@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbix Studio — Projects</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #ffffff;
+            --sidebar-bg: #fafafa;
+            --text-primary: #1a1a2e;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --border-light: #f3f4f6;
+            --accent-green: #22c55e;
+            --accent-green-light: #dcfce7;
+            --accent-blue: #3b82f6;
+            --accent-blue-light: #dbeafe;
+            --accent-purple: #7c5cfc;
+            --accent-orange: #f59e0b;
+            --accent-orange-light: #fef3c7;
+            --accent-red: #ef4444;
+            --accent-red-light: #fee2e2;
+            --accent-pink: #ec4899;
+            --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            --hover-bg: #f3f4f6;
+            --sidebar-icon-bg: #e8e8ec;
+            --new-project-green: #22c55e;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* ===================== ICON SIDEBAR ===================== */
+        .icon-sidebar {
+            width: 56px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px 0;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .icon-sidebar-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .icon-sidebar-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .icon-sidebar-item.green-icon {
+            background: #22c55e;
+            color: white;
+            border-radius: 10px;
+        }
+
+        .icon-sidebar-item.purple-icon {
+            background: #7c5cfc;
+            color: white;
+            border-radius: 10px;
+        }
+
+        .icon-sidebar-item.blue-icon {
+            background: #3b82f6;
+            color: white;
+            border-radius: 10px;
+        }
+
+        .icon-sidebar-item.add-icon {
+            background: var(--sidebar-icon-bg);
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .icon-sidebar-spacer {
+            flex: 1;
+        }
+
+        .icon-sidebar-bottom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 8px;
+        }
+
+        .icon-sidebar-item svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .avatar-small {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* ===================== TEXT SIDEBAR ===================== */
+        .text-sidebar {
+            width: 200px;
+            background: var(--bg);
+            border-right: 1px solid var(--border);
+            padding: 16px 0;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .sidebar-logo .logo-icon {
+            width: 22px;
+            height: 22px;
+            background: #22c55e;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-logo .logo-icon svg {
+            width: 14px;
+            height: 14px;
+            color: white;
+        }
+
+        .sidebar-logo .chevron {
+            color: var(--text-muted);
+            font-size: 11px;
+            margin-left: 2px;
+        }
+
+        .sidebar-search {
+            padding: 0 16px;
+            cursor: pointer;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .sidebar-search svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .sidebar-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .sidebar-nav-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .sidebar-nav-item.active {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .sidebar-nav-item svg {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 16px 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        .sidebar-section-title .add-btn {
+            cursor: pointer;
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+
+        .bookmark-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .bookmark-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .bookmark-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .bookmark-dot.blue {
+            background: #3b82f6;
+        }
+
+        .bookmark-dot.orange {
+            background: #f59e0b;
+        }
+
+        .bookmark-dot.red {
+            background: #ef4444;
+        }
+
+        .bookmark-dot.pink {
+            background: #ec4899;
+        }
+
+        .bookmark-dot.dark-blue {
+            background: #1e3a5f;
+        }
+
+        /* ===================== MAIN CONTENT ===================== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: var(--bg);
+        }
+
+        /* Top Bar */
+        .top-bar {
+            padding: 16px 24px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .top-bar-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .page-title-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .page-title-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .page-title-icons svg {
+            width: 16px;
+            height: 16px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .page-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .top-bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .top-bar-actions .activity-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 6px 12px;
+            cursor: pointer;
+        }
+
+        .top-bar-actions .more-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: none;
+            color: var(--text-secondary);
+        }
+
+        /* Tabs */
+        .tabs-row {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            flex-shrink: 0;
+        }
+
+        .tab {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            padding: 10px 16px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            color: var(--text-primary);
+            font-weight: 600;
+            border-bottom-color: var(--accent-purple);
+        }
+
+        .tab svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        /* Action bar */
+        .action-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            font-family: inherit;
+            padding: 7px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            background: var(--hover-bg);
+        }
+
+        .btn-green {
+            background: var(--new-project-green);
+            color: white;
+            border-color: var(--new-project-green);
+            font-weight: 500;
+        }
+
+        .btn-green:hover {
+            background: #16a34a;
+        }
+
+        .btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Sub-tabs under action bar */
+        .sub-header {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0 24px 8px;
+            flex-shrink: 0;
+        }
+
+        .sub-header .milestone-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .sub-header .milestone-label svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        /* ===================== CALENDAR AREA ===================== */
+        .calendar-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 24px 12px;
+            flex-shrink: 0;
+        }
+
+        .calendar-toolbar .date-label {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .calendar-nav button {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .calendar-nav .today-btn {
+            width: auto;
+            padding: 0 10px;
+            font-family: inherit;
+            font-size: 13px;
+        }
+
+        .calendar-nav .week-btn {
+            width: auto;
+            padding: 0 10px;
+            font-family: inherit;
+            font-size: 13px;
+            gap: 4px;
+            display: flex;
+            align-items: center;
+        }
+
+        .calendar-toolbar .toolbar-icons {
+            display: flex;
+            gap: 4px;
+        }
+
+        .calendar-toolbar .toolbar-icons button {
+            width: 28px;
+            height: 28px;
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+        }
+
+        .view-tabs {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0 24px 4px;
+            flex-shrink: 0;
+        }
+
+        .view-tab {
+            font-size: 12.5px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: none;
+            background: none;
+            font-family: inherit;
+        }
+
+        .view-tab.active {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .view-tab svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* ===================== CALENDAR GRID ===================== */
+        .calendar-wrapper {
+            flex: 1;
+            overflow: auto;
+            padding: 0 24px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: 70px repeat(7, 1fr);
+            min-height: 600px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        /* Header row */
+        .cal-header {
+            background: var(--sidebar-bg);
+            padding: 12px 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .cal-header.time-col {
+            border-right: 1px solid var(--border);
+        }
+
+        .cal-header .day-name {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .cal-header .day-num {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 2px;
+        }
+
+        .cal-header.today-col {
+            position: relative;
+        }
+
+        .cal-header.today-col .day-num {
+            color: var(--accent-purple);
+        }
+
+        /* Time cells */
+        .time-cell {
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border-light);
+            padding: 8px 6px;
+            font-size: 11.5px;
+            color: var(--text-muted);
+            text-align: right;
+            background: var(--sidebar-bg);
+        }
+
+        /* Day cells */
+        .day-cell {
+            border-right: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+            position: relative;
+            min-height: 56px;
+        }
+
+        .day-cell:last-child {
+            border-right: none;
+        }
+
+        /* ===================== TASK CARDS ===================== */
+        .task-card {
+            position: absolute;
+            left: 4px;
+            right: 4px;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: box-shadow 0.15s;
+            border: 1px solid;
+            overflow: hidden;
+        }
+
+        .task-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-card-green {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+
+        .task-card-blue {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+        }
+
+        .task-card-orange {
+            background: #fffbeb;
+            border-color: #fde68a;
+        }
+
+        .task-card-red {
+            background: #fef2f2;
+            border-color: #fecaca;
+        }
+
+        .task-card-title {
+            font-weight: 600;
+            font-size: 12.5px;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+
+        .task-card-time {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .task-card-time svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .task-card-thumbnails {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+
+        .task-card-thumbnails .thumb {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            background: #e5e7eb;
+            overflow: hidden;
+        }
+
+        .task-card-thumbnails .thumb.dark {
+            background: #1f2937;
+        }
+
+        .task-card-thumbnails .thumb.mid {
+            background: #9ca3af;
+        }
+
+        .task-progress {
+            margin-bottom: 6px;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        .progress-fill.green {
+            background: var(--accent-green);
+        }
+
+        .progress-fill.blue {
+            background: var(--accent-blue);
+        }
+
+        .progress-fill.orange {
+            background: var(--accent-orange);
+        }
+
+        .progress-fill.red {
+            background: var(--accent-red);
+        }
+
+        .progress-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .progress-label .status {
+            font-weight: 500;
+        }
+
+        .task-card-footer {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 6px;
+        }
+
+        .avatar-stack {
+            display: flex;
+        }
+
+        .avatar-circle {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid white;
+            margin-left: -6px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .avatar-circle:first-child {
+            margin-left: 0;
+        }
+
+        .avatar-circle.a1 {
+            background: linear-gradient(135deg, #f472b6, #ec4899);
+        }
+
+        .avatar-circle.a2 {
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+        }
+
+        .avatar-circle.a3 {
+            background: linear-gradient(135deg, #34d399, #10b981);
+        }
+
+        .avatar-count {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-left: 4px;
+            font-weight: 600;
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        /* Today indicator line */
+        .today-line {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: var(--accent-purple);
+            opacity: 0.5;
+            z-index: 1;
+        }
+
+        .today-dot {
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            background: var(--accent-purple);
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+            z-index: 2;
+        }
+
+        /* Ask AI bar */
+        .ask-ai-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px 24px;
+            background: white;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ask-ai-input {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .ask-ai-input .sparkle {
+            color: var(--accent-purple);
+        }
+
+        .ask-ai-input .shortcut {
+            margin-left: auto;
+            font-size: 11px;
+            background: var(--hover-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--text-muted);
+        }
+
+        .top-right-icons {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .top-right-icons button {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        .premium-badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--text-primary);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .premium-badge svg {
+            width: 14px;
+            height: 14px;
+            color: #fbbf24;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .text-sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .icon-sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============ ICON SIDEBAR ============ -->
+    <div class="icon-sidebar">
+        <div class="icon-sidebar-item green-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+            </svg>
+        </div>
+        <div class="icon-sidebar-item purple-icon" style="margin-top:4px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                <line x1="9" y1="9" x2="9.01" y2="9" />
+                <line x1="15" y1="9" x2="15.01" y2="9" />
+            </svg>
+        </div>
+        <div class="icon-sidebar-item blue-icon" style="margin-top:4px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+            </svg>
+        </div>
+        <div class="icon-sidebar-item add-icon" style="margin-top:4px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+        </div>
+
+        <div class="icon-sidebar-spacer"></div>
+
+        <div class="icon-sidebar-bottom">
+            <div class="icon-sidebar-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                    <rect x="14" y="14" width="7" height="7" rx="1" />
+                </svg>
+            </div>
+            <div class="icon-sidebar-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                        d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                </svg>
+            </div>
+            <div class="avatar-small">M</div>
+        </div>
+    </div>
+
+    <!-- ============ TEXT SIDEBAR ============ -->
+    <div class="text-sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                    </svg>
+                </div>
+                Orbix Studio
+                <span class="chevron">▾</span>
+            </div>
+            <div class="sidebar-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a class="sidebar-nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                    <rect x="14" y="14" width="7" height="7" rx="1" />
+                </svg>
+                Dashboard
+            </a>
+            <a class="sidebar-nav-item active" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" />
+                </svg>
+                Projects
+            </a>
+            <a class="sidebar-nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                </svg>
+                Time Sheets
+            </a>
+            <a class="sidebar-nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+                Growth Stats
+            </a>
+            <a class="sidebar-nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                        d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                </svg>
+                Automation
+            </a>
+            <a class="sidebar-nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="5" r="3" />
+                    <line x1="12" y1="8" x2="12" y2="16" />
+                    <circle cx="12" cy="19" r="3" />
+                    <line x1="6" y1="12" x2="18" y2="12" />
+                </svg>
+                Integration
+            </a>
+            <a class="sidebar-nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                    <path d="M16 3.13a4 4 0 010 7.75" />
+                </svg>
+                Team Member
+            </a>
+            <a class="sidebar-nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <line x1="2" y1="10" x2="22" y2="10" />
+                </svg>
+                Financial
+            </a>
+        </nav>
+
+        <div class="sidebar-section-title">
+            <span>▾ Bookmarks</span>
+            <span class="add-btn">+</span>
+        </div>
+
+        <div class="bookmark-item">
+            <span class="bookmark-dot blue"></span>
+            #General
+        </div>
+        <div class="bookmark-item">
+            <span class="bookmark-dot orange"></span>
+            UI Design Projects
+        </div>
+        <div class="bookmark-item">
+            <span class="bookmark-dot red"></span>
+            Recently done
+        </div>
+        <div class="bookmark-item">
+            <span class="bookmark-dot pink"></span>
+            Call booked on por...
+        </div>
+        <div class="bookmark-item">
+            <span class="bookmark-dot dark-blue"></span>
+            Design Phase
+        </div>
+    </div>
+
+    <!-- ============ MAIN CONTENT ============ -->
+    <div class="main-content" style="position:relative;">
+        <!-- Top bar with title -->
+        <div class="top-bar">
+            <div class="top-bar-row">
+                <div>
+                    <div class="page-title-area">
+                        <span class="page-title">Projects</span>
+                        <div class="page-title-icons">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="16" x2="12" y2="12" />
+                                <line x1="12" y1="8" x2="12.01" y2="8" />
+                            </svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon
+                                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="page-subtitle">Manage projects by assigning owners, setting timelines, and tracking
+                        progress.</div>
+                </div>
+                <div class="top-bar-actions">
+                    <button class="activity-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                        </svg>
+                        Activity
+                    </button>
+                    <button class="more-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="5" r="1.5" />
+                            <circle cx="12" cy="12" r="1.5" />
+                            <circle cx="12" cy="19" r="1.5" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- View tabs -->
+        <div class="tabs-row">
+            <div class="tab">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                </svg>
+                Main View
+            </div>
+            <div class="tab">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="8" y1="6" x2="21" y2="6" />
+                    <line x1="8" y1="12" x2="21" y2="12" />
+                    <line x1="8" y1="18" x2="21" y2="18" />
+                    <line x1="3" y1="6" x2="3.01" y2="6" />
+                    <line x1="3" y1="12" x2="3.01" y2="12" />
+                    <line x1="3" y1="18" x2="3.01" y2="18" />
+                </svg>
+                Gantt view
+            </div>
+            <div class="tab active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                Milestones view
+            </div>
+            <div class="tab">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="9" rx="1" />
+                    <rect x="14" y="3" width="7" height="5" rx="1" />
+                    <rect x="14" y="12" width="7" height="9" rx="1" />
+                    <rect x="3" y="16" width="7" height="5" rx="1" />
+                </svg>
+                Kanban view
+            </div>
+            <div class="tab">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                </svg>
+                Time Tracking
+            </div>
+            <div class="tab" style="color:var(--text-muted);">+</div>
+        </div>
+
+        <!-- Action bar -->
+        <div class="action-bar">
+            <button class="btn btn-green">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                New Project
+            </button>
+            <button class="btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                Search
+            </button>
+            <button class="btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                </svg>
+                Employee
+            </button>
+            <button class="btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="4" y1="21" x2="4" y2="14" />
+                    <line x1="4" y1="10" x2="4" y2="3" />
+                    <line x1="12" y1="21" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12" y2="3" />
+                    <line x1="20" y1="21" x2="20" y2="16" />
+                    <line x1="20" y1="12" x2="20" y2="3" />
+                </svg>
+                Filter
+            </button>
+            <button class="btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <polyline points="5 12 12 19 19 12" />
+                </svg>
+                Sort
+            </button>
+            <button class="btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                </svg>
+                Hide
+            </button>
+        </div>
+
+        <!-- Milestones View label -->
+        <div class="sub-header">
+            <div class="milestone-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                Milestones View
+            </div>
+        </div>
+
+        <!-- Calendar toolbar -->
+        <div class="calendar-toolbar">
+            <span class="date-label">04 September 2023</span>
+            <div class="calendar-nav">
+                <button>‹</button>
+                <button class="today-btn">Today</button>
+                <button>›</button>
+            </div>
+            <div class="calendar-nav">
+                <button class="week-btn">Week <span style="font-size:10px;">▾</span></button>
+            </div>
+            <div class="toolbar-icons">
+                <button>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 3 21 3 21 9" />
+                        <polyline points="9 21 3 21 3 15" />
+                        <line x1="21" y1="3" x2="14" y2="10" />
+                        <line x1="3" y1="21" x2="10" y2="14" />
+                    </svg>
+                </button>
+                <button>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3" />
+                        <path
+                            d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Calendar Grid -->
+        <div class="calendar-wrapper">
+            <div class="calendar-grid">
+                <!-- Header row -->
+                <div class="cal-header time-col"></div>
+                <div class="cal-header">
+                    <div class="day-name">Monday</div>
+                    <div class="day-num">28</div>
+                </div>
+                <div class="cal-header">
+                    <div class="day-name">Tuesday</div>
+                    <div class="day-num">29</div>
+                </div>
+                <div class="cal-header">
+                    <div class="day-name">Wednesday</div>
+                    <div class="day-num">30</div>
+                </div>
+                <div class="cal-header">
+                    <div class="day-name">Thursday</div>
+                    <div class="day-num">01</div>
+                </div>
+                <div class="cal-header">
+                    <div class="day-name">Friday</div>
+                    <div class="day-num">02</div>
+                </div>
+                <div class="cal-header today-col">
+                    <div class="day-name">Saturday</div>
+                    <div class="day-num">03</div>
+                </div>
+                <div class="cal-header">
+                    <div class="day-name">Sunday</div>
+                    <div class="day-num">04</div>
+                </div>
+
+                <!-- 08:00 AM row -->
+                <div class="time-cell">08:00 AM</div>
+                <div class="day-cell" style="grid-row: span 5; position:relative;">
+                    <!-- Monday task: tall green card -->
+                    <div class="task-card task-card-green" style="top:8px; bottom:8px;">
+                        <div class="task-card-title">Create visual mood boards ...</div>
+                        <div class="task-card-time">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
+                            01.25 hrs
+                        </div>
+                        <div class="task-progress" style="margin-top:auto;">
+                            <div class="progress-bar">
+                                <div class="progress-fill green" style="width:100%"></div>
+                            </div>
+                            <div class="progress-label">
+                                <span class="status">Completed</span>
+                                <span>100%</span>
+                            </div>
+                        </div>
+                        <div class="task-card-footer">
+                            <div class="avatar-stack">
+                                <div class="avatar-circle a1"></div>
+                                <div class="avatar-circle a2"></div>
+                            </div>
+                            <span class="avatar-count">10+</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="day-cell" style="grid-row: span 5; position:relative;">
+                    <!-- Tuesday: two cards stacked -->
+                    <div class="task-card task-card-blue" style="top:8px; height:48%;">
+                        <div class="task-card-title">Create visual mood boards ...</div>
+                        <div class="task-card-time">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
+                            01.25 hrs
+                        </div>
+                        <div class="task-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill blue" style="width:45%"></div>
+                            </div>
+                            <div class="progress-label">
+                                <span class="status">On Progress</span>
+                                <span>45%</span>
+                            </div>
+                        </div>
+                        <div class="task-card-footer">
+                            <div class="avatar-stack">
+                                <div class="avatar-circle a1"></div>
+                                <div class="avatar-circle a2"></div>
+                            </div>
+                            <span class="avatar-count">10+</span>
+                        </div>
+                    </div>
+                    <div class="task-card task-card-blue" style="top:52%; height:44%;">
+                        <div class="task-card-title">Create visual mood boards ...</div>
+                        <div class="task-card-time">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
+                            01.25 hrs
+                        </div>
+                        <div class="task-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill red" style="width:10%"></div>
+                            </div>
+                            <div class="progress-label">
+                                <span class="status">On Progress</span>
+                                <span>10%</span>
+                            </div>
+                        </div>
+                        <div class="task-card-footer">
+                            <div class="avatar-stack">
+                                <div class="avatar-circle a1"></div>
+                                <div class="avatar-circle a2"></div>
+                            </div>
+                            <span class="avatar-count">10+</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="day-cell" style="grid-row: span 5; position:relative;">
+                    <!-- Wednesday: partial card -->
+                    <div class="task-card task-card-green" style="top:8px; height:55%;">
+                        <div class="task-card-title">Create visual mood boards ...</div>
+                        <div class="task-card-time">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
+                            01.25 hrs
+                        </div>
+                        <div class="task-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill green" style="width:32%"></div>
+                            </div>
+                            <div class="progress-label">
+                                <span class="status">On Progress</span>
+                                <span>32%</span>
+                            </div>
+                        </div>
+                        <div class="task-card-footer">
+                            <div class="avatar-stack">
+                                <div class="avatar-circle a1"></div>
+                                <div class="avatar-circle a2"></div>
+                            </div>
+                            <span class="avatar-count">10+</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="day-cell" style="grid-row: span 5; position:relative;">
+                    <!-- Thursday -->
+                    <div class="task-card task-card-blue" style="top:20px; height:60%;">
+                        <div class="task-card-title">Create visual mood boards ...</div>
+                        <div class="task-card-time">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
+                            01.25 hrs
+                        </div>
+                        <div class="task-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill blue" style="width:45%"></div>
+                            </div>
+                            <div class="progress-label">
+                                <span class="status">On Progress</span>
+                                <span>45%</span>
+                            </div>
+                        </div>
+                        <div class="task-card-footer">
+                            <div class="avatar-stack">
+                                <div class="avatar-circle a1"></div>
+                                <div class="avatar-circle a2"></div>
+                            </div>
+                            <span class="avatar-count">10+</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="day-cell" style="grid-row: span 5;"></div>
+                <div class="day-cell" style="grid-row: span 5; position:relative;">
+                    <!-- Saturday (today) with line indicator -->
+                    <div class="today-dot"></div>
+                    <div class="today-line"></div>
+                    <div class="task-card task-card-orange" style="top:40px; height:65%;">
+                        <div class="task-card-thumbnails">
+                            <div class="thumb dark"></div>
+                            <div class="thumb mid"></div>
+                            <div class="thumb" style="background:#374151;"></div>
+                        </div>
+                        <div class="task-card-title">Create visual mood boards ...</div>
+                        <div class="task-card-time">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
+                            01.25 hrs
+                        </div>
+                        <div class="task-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill orange" style="width:32%"></div>
+                            </div>
+                            <div class="progress-label">
+                                <span class="status">On Progress</span>
+                                <span>32%</span>
+                            </div>
+                        </div>
+                        <div class="task-card-footer">
+                            <div class="avatar-stack">
+                                <div class="avatar-circle a1"></div>
+                                <div class="avatar-circle a2"></div>
+                            </div>
+                            <span class="avatar-count">10+</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="day-cell" style="grid-row: span 5;"></div>
+
+                <!-- 09:00 AM -->
+                <div class="time-cell">09:00 AM</div>
+                <!-- cells are spanned from above -->
+
+                <!-- 10:00 AM -->
+                <div class="time-cell">10:00 AM</div>
+
+                <!-- 11:00 AM -->
+                <div class="time-cell">11:00 AM</div>
+
+                <!-- 12:00 PM -->
+                <div class="time-cell">12:00 PM</div>
+
+                <!-- 01:00 PM -->
+                <div class="time-cell">01:00 PM</div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+
+                <!-- 02:00 PM -->
+                <div class="time-cell">02:00 PM</div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+
+                <!-- 03:00 PM -->
+                <div class="time-cell">03:00 PM</div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+
+                <!-- 04:00 PM -->
+                <div class="time-cell">04:00 PM</div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+                <div class="day-cell"></div>
+            </div>
+        </div>
+
+        <!-- Ask AI bottom bar -->
+        <div class="ask-ai-bar">
+            <div class="ask-ai-input" style="flex:1;">
+                <span class="sparkle">✦</span>
+                Ask Ai....
+                <span class="shortcut">⌘A</span>
+            </div>
+            <div class="top-right-icons">
+                <button>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                </button>
+                <button>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="3" width="20" height="14" rx="2" />
+                        <line x1="8" y1="21" x2="16" y2="21" />
+                        <line x1="12" y1="17" x2="12" y2="21" />
+                    </svg>
+                </button>
+                <button>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                    </svg>
+                </button>
+            </div>
+            <div class="premium-badge">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z" />
+                </svg>
+                Premium
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

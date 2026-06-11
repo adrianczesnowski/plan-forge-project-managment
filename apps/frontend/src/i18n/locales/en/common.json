@@ -1,0 +1,14 @@
+{
+  "appName": "PlanForge",
+  "loading": "Loading...",
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "edit": "Edit",
+  "create": "Create",
+  "search": "Search",
+  "settings": "Settings",
+  "logout": "Log out",
+  "dashboard": "Dashboard",
+  "welcome": "Welcome, {{name}}"
+}

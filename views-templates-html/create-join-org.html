@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbix Studio — Wybierz organizację</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #ffffff;
+            --sidebar-bg: #fafafa;
+            --text-primary: #1a1a2e;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --border-light: #f3f4f6;
+            --accent-green: #22c55e;
+            --accent-blue: #3b82f6;
+            --accent-purple: #7c5cfc;
+            --accent-orange: #f59e0b;
+            --hover-bg: #f3f4f6;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, sans-serif;
+            background: var(--sidebar-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+        }
+
+        /* ===================== TOP LOGO ===================== */
+        .onboard-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .onboard-logo .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--accent-green);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .onboard-logo .logo-icon svg {
+            width: 20px;
+            height: 20px;
+            color: white;
+        }
+
+        .onboard-logo span {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text-primary);
+        }
+
+        .onboard-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 36px;
+            text-align: center;
+        }
+
+        /* ===================== STEPPER ===================== */
+        .stepper {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 32px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            border: 2px solid var(--border);
+            color: var(--text-muted);
+            background: white;
+            transition: all 0.3s;
+        }
+
+        .step.active .step-dot {
+            background: var(--accent-purple);
+            border-color: var(--accent-purple);
+            color: white;
+        }
+
+        .step.done .step-dot {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .step.active .step-label {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .step.done .step-label {
+            color: var(--accent-green);
+        }
+
+        .step-line {
+            width: 48px;
+            height: 2px;
+            background: var(--border);
+            margin: 0 12px;
+            transition: background 0.3s;
+        }
+
+        .step-line.done {
+            background: var(--accent-green);
+        }
+
+        /* ===================== CARD ===================== */
+        .onboard-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 560px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.03);
+            overflow: hidden;
+        }
+
+        /* ===================== TABS ===================== */
+        .onboard-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .onboard-tab {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            background: none;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            font-family: inherit;
+        }
+
+        .onboard-tab:hover {
+            color: var(--text-primary);
+            background: var(--hover-bg);
+        }
+
+        .onboard-tab.active {
+            color: var(--text-primary);
+            font-weight: 600;
+            border-bottom-color: var(--accent-purple);
+        }
+
+        .onboard-tab svg {
+            width: 17px;
+            height: 17px;
+        }
+
+        .onboard-tab .tab-count {
+            background: var(--accent-purple);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: 10px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* ===================== PANELS ===================== */
+        .tab-panel {
+            display: none;
+            padding: 24px;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* ---- Invitations panel ---- */
+        .invitations-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .invitation-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: all 0.15s;
+        }
+
+        .invitation-card:hover {
+            border-color: #d1d5db;
+            background: #fcfcfd;
+        }
+
+        .inv-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .inv-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .inv-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .inv-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .inv-role {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: #ede9fe;
+            color: var(--accent-purple);
+        }
+
+        .inv-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .inv-btn {
+            padding: 7px 16px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: none;
+        }
+
+        .inv-btn.accept {
+            background: var(--accent-purple);
+            color: white;
+        }
+
+        .inv-btn.accept:hover {
+            background: #6842e8;
+        }
+
+        .inv-btn.decline {
+            background: none;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+
+        .inv-btn.decline:hover {
+            background: var(--hover-bg);
+            color: var(--text-secondary);
+        }
+
+        .inv-btn.accepted {
+            background: #dcfce7;
+            color: #16a34a;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .inv-btn.declined {
+            background: var(--hover-bg);
+            color: var(--text-muted);
+            cursor: default;
+            pointer-events: none;
+            text-decoration: line-through;
+        }
+
+        /* ---- Create org panel ---- */
+        .create-section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .form-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: white;
+            transition: all 0.15s;
+        }
+
+        .form-input-wrapper:hover {
+            border-color: #d1d5db;
+        }
+
+        .form-input-wrapper:focus-within {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 3px rgba(124, 92, 252, 0.1);
+        }
+
+        .form-input-wrapper svg {
+            width: 16px;
+            height: 16px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .form-input-wrapper input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: inherit;
+            font-size: 13.5px;
+            color: var(--text-primary);
+            padding: 12px 0;
+            min-width: 0;
+        }
+
+        .form-input-wrapper input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Invite section */
+        .invite-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 24px 0 20px;
+        }
+
+        .invite-divider::before,
+        .invite-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .invite-divider span {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .invite-rows {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .invite-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .invite-row .form-input-wrapper {
+            flex: 1;
+        }
+
+        .role-select-wrapper {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .role-select {
+            appearance: none;
+            -webkit-appearance: none;
+            padding: 11px 32px 11px 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: white;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.15s;
+            min-width: 120px;
+        }
+
+        .role-select:hover {
+            border-color: #d1d5db;
+        }
+
+        .role-select:focus {
+            outline: none;
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 3px rgba(124, 92, 252, 0.1);
+        }
+
+        .role-select-wrapper::after {
+            content: '';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 5px solid var(--text-muted);
+            pointer-events: none;
+        }
+
+        .remove-invite-btn {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+
+        .remove-invite-btn:hover {
+            background: #fee2e2;
+            border-color: #fecaca;
+            color: #ef4444;
+        }
+
+        .remove-invite-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .add-invite-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-family: inherit;
+            font-weight: 500;
+            color: var(--accent-purple);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px 0;
+            transition: color 0.15s;
+        }
+
+        .add-invite-btn:hover {
+            color: #6842e8;
+        }
+
+        .add-invite-btn svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        /* ===================== FOOTER ACTIONS ===================== */
+        .onboard-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            background: var(--sidebar-bg);
+        }
+
+        .skip-btn {
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px 4px;
+            transition: color 0.15s;
+        }
+
+        .skip-btn:hover {
+            color: var(--text-secondary);
+        }
+
+        .continue-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            background: var(--accent-purple);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .continue-btn:hover {
+            background: #6842e8;
+            box-shadow: 0 4px 16px rgba(124, 92, 252, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .continue-btn:active {
+            transform: translateY(0);
+        }
+
+        .continue-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* ===================== ANIMATIONS ===================== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .onboard-logo {
+            animation: fadeInUp 0.4s ease both;
+        }
+
+        .onboard-subtitle {
+            animation: fadeInUp 0.4s ease 0.05s both;
+        }
+
+        .stepper {
+            animation: fadeInUp 0.4s ease 0.1s both;
+        }
+
+        .onboard-card {
+            animation: fadeInUp 0.5s ease 0.15s both;
+        }
+
+        .invitation-card:nth-child(1) {
+            animation: fadeIn 0.3s ease 0.25s both;
+        }
+
+        .invitation-card:nth-child(2) {
+            animation: fadeIn 0.3s ease 0.35s both;
+        }
+
+        /* ===================== RESPONSIVE ===================== */
+        @media (max-width: 600px) {
+            body {
+                padding: 24px 16px;
+            }
+
+            .stepper {
+                transform: scale(0.9);
+            }
+
+            .invite-row {
+                flex-wrap: wrap;
+            }
+
+            .invite-row .form-input-wrapper {
+                min-width: 100%;
+            }
+
+            .role-select {
+                min-width: 0;
+                flex: 1;
+            }
+
+            .inv-actions {
+                flex-direction: column;
+            }
+
+            .step-label {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Logo -->
+    <div class="onboard-logo">
+        <div class="logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+            </svg>
+        </div>
+        <span>Orbix Studio</span>
+    </div>
+    <p class="onboard-subtitle">Wybierz lub utwórz organizację, aby rozpocząć</p>
+
+    <!-- Stepper -->
+    <div class="stepper">
+        <div class="step done">
+            <div class="step-dot">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <polyline points="20 6 9 17 4 12" />
+                </svg>
+            </div>
+            <span class="step-label">Rejestracja</span>
+        </div>
+        <div class="step-line done"></div>
+        <div class="step active">
+            <div class="step-dot">2</div>
+            <span class="step-label">Organizacja</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+            <div class="step-dot">3</div>
+            <span class="step-label">Pierwszy projekt</span>
+        </div>
+    </div>
+
+    <!-- Card -->
+    <div class="onboard-card">
+
+        <!-- Tabs -->
+        <div class="onboard-tabs">
+            <button class="onboard-tab active" onclick="switchTab('invitations')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <polyline points="22,4 12,13 2,4" />
+                </svg>
+                Zaproszenia
+                <span class="tab-count">2</span>
+            </button>
+            <button class="onboard-tab" onclick="switchTab('create')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                Utwórz organizację
+            </button>
+        </div>
+
+        <!-- Panel: Invitations -->
+        <div class="tab-panel active" id="panel-invitations">
+            <div class="invitations-list">
+
+                <div class="invitation-card" id="inv1">
+                    <div class="inv-avatar" style="background: linear-gradient(135deg, #7c5cfc, #3b82f6);">O</div>
+                    <div class="inv-body">
+                        <div class="inv-name">Orbix Design Team</div>
+                        <div class="inv-meta">Zaproszenie od anna@orbix.io · <span class="inv-role">Member</span></div>
+                    </div>
+                    <div class="inv-actions" id="inv1-actions">
+                        <button class="inv-btn accept" onclick="handleInvite('inv1', 'accept')">Dołącz</button>
+                        <button class="inv-btn decline" onclick="handleInvite('inv1', 'decline')">Odrzuć</button>
+                    </div>
+                </div>
+
+                <div class="invitation-card" id="inv2">
+                    <div class="inv-avatar" style="background: linear-gradient(135deg, #f59e0b, #ef4444);">S</div>
+                    <div class="inv-body">
+                        <div class="inv-name">Startup Labs Sp. z o.o.</div>
+                        <div class="inv-meta">Zaproszenie od jan@startuplabs.pl · <span class="inv-role">Admin</span>
+                        </div>
+                    </div>
+                    <div class="inv-actions" id="inv2-actions">
+                        <button class="inv-btn accept" onclick="handleInvite('inv2', 'accept')">Dołącz</button>
+                        <button class="inv-btn decline" onclick="handleInvite('inv2', 'decline')">Odrzuć</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Panel: Create org -->
+        <div class="tab-panel" id="panel-create">
+
+            <div class="form-group">
+                <label class="form-label">Nazwa organizacji</label>
+                <div class="form-input-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
+                    </svg>
+                    <input type="text" placeholder="np. Moja Firma Sp. z o.o.">
+                </div>
+            </div>
+
+            <div class="invite-divider">
+                <span>Zaproś członków zespołu (opcjonalnie)</span>
+            </div>
+
+            <div class="invite-rows" id="inviteRows">
+                <div class="invite-row">
+                    <div class="form-input-wrapper">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="4" width="20" height="16" rx="2" />
+                            <polyline points="22,4 12,13 2,4" />
+                        </svg>
+                        <input type="email" placeholder="adres@email.com">
+                    </div>
+                    <div class="role-select-wrapper">
+                        <select class="role-select">
+                            <option value="member">Member</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <button class="remove-invite-btn" onclick="removeInviteRow(this)" title="Usuń">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button class="add-invite-btn" onclick="addInviteRow()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                Dodaj kolejną osobę
+            </button>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="onboard-footer">
+            <button class="skip-btn">Pomiń ten krok</button>
+            <button class="continue-btn">
+                Dalej
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                </svg>
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // Tab switching
+        function switchTab(tab) {
+            document.querySelectorAll('.onboard-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+            if (tab === 'invitations') {
+                document.querySelectorAll('.onboard-tab')[0].classList.add('active');
+                document.getElementById('panel-invitations').classList.add('active');
+            } else {
+                document.querySelectorAll('.onboard-tab')[1].classList.add('active');
+                document.getElementById('panel-create').classList.add('active');
+            }
+        }
+
+        // Handle invitation accept/decline
+        function handleInvite(id, action) {
+            const actionsEl = document.getElementById(id + '-actions');
+            if (action === 'accept') {
+                actionsEl.innerHTML = '<button class="inv-btn accepted">✓ Dołączono</button>';
+            } else {
+                actionsEl.innerHTML = '<button class="inv-btn declined">Odrzucono</button>';
+            }
+        }
+
+        // Add invite row
+        function addInviteRow() {
+            const container = document.getElementById('inviteRows');
+            const row = document.createElement('div');
+            row.className = 'invite-row';
+            row.style.animation = 'fadeInUp 0.25s ease both';
+            row.innerHTML = `
+                <div class="form-input-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="4" width="20" height="16" rx="2" />
+                        <polyline points="22,4 12,13 2,4" />
+                    </svg>
+                    <input type="email" placeholder="adres@email.com">
+                </div>
+                <div class="role-select-wrapper">
+                    <select class="role-select">
+                        <option value="member">Member</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <button class="remove-invite-btn" onclick="removeInviteRow(this)" title="Usuń">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            `;
+            container.appendChild(row);
+            row.querySelector('input').focus();
+        }
+
+        // Remove invite row
+        function removeInviteRow(btn) {
+            const row = btn.closest('.invite-row');
+            const container = document.getElementById('inviteRows');
+            if (container.children.length > 1) {
+                row.style.opacity = '0';
+                row.style.transform = 'translateX(12px)';
+                row.style.transition = 'all 0.2s ease';
+                setTimeout(() => row.remove(), 200);
+            } else {
+                // Last row — just clear the input
+                row.querySelector('input').value = '';
+                row.querySelector('select').selectedIndex = 0;
+            }
+        }
+    </script>
+
+</body>
+
+</html>

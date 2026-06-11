@@ -1,0 +1,2754 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbix Studio — ToDo Lists</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #ffffff;
+            --sidebar-bg: #fafafa;
+            --text-primary: #1a1a2e;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --border-light: #f3f4f6;
+            --accent-green: #22c55e;
+            --accent-blue: #3b82f6;
+            --accent-purple: #7c5cfc;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-pink: #ec4899;
+            --hover-bg: #f3f4f6;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* ===================== SIDEBAR ===================== */
+        .text-sidebar {
+            width: 220px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            height: 100vh;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .sidebar-logo .logo-icon {
+            width: 24px;
+            height: 24px;
+            background: #22c55e;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-logo .logo-icon svg {
+            width: 14px;
+            height: 14px;
+            color: white;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            padding: 0 8px;
+        }
+
+        .sidebar-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-decoration: none;
+            border-radius: 7px;
+        }
+
+        .sidebar-nav-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .sidebar-nav-item.active {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .sidebar-nav-item svg {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav-item .nav-chevron {
+            margin-left: auto;
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .sidebar-nav-item.expanded .nav-chevron {
+            transform: rotate(90deg);
+        }
+
+        .sidebar-sub-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            padding: 2px 0 2px 18px;
+        }
+
+        .sidebar-sub-item {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 7px 10px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 7px;
+            transition: all 0.15s;
+        }
+
+        .sidebar-sub-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .sidebar-sub-item svg {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-sub-item .nav-chevron {
+            margin-left: auto;
+            font-size: 10px;
+            color: var(--text-muted);
+            transition: transform 0.2s;
+        }
+
+        .sidebar-sub-item.expanded .nav-chevron {
+            transform: rotate(90deg);
+        }
+
+        .sidebar-sub-sub-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            padding: 2px 0 2px 16px;
+        }
+
+        .sidebar-sub-sub-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 7px;
+            transition: all 0.15s;
+        }
+
+        .sidebar-sub-sub-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .sidebar-sub-sub-item .project-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .sidebar-section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 16px 8px;
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .sidebar-section-title .add-btn {
+            cursor: pointer;
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+
+        .bookmark-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .bookmark-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .bookmark-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .bookmark-dot.blue {
+            background: #3b82f6;
+        }
+
+        .bookmark-dot.orange {
+            background: #f59e0b;
+        }
+
+        .bookmark-dot.red {
+            background: #ef4444;
+        }
+
+        .bookmark-dot.pink {
+            background: #ec4899;
+        }
+
+        .bookmark-dot.dark-blue {
+            background: #1e3a5f;
+        }
+
+        .sidebar-spacer {
+            flex: 1;
+        }
+
+        .sidebar-bottom {
+            border-top: 1px solid var(--border);
+            padding: 10px 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .sidebar-bottom-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 7px;
+            transition: all 0.15s;
+        }
+
+        .sidebar-bottom-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .sidebar-bottom-item svg {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            cursor: pointer;
+            border-radius: 7px;
+        }
+
+        .sidebar-user:hover {
+            background: var(--hover-bg);
+        }
+
+        .avatar-small {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .sidebar-user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .sidebar-user-email {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* ===================== MAIN ===================== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .global-search-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 24px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            max-width: 480px;
+            transition: border-color 0.15s;
+        }
+
+        .search-input-wrapper:focus-within {
+            border-color: #c4b5fd;
+        }
+
+        .search-input-wrapper svg {
+            width: 15px;
+            height: 15px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .search-input-wrapper input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: inherit;
+            font-size: 13px;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .search-input-wrapper input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-shortcut {
+            font-size: 11px;
+            background: var(--hover-bg);
+            padding: 2px 7px;
+            border-radius: 4px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .global-search-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: auto;
+        }
+
+        .global-search-right button {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.15s;
+        }
+
+        .global-search-right button:hover {
+            background: var(--hover-bg);
+        }
+
+        .premium-badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--text-primary);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .premium-badge svg {
+            width: 14px;
+            height: 14px;
+            color: #fbbf24;
+        }
+
+        /* ===================== TODO HEADER ===================== */
+        .todo-header {
+            padding: 24px 32px 0;
+            flex-shrink: 0;
+        }
+
+        .todo-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .todo-title {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .todo-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 18px;
+        }
+
+        .todo-stats {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .todo-stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .todo-stat .num {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 15px;
+        }
+
+        .todo-stat .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ===================== TOOLBAR ===================== */
+        .todo-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            font-family: inherit;
+            padding: 7px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            background: var(--hover-bg);
+        }
+
+        .btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .btn-primary {
+            background: var(--accent-purple);
+            color: white;
+            border-color: var(--accent-purple);
+            font-weight: 500;
+        }
+
+        .btn-primary:hover {
+            background: #6d4de6;
+        }
+
+        .toolbar-separator {
+            width: 1px;
+            height: 24px;
+            background: var(--border);
+        }
+
+        .filter-pills {
+            display: flex;
+            gap: 4px;
+            margin-left: auto;
+        }
+
+        .filter-pill {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12.5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--text-secondary);
+        }
+
+        .filter-pill:hover {
+            background: var(--hover-bg);
+        }
+
+        .filter-pill.active {
+            background: var(--text-primary);
+            color: white;
+            border-color: var(--text-primary);
+        }
+
+        /* ===================== TODO CONTENT ===================== */
+        .todo-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 32px 32px;
+        }
+
+        /* ---- Section group ---- */
+        .todo-section {
+            margin-bottom: 28px;
+        }
+
+        .todo-section-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .section-toggle {
+            font-size: 10px;
+            color: var(--text-muted);
+            width: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .section-name {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .section-count {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+            background: var(--hover-bg);
+            padding: 1px 8px;
+            border-radius: 10px;
+        }
+
+        /* ---- Todo item ---- */
+        .todo-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: all 0.15s;
+            background: white;
+            position: relative;
+        }
+
+        .todo-item:hover {
+            border-color: #d4d4d8;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+
+        .todo-item.overdue {
+            border-left: 3px solid var(--accent-red);
+        }
+
+        .todo-item.completed {
+            opacity: 0.55;
+        }
+
+        /* Checkbox */
+        .todo-check {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+            cursor: pointer;
+        }
+
+        .todo-check:hover {
+            border-color: var(--accent-purple);
+        }
+
+        .todo-check.checked {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+        }
+
+        .todo-check.checked svg {
+            width: 12px;
+            height: 12px;
+            color: white;
+        }
+
+        /* Content */
+        .todo-content {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .todo-title-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .todo-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .todo-item.completed .todo-name {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .todo-tag {
+            padding: 1px 7px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            flex-shrink: 0;
+        }
+
+        .todo-tag.urgent {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .todo-tag.project {
+            background: #ede9fe;
+            color: #7c3aed;
+        }
+
+        .todo-tag.personal {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .todo-tag.meeting {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .todo-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .todo-meta svg {
+            width: 12px;
+            height: 12px;
+            flex-shrink: 0;
+        }
+
+        .todo-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .todo-meta-item.overdue-text {
+            color: var(--accent-red);
+            font-weight: 600;
+        }
+
+        .todo-meta-item.due-soon {
+            color: var(--accent-orange);
+            font-weight: 500;
+        }
+
+        /* Right side: shared avatars + date */
+        .todo-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-shrink: 0;
+        }
+
+        /* Shared with */
+        .shared-avatars {
+            display: flex;
+            align-items: center;
+        }
+
+        .shared-avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 700;
+            color: white;
+            border: 2px solid white;
+            margin-left: -8px;
+            cursor: pointer;
+            transition: transform 0.15s;
+            position: relative;
+        }
+
+        .shared-avatar:first-child {
+            margin-left: 0;
+        }
+
+        .shared-avatar:hover {
+            transform: scale(1.15);
+            z-index: 2;
+        }
+
+        .shared-avatar.add-person {
+            background: var(--hover-bg);
+            color: var(--text-muted);
+            border: 2px dashed var(--border);
+            font-size: 14px;
+        }
+
+        .shared-avatar.add-person:hover {
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+        }
+
+        /* Due date column */
+        .todo-due {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+            min-width: 90px;
+        }
+
+        .todo-due-date {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .todo-due-date svg {
+            width: 13px;
+            height: 13px;
+            color: var(--text-muted);
+        }
+
+        .todo-due-date.overdue {
+            color: var(--accent-red);
+        }
+
+        .todo-due-date.overdue svg {
+            color: var(--accent-red);
+        }
+
+        .todo-due-date.soon {
+            color: var(--accent-orange);
+        }
+
+        .todo-due-date.soon svg {
+            color: var(--accent-orange);
+        }
+
+        .todo-created {
+            font-size: 10.5px;
+            color: var(--text-muted);
+        }
+
+        /* Priority indicator */
+        .priority-dot {
+            width: 6px;
+            height: 20px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .priority-dot.high {
+            background: var(--accent-red);
+        }
+
+        .priority-dot.medium {
+            background: var(--accent-orange);
+        }
+
+        .priority-dot.low {
+            background: var(--accent-blue);
+        }
+
+        .priority-dot.none {
+            background: var(--border);
+        }
+
+        /* ---- Add task input ---- */
+        .add-todo-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 16px;
+            border: 1px dashed var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.15s;
+            color: var(--text-muted);
+            font-size: 13.5px;
+        }
+
+        .add-todo-row:hover {
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+            background: #faf8ff;
+        }
+
+        .add-todo-row svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Tooltip */
+        .shared-avatar[data-tooltip]:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-primary);
+            color: white;
+            font-size: 10.5px;
+            font-weight: 500;
+            padding: 3px 8px;
+            border-radius: 5px;
+            white-space: nowrap;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* ===================== TODO PREVIEW MODAL ===================== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 15, 30, 0.45);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal {
+            width: 860px;
+            max-width: calc(100vw - 48px);
+            max-height: calc(100vh - 48px);
+            background: var(--bg);
+            border-radius: 14px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideUp 0.25s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .modal-breadcrumb {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .modal-breadcrumb svg {
+            width: 13px;
+            height: 13px;
+        }
+
+        .modal-breadcrumb strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .modal-header-actions {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .modal-header-actions button {
+            width: 30px;
+            height: 30px;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            background: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: all 0.15s;
+            font-size: 14px;
+        }
+
+        .modal-header-actions button:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        /* Split pane */
+        .modal-split {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Left pane */
+        .modal-main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        /* Right pane - activity */
+        .modal-activity {
+            width: 300px;
+            border-left: 1px solid var(--border);
+            background: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        /* Task title */
+        .preview-title-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .preview-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            flex-shrink: 0;
+            margin-top: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .preview-checkbox:hover {
+            border-color: var(--accent-purple);
+        }
+
+        .preview-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.35;
+            flex: 1;
+        }
+
+        .preview-tags {
+            display: flex;
+            gap: 5px;
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+
+        .preview-tag {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .preview-tag.urgent {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .preview-tag.project {
+            background: #ede9fe;
+            color: #7c3aed;
+        }
+
+        .preview-tag.personal {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .preview-tag.meeting {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        /* Meta grid */
+        .preview-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .pmeta-cell {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-light);
+            border-right: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .pmeta-cell:nth-child(2n) {
+            border-right: none;
+        }
+
+        .pmeta-cell:nth-last-child(-n+2) {
+            border-bottom: none;
+        }
+
+        .pmeta-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .pmeta-value {
+            font-size: 13.5px;
+            color: var(--text-primary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pmeta-value svg {
+            width: 14px;
+            height: 14px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .priority-badge.high {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .priority-badge.medium {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .priority-badge.low {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .overdue-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .linked-project {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            background: #f3f0ff;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-purple);
+            cursor: pointer;
+            transition: background 0.12s;
+        }
+
+        .linked-project:hover {
+            background: #ede9fe;
+        }
+
+        .linked-project .lp-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent-purple);
+            flex-shrink: 0;
+        }
+
+        /* Description */
+        .section-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .section-label svg {
+            width: 15px;
+            height: 15px;
+            color: var(--text-muted);
+        }
+
+        .preview-description {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.65;
+            padding: 12px 14px;
+            background: var(--sidebar-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+        }
+
+        /* Shared with */
+        .shared-people-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .shared-person {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 5px 12px 5px 5px;
+            background: var(--hover-bg);
+            border-radius: 20px;
+            font-size: 12.5px;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: background 0.12s;
+        }
+
+        .shared-person:hover {
+            background: #e5e7eb;
+        }
+
+        .shared-person .sp-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .add-person-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border: 1px dashed var(--border);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.12s;
+        }
+
+        .add-person-btn:hover {
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+        }
+
+        /* Subtasks */
+        .subtask-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .subtask-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 13px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: background 0.12s;
+        }
+
+        .subtask-item:last-child {
+            border-bottom: none;
+        }
+
+        .subtask-item:hover {
+            background: #f8f8fb;
+        }
+
+        .st-check {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border);
+            border-radius: 5px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+
+        .st-check.checked {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            color: white;
+        }
+
+        .st-check.checked svg {
+            width: 11px;
+            height: 11px;
+        }
+
+        .st-name {
+            flex: 1;
+        }
+
+        .st-name.done {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .subtask-progress-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .subtask-pbar {
+            flex: 1;
+            height: 5px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .subtask-pfill {
+            height: 100%;
+            border-radius: 4px;
+            background: var(--accent-green);
+        }
+
+        .subtask-ptext {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        /* ---- Activity panel ---- */
+        .activity-panel-header {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .act-tab {
+            flex: 1;
+            padding: 12px 16px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.15s;
+        }
+
+        .act-tab:hover {
+            color: var(--text-primary);
+        }
+
+        .act-tab.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--accent-purple);
+        }
+
+        .activity-feed {
+            flex: 1;
+            overflow-y: auto;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .act-item {
+            display: flex;
+            gap: 10px;
+            padding: 9px 0;
+            border-bottom: 1px solid var(--border-light);
+            position: relative;
+        }
+
+        .act-item:last-child {
+            border-bottom: none;
+        }
+
+        .act-item::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 35px;
+            bottom: -9px;
+            width: 1.5px;
+            background: var(--border-light);
+        }
+
+        .act-item:last-child::before {
+            display: none;
+        }
+
+        .act-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 700;
+            color: white;
+            z-index: 1;
+        }
+
+        .act-avatar.sys {
+            background: var(--hover-bg);
+            color: var(--text-muted);
+        }
+
+        .act-avatar.sys svg {
+            width: 11px;
+            height: 11px;
+        }
+
+        .act-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .act-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .act-text strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .act-time {
+            font-size: 10.5px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .act-comment {
+            margin-top: 5px;
+            padding: 7px 11px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 12px;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .change-badge {
+            display: inline-block;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 10.5px;
+            font-weight: 500;
+        }
+
+        .change-badge.old {
+            background: #fee2e2;
+            color: #dc2626;
+            text-decoration: line-through;
+        }
+
+        .change-badge.new {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        /* Comment input */
+        .comment-box {
+            border-top: 1px solid var(--border);
+            padding: 12px 14px;
+            flex-shrink: 0;
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .comment-box .cb-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .comment-box textarea {
+            flex: 1;
+            padding: 7px 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 12px;
+            color: var(--text-primary);
+            resize: none;
+            outline: none;
+            min-height: 34px;
+            transition: border-color 0.15s;
+            background: white;
+        }
+
+        .comment-box textarea:focus {
+            border-color: #c4b5fd;
+        }
+
+        .comment-box textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .comment-box .cb-send {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: var(--accent-purple);
+            color: white;
+            border-radius: 7px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.15s;
+        }
+
+        .comment-box .cb-send:hover {
+            background: #6d4de6;
+        }
+
+        .comment-box .cb-send svg {
+            width: 13px;
+            height: 13px;
+        }
+
+        /* Footer */
+        .modal-footer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 24px;
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .modal-footer-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .modal-footer-btn:hover {
+            background: var(--hover-bg);
+        }
+
+        .modal-footer-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .modal-footer-btn.primary {
+            background: var(--accent-purple);
+            color: white;
+            border-color: var(--accent-purple);
+        }
+
+        .modal-footer-btn.primary:hover {
+            background: #6d4de6;
+        }
+
+        .modal-footer-btn.danger {
+            color: var(--accent-red);
+            border-color: transparent;
+        }
+
+        .modal-footer-btn.danger:hover {
+            background: #fef2f2;
+        }
+
+        .modal-footer-spacer {
+            flex: 1;
+        }
+
+        @media (max-width: 800px) {
+            .text-sidebar {
+                width: 180px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .text-sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============ SIDEBAR ============ -->
+    <div class="text-sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <div class="logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                    </svg></div> Orbix Studio
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                    <rect x="14" y="14" width="7" height="7" rx="1" />
+                </svg> Dashboard</a>
+            <a class="sidebar-nav-item active" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="M9 11l3 3L22 4" />
+                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                </svg> ToDo Lists</a>
+            <a class="sidebar-nav-item expanded" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path
+                        d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                    <line x1="12" y1="22.08" x2="12" y2="12" />
+                </svg> Spaces <span class="nav-chevron">▸</span></a>
+            <div class="sidebar-sub-nav">
+                <div class="sidebar-sub-item expanded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" />
+                    </svg> Projects <span class="nav-chevron">▸</span></div>
+                <div class="sidebar-sub-sub-nav">
+                    <div class="sidebar-sub-sub-item"><span class="project-dot"
+                            style="background:var(--accent-purple);"></span> New company website</div>
+                    <div class="sidebar-sub-sub-item"><span class="project-dot"
+                            style="background:var(--accent-orange);"></span> Brand redesign</div>
+                </div>
+                <div class="sidebar-sub-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                    </svg> Documents</div>
+            </div>
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                </svg> Time Sheets</a>
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg> Growth Stats</a>
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path
+                        d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                </svg> Automation</a>
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <circle cx="12" cy="5" r="3" />
+                    <line x1="12" y1="8" x2="12" y2="16" />
+                    <circle cx="12" cy="19" r="3" />
+                    <line x1="6" y1="12" x2="18" y2="12" />
+                </svg> Integration</a>
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                    <path d="M16 3.13a4 4 0 010 7.75" />
+                </svg> Team Member</a>
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <line x1="2" y1="10" x2="22" y2="10" />
+                </svg> Financial</a>
+        </nav>
+        <div class="sidebar-section-title"><span>Bookmarks</span><span class="add-btn">+</span></div>
+        <div class="bookmark-item"><span class="bookmark-dot blue"></span> #General</div>
+        <div class="bookmark-item"><span class="bookmark-dot orange"></span> UI Design Projects</div>
+        <div class="bookmark-item"><span class="bookmark-dot red"></span> Recently done</div>
+        <div class="bookmark-item"><span class="bookmark-dot pink"></span> Call booked on por...</div>
+        <div class="bookmark-item"><span class="bookmark-dot dark-blue"></span> Design Phase</div>
+        <div class="sidebar-spacer"></div>
+        <div class="sidebar-bottom">
+            <div class="sidebar-bottom-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                        d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
+                </svg> Settings</div>
+            <div class="sidebar-bottom-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg> Help &amp; Support</div>
+            <div class="sidebar-user">
+                <div class="avatar-small">M</div>
+                <div class="sidebar-user-info"><span class="sidebar-user-name">Marcin K.</span><span
+                        class="sidebar-user-email">marcin@orbix.io</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ MAIN CONTENT ============ -->
+    <div class="main-content">
+
+        <div class="global-search-bar">
+            <div class="search-input-wrapper"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg><input type="text" placeholder="Search projects, spaces, tasks..."><span
+                    class="search-shortcut">⌘K</span></div>
+            <div class="global-search-right">
+                <button><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                        <path d="M13.73 21a2 2 0 01-3.46 0" />
+                    </svg></button>
+                <button><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                    </svg></button>
+                <div class="premium-badge"><svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z" />
+                    </svg> Premium</div>
+            </div>
+        </div>
+
+        <!-- ToDo Header -->
+        <div class="todo-header">
+            <div class="todo-header-row">
+                <div>
+                    <div class="todo-title">My ToDo Lists</div>
+                    <div class="todo-subtitle">Personal tasks, reminders, and shared action items</div>
+                </div>
+                <div class="todo-stats">
+                    <div class="todo-stat"><span class="dot" style="background:var(--accent-red);"></span><span
+                            class="num">1</span> overdue</div>
+                    <div class="todo-stat"><span class="dot" style="background:var(--accent-orange);"></span><span
+                            class="num">3</span> due soon</div>
+                    <div class="todo-stat"><span class="dot" style="background:var(--accent-green);"></span><span
+                            class="num">5</span> completed</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="todo-toolbar">
+            <button class="btn btn-primary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                New Task
+            </button>
+            <button class="btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="4" y1="21" x2="4" y2="14" />
+                    <line x1="4" y1="10" x2="4" y2="3" />
+                    <line x1="12" y1="21" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12" y2="3" />
+                    <line x1="20" y1="21" x2="20" y2="16" />
+                    <line x1="20" y1="12" x2="20" y2="3" />
+                </svg>
+                Filter
+            </button>
+            <button class="btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <polyline points="5 12 12 19 19 12" />
+                </svg>
+                Sort by Due Date
+            </button>
+            <div class="toolbar-separator"></div>
+            <div class="filter-pills">
+                <div class="filter-pill active">All</div>
+                <div class="filter-pill">My Tasks</div>
+                <div class="filter-pill">Shared with Me</div>
+                <div class="filter-pill">Completed</div>
+            </div>
+        </div>
+
+        <!-- ============ TODO LIST ============ -->
+        <div class="todo-scroll">
+
+            <!-- Section: Today -->
+            <div class="todo-section">
+                <div class="todo-section-header">
+                    <span class="section-toggle">▾</span>
+                    <span class="section-color" style="background:var(--accent-red);"></span>
+                    <span class="section-name">Overdue</span>
+                    <span class="section-count">1</span>
+                </div>
+
+                <div class="todo-item overdue">
+                    <div class="priority-dot high"></div>
+                    <div class="todo-check"></div>
+                    <div class="todo-content">
+                        <div class="todo-title-row">
+                            <span class="todo-name">Review content strategy draft and provide feedback</span>
+                            <span class="todo-tag urgent">Urgent</span>
+                            <span class="todo-tag project">Project</span>
+                        </div>
+                        <div class="todo-meta">
+                            <span class="todo-meta-item overdue-text">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                2 days overdue
+                            </span>
+                            <span class="todo-meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" />
+                                    <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
+                                </svg>
+                                New company website
+                            </span>
+                        </div>
+                    </div>
+                    <div class="todo-right">
+                        <div class="shared-avatars">
+                            <div class="shared-avatar" style="background:linear-gradient(135deg,#34d399,#10b981);"
+                                data-tooltip="Ewa S.">ES</div>
+                            <div class="shared-avatar" style="background:linear-gradient(135deg,#f472b6,#ec4899);"
+                                data-tooltip="Anna K.">AK</div>
+                        </div>
+                        <div class="todo-due">
+                            <div class="todo-due-date overdue">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>
+                                2 Oct
+                            </div>
+                            <div class="todo-created">Created 25 Sep</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Due Soon -->
+            <div class="todo-section">
+                <div class="todo-section-header">
+                    <span class="section-toggle">▾</span>
+                    <span class="section-color" style="background:var(--accent-orange);"></span>
+                    <span class="section-name">Due This Week</span>
+                    <span class="section-count">3</span>
+                </div>
+
+                <div class="todo-item">
+                    <div class="priority-dot high"></div>
+                    <div class="todo-check"></div>
+                    <div class="todo-content">
+                        <div class="todo-title-row">
+                            <span class="todo-name">Finalize risk assessment document</span>
+                            <span class="todo-tag project">Project</span>
+                        </div>
+                        <div class="todo-meta">
+                            <span class="todo-meta-item due-soon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                Due tomorrow
+                            </span>
+                            <span class="todo-meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" />
+                                    <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
+                                </svg>
+                                New company website
+                            </span>
+                        </div>
+                    </div>
+                    <div class="todo-right">
+                        <div class="shared-avatars">
+                            <div class="shared-avatar" style="background:linear-gradient(135deg,#f472b6,#ec4899);"
+                                data-tooltip="Anna K.">AK</div>
+                        </div>
+                        <div class="todo-due">
+                            <div class="todo-due-date soon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>
+                                5 Oct
+                            </div>
+                            <div class="todo-created">Created 1 Oct</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="todo-item">
+                    <div class="priority-dot medium"></div>
+                    <div class="todo-check"></div>
+                    <div class="todo-content">
+                        <div class="todo-title-row">
+                            <span class="todo-name">Schedule planning review meeting with stakeholders</span>
+                            <span class="todo-tag meeting">Meeting</span>
+                        </div>
+                        <div class="todo-meta">
+                            <span class="todo-meta-item due-soon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                Due in 2 days
+                            </span>
+                        </div>
+                    </div>
+                    <div class="todo-right">
+                        <div class="shared-avatars">
+                            <div class="shared-avatar" style="background:linear-gradient(135deg,#f472b6,#ec4899);"
+                                data-tooltip="Anna K.">AK</div>
+                            <div class="shared-avatar" style="background:linear-gradient(135deg,#60a5fa,#3b82f6);"
+                                data-tooltip="Tomek R.">TR</div>
+                            <div class="shared-avatar" style="background:linear-gradient(135deg,#34d399,#10b981);"
+                                data-tooltip="Ewa S.">ES</div>
+                        </div>
+                        <div class="todo-due">
+                            <div class="todo-due-date soon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>
+                                6 Oct
+                            </div>
+                            <div class="todo-created">Created 30 Sep</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="todo-item">
+                    <div class="priority-dot low"></div>
+                    <div class="todo-check"></div>
+                    <div class="todo-content">
+                        <div class="todo-title-row">
+                            <span class="todo-name">Prepare Q4 resource allocation proposal</span>
+                            <span class="todo-tag personal">Personal</span>
+                        </div>
+                        <div class="todo-meta">
+                            <span class="todo-meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                Due in 3 days
+                            </span>
+                        </div>
+                    </div>
+                    <div class="todo-right">
+                        <div class="shared-avatars">
+                            <div class="shared-avatar add-person" data-tooltip="Share...">+</div>
+                        </div>
+                        <div class="todo-due">
+                            <div class="todo-due-date">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>
+                                7 Oct
+                            </div>
+                            <div class="todo-created">Created 28 Sep</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Upcoming -->
+            <div class="todo-section">
+                <div class="todo-section-header">
+                    <span class="section-toggle">▾</span>
+                    <span class="section-color" style="background:var(--accent-blue);"></span>
+                    <span class="section-name">Upcoming</span>
+                    <span class="section-count">3</span>
+                </div>
+
+                <div class="todo-item">
+                    <div class="priority-dot medium"></div>
+                    <div class="todo-check"></div>
+                    <div class="todo-content">
+                        <div class="todo-title-row">
+                            <span class="todo-name">Brief design team on project requirements &amp; brand
+                                guidelines</span>
+                            <span class="todo-tag project">Project</span>
+                        </div>
+                        <div class="todo-meta">
+                            <span class="todo-meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                Due in 9 days
+                            </span>
+                            <span class="todo-meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" />
+                                    <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
+                                </svg>
+                                New company website
+                            </span>
+                        </div>
+                    </div>
+                    <div class="todo-right">
+                        <div class="shared-avatars">
+                            <div class="shared-avatar" style="background:linear-gradient(135deg,#f472b6,#ec4899);"
+                                data-tooltip="Kasia M.">KM</div>
+                        </div>
+                        <div class="todo-due">
+                            <div class="todo-due-date">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>
+                                13 Oct
+                            </div>
+                            <div class="todo-created">Created 3 Oct</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="todo-item">
+                    <div class="priority-dot low"></div>
+                    <div class="todo-check"></div>
+                    <div class="todo-content">
+                        <div class="todo-title-row">
+                            <span class="todo-name">Set up CMS evaluation environment for dev team</span>
+                            <span class="todo-tag project">Project</span>
+                        </div>
+                        <div class="todo-meta">
+                            <span class="todo-meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                Due in 2 weeks
+                            </span>
+                        </div>
+                    </div>
+                    <div class="todo-right">
+                        <div class="shared-avatars">
+                            <div class="shared-avatar" style="background:linear-gradient(135deg,#60a5fa,#3b82f6);"
+                                data-tooltip="Tomek R.">TR</div>
+                            <div class="shared-avatar" style="background:#6b7280;" data-tooltip="Paweł W.">PW</div>
+                        </div>
+                        <div class="todo-due">
+                            <div class="todo-due-date">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>
+                                18 Oct
+                            </div>
+                            <div class="todo-created">Created 4 Oct</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="todo-item">
+                    <div class="priority-dot none"></div>
+                    <div class="todo-check"></div>
+                    <div class="todo-content">
+                        <div class="todo-title-row">
+                            <span class="todo-name">Update project charter with revised budget numbers</span>
+                            <span class="todo-tag personal">Personal</span>
+                        </div>
+                        <div class="todo-meta">
+                            <span class="todo-meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                Due in 3 weeks
+                            </span>
+                        </div>
+                    </div>
+                    <div class="todo-right">
+                        <div class="shared-avatars">
+                            <div class="shared-avatar add-person" data-tooltip="Share...">+</div>
+                        </div>
+                        <div class="todo-due">
+                            <div class="todo-due-date">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>
+                                25 Oct
+                            </div>
+                            <div class="todo-created">Created 4 Oct</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="add-todo-row">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    Add a new task...
+                </div>
+            </div>
+
+            <!-- Section: Completed -->
+            <div class="todo-section">
+                <div class="todo-section-header">
+                    <span class="section-toggle">▾</span>
+                    <span class="section-color" style="background:var(--accent-green);"></span>
+                    <span class="section-name">Completed</span>
+                    <span class="section-count">5</span>
+                </div>
+
+                <div class="todo-item completed">
+                    <div class="priority-dot none"></div>
+                    <div class="todo-check checked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="3">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg></div>
+                    <div class="todo-content">
+                        <div class="todo-title-row"><span class="todo-name">Send project charter to sponsor for
+                                approval</span><span class="todo-tag project">Project</span></div>
+                        <div class="todo-meta"><span class="todo-meta-item"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M9 11l3 3L22 4" />
+                                </svg> Completed 14 Sep</span></div>
+                    </div>
+                    <div class="todo-right">
+                        <div class="shared-avatars">
+                            <div class="shared-avatar" style="background:linear-gradient(135deg,#f472b6,#ec4899);"
+                                data-tooltip="Anna K.">AK</div>
+                        </div>
+                        <div class="todo-due">
+                            <div class="todo-due-date" style="color:var(--text-muted);"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>14 Sep</div>
+                            <div class="todo-created">Created 9 Sep</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="todo-item completed">
+                    <div class="priority-dot none"></div>
+                    <div class="todo-check checked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="3">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg></div>
+                    <div class="todo-content">
+                        <div class="todo-title-row"><span class="todo-name">Gather hosting requirements from IT</span>
+                        </div>
+                        <div class="todo-meta"><span class="todo-meta-item"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M9 11l3 3L22 4" />
+                                </svg> Completed 25 Sep</span></div>
+                    </div>
+                    <div class="todo-right">
+                        <div class="shared-avatars">
+                            <div class="shared-avatar" style="background:linear-gradient(135deg,#60a5fa,#3b82f6);"
+                                data-tooltip="Tomek R.">TR</div>
+                        </div>
+                        <div class="todo-due">
+                            <div class="todo-due-date" style="color:var(--text-muted);"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>26 Sep</div>
+                            <div class="todo-created">Created 18 Sep</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="todo-item completed">
+                    <div class="priority-dot none"></div>
+                    <div class="todo-check checked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="3">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg></div>
+                    <div class="todo-content">
+                        <div class="todo-title-row"><span class="todo-name">Prepare kickoff meeting agenda and send
+                                invitations</span><span class="todo-tag meeting">Meeting</span></div>
+                        <div class="todo-meta"><span class="todo-meta-item"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M9 11l3 3L22 4" />
+                                </svg> Completed 18 Sep</span></div>
+                    </div>
+                    <div class="todo-right">
+                        <div class="shared-avatars">
+                            <div class="shared-avatar" style="background:linear-gradient(135deg,#f472b6,#ec4899);"
+                                data-tooltip="Anna K.">AK</div>
+                            <div class="shared-avatar" style="background:linear-gradient(135deg,#34d399,#10b981);"
+                                data-tooltip="Ewa S.">ES</div>
+                            <div class="shared-avatar" style="background:linear-gradient(135deg,#60a5fa,#3b82f6);"
+                                data-tooltip="Tomek R.">TR</div>
+                            <div class="shared-avatar" style="background:linear-gradient(135deg,#f472b6,#ec4899);"
+                                data-tooltip="Kasia M.">KM</div>
+                        </div>
+                        <div class="todo-due">
+                            <div class="todo-due-date" style="color:var(--text-muted);"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>19 Sep</div>
+                            <div class="todo-created">Created 11 Sep</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="todo-item completed">
+                    <div class="priority-dot none"></div>
+                    <div class="todo-check checked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="3">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg></div>
+                    <div class="todo-content">
+                        <div class="todo-title-row"><span class="todo-name">Research competitor websites and document
+                                findings</span></div>
+                        <div class="todo-meta"><span class="todo-meta-item"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M9 11l3 3L22 4" />
+                                </svg> Completed 8 Sep</span></div>
+                    </div>
+                    <div class="todo-right">
+                        <div class="shared-avatars">
+                            <div class="shared-avatar" style="background:linear-gradient(135deg,#34d399,#10b981);"
+                                data-tooltip="Ewa S.">ES</div>
+                        </div>
+                        <div class="todo-due">
+                            <div class="todo-due-date" style="color:var(--text-muted);"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>10 Sep</div>
+                            <div class="todo-created">Created 4 Sep</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="todo-item completed">
+                    <div class="priority-dot none"></div>
+                    <div class="todo-check checked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="3">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg></div>
+                    <div class="todo-content">
+                        <div class="todo-title-row"><span class="todo-name">Define project scope with
+                                stakeholders</span><span class="todo-tag project">Project</span></div>
+                        <div class="todo-meta"><span class="todo-meta-item"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M9 11l3 3L22 4" />
+                                </svg> Completed 6 Sep</span></div>
+                    </div>
+                    <div class="todo-right">
+                        <div class="shared-avatars">
+                            <div class="shared-avatar" style="background:linear-gradient(135deg,#f472b6,#ec4899);"
+                                data-tooltip="Anna K.">AK</div>
+                        </div>
+                        <div class="todo-due">
+                            <div class="todo-due-date" style="color:var(--text-muted);"><svg viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>6 Sep</div>
+                            <div class="todo-created">Created 4 Sep</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ============ TODO PREVIEW MODAL ============ -->
+    <div class="modal-overlay">
+        <div class="modal">
+
+            <div class="modal-header">
+                <div class="modal-breadcrumb">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 11l3 3L22 4" />
+                        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                    </svg>
+                    ToDo Lists <span style="color:var(--text-muted);">›</span> <strong>Review content strategy draft and
+                        provide feedback</strong>
+                </div>
+                <div class="modal-header-actions">
+                    <button title="Edit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg></button>
+                    <button title="Copy link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" />
+                            <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
+                        </svg></button>
+                    <button title="More"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="5" cy="12" r="1.5" />
+                            <circle cx="12" cy="12" r="1.5" />
+                            <circle cx="19" cy="12" r="1.5" />
+                        </svg></button>
+                    <button title="Close" style="font-size:18px;">✕</button>
+                </div>
+            </div>
+
+            <div class="modal-split">
+
+                <!-- Left pane -->
+                <div class="modal-main">
+
+                    <!-- Title + tags -->
+                    <div class="preview-title-row">
+                        <div class="preview-checkbox"></div>
+                        <div style="flex:1;">
+                            <div class="preview-title">Review content strategy draft and provide feedback</div>
+                        </div>
+                        <div class="preview-tags">
+                            <span class="preview-tag urgent">Urgent</span>
+                            <span class="preview-tag project">Project</span>
+                        </div>
+                    </div>
+
+                    <!-- Meta -->
+                    <div class="preview-meta">
+                        <div class="pmeta-cell">
+                            <div class="pmeta-label">Status</div>
+                            <div class="pmeta-value">
+                                <span class="overdue-badge">
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <polyline points="12 6 12 12 16 14" />
+                                    </svg>
+                                    2 days overdue
+                                </span>
+                            </div>
+                        </div>
+                        <div class="pmeta-cell">
+                            <div class="pmeta-label">Priority</div>
+                            <div class="pmeta-value"><span class="priority-badge high">High</span></div>
+                        </div>
+                        <div class="pmeta-cell">
+                            <div class="pmeta-label">Due Date</div>
+                            <div class="pmeta-value">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>
+                                <span style="color:var(--accent-red);font-weight:600;">2 Oct 2023</span>
+                            </div>
+                        </div>
+                        <div class="pmeta-cell">
+                            <div class="pmeta-label">Created</div>
+                            <div class="pmeta-value">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                25 Sep 2023
+                            </div>
+                        </div>
+                        <div class="pmeta-cell">
+                            <div class="pmeta-label">Linked Project</div>
+                            <div class="pmeta-value">
+                                <span class="linked-project"><span class="lp-dot"></span> New company website</span>
+                            </div>
+                        </div>
+                        <div class="pmeta-cell">
+                            <div class="pmeta-label">Created by</div>
+                            <div class="pmeta-value">
+                                <span
+                                    style="width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:inline-flex;align-items:center;justify-content:center;color:white;font-size:9px;font-weight:700;flex-shrink:0;">MK</span>
+                                Marcin K.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div>
+                        <div class="section-label">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                                <polyline points="14 2 14 8 20 8" />
+                                <line x1="16" y1="13" x2="8" y2="13" />
+                                <line x1="16" y1="17" x2="8" y2="17" />
+                            </svg>
+                            Description
+                        </div>
+                        <div class="preview-description">
+                            Review the content strategy document prepared by Ewa and provide detailed feedback on the
+                            proposed sitemap structure, page hierarchy, and content migration plan. Pay special
+                            attention to the SEO requirements and ensure alignment with the brand guidelines.
+                            Consolidate feedback from Anna before sending back.
+                        </div>
+                    </div>
+
+                    <!-- Shared with -->
+                    <div>
+                        <div class="section-label">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                                <path d="M16 3.13a4 4 0 010 7.75" />
+                            </svg>
+                            Shared with
+                        </div>
+                        <div class="shared-people-row">
+                            <div class="shared-person">
+                                <div class="sp-avatar" style="background:linear-gradient(135deg,#34d399,#10b981);">ES
+                                </div>
+                                Ewa S.
+                            </div>
+                            <div class="shared-person">
+                                <div class="sp-avatar" style="background:linear-gradient(135deg,#f472b6,#ec4899);">AK
+                                </div>
+                                Anna K.
+                            </div>
+                            <div class="add-person-btn">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5">
+                                    <line x1="12" y1="5" x2="12" y2="19" />
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                </svg>
+                                Add
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Subtasks -->
+                    <div>
+                        <div class="section-label">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 11l3 3L22 4" />
+                                <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                            </svg>
+                            Subtasks
+                            <span style="font-weight:400;color:var(--text-muted);font-size:12px;margin-left:2px;">1 /
+                                3</span>
+                        </div>
+                        <div class="subtask-progress-info">
+                            <div class="subtask-pbar">
+                                <div class="subtask-pfill" style="width:33%;"></div>
+                            </div>
+                            <span class="subtask-ptext">33%</span>
+                        </div>
+                        <div class="subtask-list">
+                            <div class="subtask-item">
+                                <div class="st-check checked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="3">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg></div>
+                                <span class="st-name done">Read through the full document</span>
+                            </div>
+                            <div class="subtask-item">
+                                <div class="st-check"></div>
+                                <span class="st-name">Write feedback on sitemap &amp; page hierarchy</span>
+                            </div>
+                            <div class="subtask-item">
+                                <div class="st-check"></div>
+                                <span class="st-name">Collect and merge Anna's comments</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right pane: Activity -->
+                <div class="modal-activity">
+
+                    <div class="activity-panel-header">
+                        <div class="act-tab active">All</div>
+                        <div class="act-tab">Comments</div>
+                        <div class="act-tab">History</div>
+                    </div>
+
+                    <div class="activity-feed">
+
+                        <div class="act-item">
+                            <div class="act-avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">MK</div>
+                            <div class="act-content">
+                                <div class="act-text"><strong>Marcin K.</strong> completed subtask</div>
+                                <div class="act-text" style="margin-top:2px;"><em>Read through the full document</em>
+                                </div>
+                                <div class="act-time">Today, 09:15</div>
+                            </div>
+                        </div>
+
+                        <div class="act-item">
+                            <div class="act-avatar" style="background:linear-gradient(135deg,#34d399,#10b981);">ES</div>
+                            <div class="act-content">
+                                <div class="act-text"><strong>Ewa S.</strong></div>
+                                <div class="act-comment">
+                                    I've updated the document with the latest SEO keyword research. Sections 3 and 4
+                                    have the most changes — would appreciate your focus there.
+                                </div>
+                                <div class="act-time">Yesterday, 16:30</div>
+                            </div>
+                        </div>
+
+                        <div class="act-item">
+                            <div class="act-avatar sys">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                                </svg>
+                            </div>
+                            <div class="act-content">
+                                <div class="act-text">Task is now <span class="change-badge old">on time</span> → <span
+                                        class="change-badge" style="background:#fee2e2;color:#dc2626;">overdue</span>
+                                </div>
+                                <div class="act-time">Today, 00:00</div>
+                            </div>
+                        </div>
+
+                        <div class="act-item">
+                            <div class="act-avatar" style="background:linear-gradient(135deg,#f472b6,#ec4899);">AK</div>
+                            <div class="act-content">
+                                <div class="act-text"><strong>Anna K.</strong></div>
+                                <div class="act-comment">
+                                    I'll have my notes ready by tomorrow morning. A few concerns about the blog section
+                                    structure.
+                                </div>
+                                <div class="act-time">1 Oct, 14:20</div>
+                            </div>
+                        </div>
+
+                        <div class="act-item">
+                            <div class="act-avatar sys">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                </svg>
+                            </div>
+                            <div class="act-content">
+                                <div class="act-text"><strong>Marcin K.</strong> shared with <span
+                                        class="change-badge new">Anna K.</span></div>
+                                <div class="act-time">30 Sep, 10:05</div>
+                            </div>
+                        </div>
+
+                        <div class="act-item">
+                            <div class="act-avatar sys">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                </svg>
+                            </div>
+                            <div class="act-content">
+                                <div class="act-text"><strong>Marcin K.</strong> shared with <span
+                                        class="change-badge new">Ewa S.</span></div>
+                                <div class="act-time">25 Sep, 11:00</div>
+                            </div>
+                        </div>
+
+                        <div class="act-item">
+                            <div class="act-avatar sys">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <line x1="12" y1="5" x2="12" y2="19" />
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                </svg>
+                            </div>
+                            <div class="act-content">
+                                <div class="act-text"><strong>Marcin K.</strong> created this task</div>
+                                <div class="act-time">25 Sep, 10:45</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="comment-box">
+                        <div class="cb-avatar">MK</div>
+                        <textarea placeholder="Write a comment..." rows="1"></textarea>
+                        <button class="cb-send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13" />
+                                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                            </svg></button>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="modal-footer-btn danger">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+                    </svg>
+                    Delete
+                </button>
+                <div class="modal-footer-spacer"></div>
+                <button class="modal-footer-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                        <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                    </svg>
+                    Edit
+                </button>
+                <button class="modal-footer-btn primary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M9 11l3 3L22 4" />
+                    </svg>
+                    Mark as Done
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

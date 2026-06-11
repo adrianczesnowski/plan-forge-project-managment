@@ -1,0 +1,10 @@
+{
+  "Invalid email or password": "Invalid email or password",
+  "An account with this email already exists": "An account with this email already exists",
+  "Authentication required": "You need to sign in to continue",
+  "Refresh token is invalid or expired": "Your session has expired, please sign in again",
+  "Validation failed": "Some fields contain invalid values",
+  "You do not have permission to perform this action": "You do not have permission to perform this action",
+  "Something went wrong, please try again later": "Something went wrong, please try again later",
+  "fallback": "Something went wrong, please try again later"
+}

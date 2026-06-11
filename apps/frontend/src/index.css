@@ -1,0 +1,81 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'DM Sans', -apple-system, sans-serif;
+
+  /* Palette taken from the HTML view templates */
+  --color-background: #ffffff;
+  --color-foreground: #1a1a2e;
+  --color-muted: #f3f4f6;
+  --color-muted-foreground: #6b7280;
+  --color-faint: #9ca3af;
+  --color-border: #e5e7eb;
+  --color-border-light: #f3f4f6;
+  --color-card: #ffffff;
+  --color-card-foreground: #1a1a2e;
+
+  --color-primary: #7c5cfc;
+  --color-primary-hover: #6842e8;
+  --color-primary-foreground: #ffffff;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+
+  --color-brand: #1a1a2e;
+  --color-accent-green: #22c55e;
+  --color-accent-blue: #3b82f6;
+  --color-accent-purple: #7c5cfc;
+  --color-accent-orange: #f59e0b;
+
+  --animate-fade-in-up: fade-in-up 0.5s ease both;
+  --animate-fade-in-left: fade-in-left 0.5s ease both;
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-in-left {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+}
+
+body {
+  @apply bg-background font-sans text-foreground antialiased;
+}
+
+/* Decorative layers of the auth brand panel (grid + radial glows). */
+.auth-brand-grid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(124, 92, 252, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124, 92, 252, 0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+
+.auth-brand-grid::after {
+  content: '';
+  position: absolute;
+  top: -80px;
+  right: -120px;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(124, 92, 252, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}

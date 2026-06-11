@@ -1,0 +1,10 @@
+{
+  "Invalid email or password": "Nieprawidłowy email lub hasło",
+  "An account with this email already exists": "Konto z tym adresem email już istnieje",
+  "Authentication required": "Musisz się zalogować, aby kontynuować",
+  "Refresh token is invalid or expired": "Twoja sesja wygasła, zaloguj się ponownie",
+  "Validation failed": "Niektóre pola zawierają nieprawidłowe wartości",
+  "You do not have permission to perform this action": "Nie masz uprawnień do wykonania tej akcji",
+  "Something went wrong, please try again later": "Coś poszło nie tak, spróbuj ponownie później",
+  "fallback": "Coś poszło nie tak, spróbuj ponownie później"
+}

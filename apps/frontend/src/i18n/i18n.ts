@@ -1,0 +1,34 @@
+import i18n from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import { initReactI18next } from 'react-i18next';
+
+import enAuth from './locales/en/auth.json';
+import enCommon from './locales/en/common.json';
+import enErrors from './locales/en/errors.json';
+import plAuth from './locales/pl/auth.json';
+import plCommon from './locales/pl/common.json';
+import plErrors from './locales/pl/errors.json';
+
+export const defaultNS = 'common';
+
+export const resources = {
+  en: { common: enCommon, auth: enAuth, errors: enErrors },
+  pl: { common: plCommon, auth: plAuth, errors: plErrors },
+} as const;
+
+void i18n
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    resources,
+    defaultNS,
+    fallbackLng: 'en',
+    supportedLngs: ['en', 'pl'],
+    interpolation: { escapeValue: false },
+    detection: {
+      order: ['localStorage', 'navigator'],
+      caches: ['localStorage'],
+    },
+  });
+
+export default i18n;

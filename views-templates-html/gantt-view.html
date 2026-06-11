@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbix Studio — Gantt View</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #ffffff;
+            --sidebar-bg: #fafafa;
+            --text-primary: #1a1a2e;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --border-light: #f3f4f6;
+            --accent-green: #22c55e;
+            --accent-blue: #3b82f6;
+            --accent-purple: #7c5cfc;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-pink: #ec4899;
+            --hover-bg: #f3f4f6;
+            --row-h: 38px;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* ===================== SIDEBAR (same as other views) ===================== */
+        .text-sidebar {
+            width: 220px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            height: 100vh;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .sidebar-logo .logo-icon {
+            width: 24px;
+            height: 24px;
+            background: #22c55e;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-logo .logo-icon svg {
+            width: 14px;
+            height: 14px;
+            color: white;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            padding: 0 8px;
+        }
+
+        .sidebar-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-decoration: none;
+            border-radius: 7px;
+        }
+
+        .sidebar-nav-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .sidebar-nav-item.active {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .sidebar-nav-item svg {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav-item .nav-chevron {
+            margin-left: auto;
+            font-size: 10px;
+            color: var(--text-muted);
+            transition: transform 0.2s;
+        }
+
+        .sidebar-nav-item.expanded .nav-chevron {
+            transform: rotate(90deg);
+        }
+
+        .sidebar-sub-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            padding: 2px 0 2px 18px;
+        }
+
+        .sidebar-sub-item {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 7px 10px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+            border-radius: 7px;
+        }
+
+        .sidebar-sub-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .sidebar-sub-item.active {
+            background: #ede9fe;
+            color: var(--accent-purple);
+            font-weight: 600;
+        }
+
+        .sidebar-sub-item svg {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-sub-item .nav-chevron {
+            margin-left: auto;
+            font-size: 10px;
+            color: var(--text-muted);
+            transition: transform 0.2s;
+        }
+
+        .sidebar-sub-item.expanded .nav-chevron {
+            transform: rotate(90deg);
+        }
+
+        .sidebar-sub-sub-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            padding: 2px 0 2px 16px;
+        }
+
+        .sidebar-sub-sub-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 7px;
+            transition: all 0.15s;
+        }
+
+        .sidebar-sub-sub-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .sidebar-sub-sub-item.active {
+            background: #ede9fe;
+            color: var(--accent-purple);
+            font-weight: 600;
+        }
+
+        .sidebar-sub-sub-item .project-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .sidebar-section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 16px 8px;
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .sidebar-section-title .add-btn {
+            cursor: pointer;
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+
+        .bookmark-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .bookmark-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .bookmark-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .bookmark-dot.blue {
+            background: #3b82f6;
+        }
+
+        .bookmark-dot.orange {
+            background: #f59e0b;
+        }
+
+        .bookmark-dot.red {
+            background: #ef4444;
+        }
+
+        .bookmark-dot.pink {
+            background: #ec4899;
+        }
+
+        .bookmark-dot.dark-blue {
+            background: #1e3a5f;
+        }
+
+        .sidebar-spacer {
+            flex: 1;
+        }
+
+        .sidebar-bottom {
+            border-top: 1px solid var(--border);
+            padding: 10px 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .sidebar-bottom-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 7px;
+            transition: all 0.15s;
+        }
+
+        .sidebar-bottom-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .sidebar-bottom-item svg {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            cursor: pointer;
+            border-radius: 7px;
+            transition: background 0.15s;
+        }
+
+        .sidebar-user:hover {
+            background: var(--hover-bg);
+        }
+
+        .avatar-small {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .sidebar-user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .sidebar-user-email {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* ===================== MAIN ===================== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Search bar */
+        .global-search-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 24px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            max-width: 480px;
+            transition: border-color 0.15s;
+        }
+
+        .search-input-wrapper:focus-within {
+            border-color: #c4b5fd;
+        }
+
+        .search-input-wrapper svg {
+            width: 15px;
+            height: 15px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .search-input-wrapper input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: inherit;
+            font-size: 13px;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .search-input-wrapper input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-shortcut {
+            font-size: 11px;
+            background: var(--hover-bg);
+            padding: 2px 7px;
+            border-radius: 4px;
+            color: var(--text-muted);
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .global-search-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: auto;
+        }
+
+        .global-search-right button {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.15s;
+        }
+
+        .global-search-right button:hover {
+            background: var(--hover-bg);
+        }
+
+        .premium-badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--text-primary);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .premium-badge svg {
+            width: 14px;
+            height: 14px;
+            color: #fbbf24;
+        }
+
+        /* Page header */
+        .top-bar {
+            padding: 18px 24px 0;
+            flex-shrink: 0;
+        }
+
+        .top-bar-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .page-title-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .page-title-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .page-title-icons svg {
+            width: 16px;
+            height: 16px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .page-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11.5px;
+            font-weight: 500;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-left: 10px;
+        }
+
+        .status-badge.open {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .status-badge.open::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #22c55e;
+        }
+
+        .top-bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .top-bar-actions button {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--text-secondary);
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .top-bar-actions button:hover {
+            background: var(--hover-bg);
+        }
+
+        .top-bar-actions .more-btn {
+            width: 32px;
+            padding: 6px;
+            justify-content: center;
+        }
+
+        /* Tabs */
+        .tabs-row {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            flex-shrink: 0;
+        }
+
+        .tab {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            padding: 10px 16px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            color: var(--text-primary);
+            font-weight: 600;
+            border-bottom-color: var(--accent-purple);
+        }
+
+        .tab svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        /* Action bar */
+        .action-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            font-family: inherit;
+            padding: 7px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            background: var(--hover-bg);
+        }
+
+        .btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* ===================== GANTT SPLIT PANE ===================== */
+        .gantt-container {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Left: task list */
+        .gantt-list {
+            width: 340px;
+            flex-shrink: 0;
+            border-right: 2px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: var(--bg);
+        }
+
+        .gantt-list-header {
+            display: flex;
+            align-items: center;
+            height: 36px;
+            border-bottom: 1px solid var(--border);
+            background: var(--sidebar-bg);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            flex-shrink: 0;
+        }
+
+        .glh-id {
+            width: 36px;
+            text-align: center;
+            padding: 0 4px;
+        }
+
+        .glh-task {
+            flex: 1;
+            padding: 0 10px;
+        }
+
+        .glh-dur {
+            width: 56px;
+            text-align: center;
+        }
+
+        .glh-res {
+            width: 70px;
+            text-align: center;
+        }
+
+        .gantt-list-body {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .gantt-row-left {
+            display: flex;
+            align-items: center;
+            height: var(--row-h);
+            border-bottom: 1px solid var(--border-light);
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+
+        .gantt-row-left:hover {
+            background: #f8f8fb;
+        }
+
+        .grl-id {
+            width: 36px;
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .grl-task {
+            flex: 1;
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .grl-dur {
+            width: 56px;
+            text-align: center;
+            font-size: 11.5px;
+            color: var(--text-muted);
+        }
+
+        .grl-res {
+            width: 70px;
+            text-align: center;
+        }
+
+        .grl-task .indent {
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .indent-0 {
+            width: 0;
+        }
+
+        .indent-1 {
+            width: 18px;
+        }
+
+        .grl-task .tree-toggle {
+            font-size: 10px;
+            color: var(--text-muted);
+            width: 16px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .grl-task .phase-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .grl-task .task-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Phase row styling */
+        .gantt-row-left.phase {
+            background: #fafafe;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .gantt-row-left.milestone .task-name {
+            font-style: italic;
+            color: var(--accent-purple);
+        }
+
+        .resource-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        /* ===================== RIGHT: GANTT TIMELINE ===================== */
+        .gantt-timeline {
+            flex: 1;
+            overflow-x: auto;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg);
+        }
+
+        .gantt-time-header {
+            display: flex;
+            flex-shrink: 0;
+            height: 36px;
+            border-bottom: 1px solid var(--border);
+            background: var(--sidebar-bg);
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        .gantt-month-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .gantt-month-label {
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .gantt-weeks {
+            display: flex;
+            height: 18px;
+        }
+
+        .gantt-week-cell {
+            width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            border-right: 1px solid var(--border-light);
+            font-weight: 500;
+        }
+
+        .gantt-week-cell.today {
+            color: var(--accent-purple);
+            font-weight: 700;
+            background: #f5f3ff;
+        }
+
+        /* Timeline body */
+        .gantt-timeline-body {
+            flex: 1;
+            position: relative;
+        }
+
+        .gantt-row-right {
+            display: flex;
+            height: var(--row-h);
+            border-bottom: 1px solid var(--border-light);
+            position: relative;
+        }
+
+        .gantt-cell {
+            width: 40px;
+            height: 100%;
+            border-right: 1px solid var(--border-light);
+            flex-shrink: 0;
+        }
+
+        .gantt-cell.weekend {
+            background: #fafafa;
+        }
+
+        .gantt-cell.today-col {
+            background: #f5f3ff;
+        }
+
+        /* Gantt bars */
+        .gantt-bar-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+
+        .gantt-bar {
+            position: absolute;
+            top: 10px;
+            height: 18px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            pointer-events: auto;
+            cursor: pointer;
+            transition: filter 0.15s;
+            overflow: hidden;
+        }
+
+        .gantt-bar:hover {
+            filter: brightness(0.93);
+        }
+
+        .gantt-bar .bar-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            border-radius: 4px;
+            opacity: 0.35;
+        }
+
+        .gantt-bar .bar-label {
+            position: relative;
+            z-index: 1;
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+            padding: 0 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Summary bar (phase) */
+        .gantt-bar.summary {
+            top: 14px;
+            height: 10px;
+            border-radius: 2px;
+        }
+
+        .gantt-bar.summary::before,
+        .gantt-bar.summary::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            width: 8px;
+            height: 4px;
+            background: inherit;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+        }
+
+        .gantt-bar.summary::before {
+            left: 0;
+        }
+
+        .gantt-bar.summary::after {
+            right: 0;
+        }
+
+        /* Milestone diamond */
+        .gantt-milestone {
+            position: absolute;
+            top: 11px;
+            width: 14px;
+            height: 14px;
+            transform: rotate(45deg);
+            border-radius: 2px;
+            pointer-events: auto;
+            cursor: pointer;
+            transition: filter 0.15s;
+        }
+
+        .gantt-milestone:hover {
+            filter: brightness(0.85);
+        }
+
+        /* Dependency arrows */
+        .gantt-dependency {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Today line */
+        .gantt-today-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-purple);
+            opacity: 0.5;
+            z-index: 3;
+        }
+
+        .gantt-today-marker {
+            position: absolute;
+            top: -2px;
+            width: 8px;
+            height: 8px;
+            background: var(--accent-purple);
+            border-radius: 50%;
+            transform: translateX(-3px);
+            z-index: 4;
+        }
+
+        @media (max-width: 800px) {
+            .text-sidebar {
+                width: 180px;
+            }
+
+            .gantt-list {
+                width: 260px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .text-sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============ SIDEBAR ============ -->
+    <div class="text-sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <div class="logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                    </svg></div>
+                Orbix Studio
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                    <rect x="14" y="14" width="7" height="7" rx="1" />
+                </svg> Dashboard</a>
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="M9 11l3 3L22 4" />
+                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                </svg> ToDo Lists</a>
+            <a class="sidebar-nav-item expanded" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path
+                        d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                    <line x1="12" y1="22.08" x2="12" y2="12" />
+                </svg> Spaces <span class="nav-chevron">▸</span></a>
+            <div class="sidebar-sub-nav">
+                <div class="sidebar-sub-item expanded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" />
+                    </svg> Projects <span class="nav-chevron">▸</span></div>
+                <div class="sidebar-sub-sub-nav">
+                    <div class="sidebar-sub-sub-item active"><span class="project-dot"
+                            style="background:var(--accent-purple);"></span> New company website</div>
+                    <div class="sidebar-sub-sub-item"><span class="project-dot"
+                            style="background:var(--accent-orange);"></span> Brand redesign</div>
+                </div>
+                <div class="sidebar-sub-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                    </svg> Documents</div>
+            </div>
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                </svg> Time Sheets</a>
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg> Growth Stats</a>
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path
+                        d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                </svg> Automation</a>
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <circle cx="12" cy="5" r="3" />
+                    <line x1="12" y1="8" x2="12" y2="16" />
+                    <circle cx="12" cy="19" r="3" />
+                    <line x1="6" y1="12" x2="18" y2="12" />
+                </svg> Integration</a>
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                    <path d="M16 3.13a4 4 0 010 7.75" />
+                </svg> Team Member</a>
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <line x1="2" y1="10" x2="22" y2="10" />
+                </svg> Financial</a>
+        </nav>
+        <div class="sidebar-section-title"><span>Bookmarks</span><span class="add-btn">+</span></div>
+        <div class="bookmark-item"><span class="bookmark-dot blue"></span> #General</div>
+        <div class="bookmark-item"><span class="bookmark-dot orange"></span> UI Design Projects</div>
+        <div class="bookmark-item"><span class="bookmark-dot red"></span> Recently done</div>
+        <div class="bookmark-item"><span class="bookmark-dot pink"></span> Call booked on por...</div>
+        <div class="bookmark-item"><span class="bookmark-dot dark-blue"></span> Design Phase</div>
+        <div class="sidebar-spacer"></div>
+        <div class="sidebar-bottom">
+            <div class="sidebar-bottom-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                        d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
+                </svg> Settings</div>
+            <div class="sidebar-bottom-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg> Help &amp; Support</div>
+            <div class="sidebar-user">
+                <div class="avatar-small">M</div>
+                <div class="sidebar-user-info"><span class="sidebar-user-name">Marcin K.</span><span
+                        class="sidebar-user-email">marcin@orbix.io</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ MAIN CONTENT ============ -->
+    <div class="main-content">
+
+        <div class="global-search-bar">
+            <div class="search-input-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input type="text" placeholder="Search projects, spaces, tasks...">
+                <span class="search-shortcut">⌘K</span>
+            </div>
+            <div class="global-search-right">
+                <button title="Notifications"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                        <path d="M13.73 21a2 2 0 01-3.46 0" />
+                    </svg></button>
+                <button title="Messages"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                    </svg></button>
+                <div class="premium-badge"><svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z" />
+                    </svg> Premium</div>
+            </div>
+        </div>
+
+        <div class="top-bar">
+            <div class="top-bar-row">
+                <div>
+                    <div class="page-title-area">
+                        <span class="page-title">New company website</span>
+                        <span class="status-badge open">Open</span>
+                    </div>
+                    <div class="page-subtitle">Spaces › Projects › New company website</div>
+                </div>
+                <div class="top-bar-actions">
+                    <button><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                        </svg> Activity</button>
+                    <button class="more-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="5" r="1.5" />
+                            <circle cx="12" cy="12" r="1.5" />
+                            <circle cx="12" cy="19" r="1.5" />
+                        </svg></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tabs-row">
+            <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                </svg> Main View</div>
+            <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="8" y1="6" x2="21" y2="6" />
+                    <line x1="8" y1="12" x2="21" y2="12" />
+                    <line x1="8" y1="18" x2="21" y2="18" />
+                    <line x1="3" y1="6" x2="3.01" y2="6" />
+                    <line x1="3" y1="12" x2="3.01" y2="12" />
+                    <line x1="3" y1="18" x2="3.01" y2="18" />
+                </svg> List View</div>
+            <div class="tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <line x1="3" y1="9" x2="21" y2="9" />
+                    <line x1="9" y1="3" x2="9" y2="9" />
+                    <rect x="12" y="12" width="4" height="2" rx="0.5" />
+                    <rect x="12" y="16" width="6" height="2" rx="0.5" />
+                    <rect x="5" y="14" width="5" height="2" rx="0.5" />
+                </svg> Gantt View</div>
+            <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                </svg> Calendar View</div>
+            <div class="tab" style="color:var(--text-muted);">+</div>
+        </div>
+
+        <div class="action-bar">
+            <button class="btn"
+                style="background:var(--accent-green);color:white;border-color:var(--accent-green);font-weight:500;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                </svg> New Task
+            </button>
+            <button class="btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                </svg> Today</button>
+            <button class="btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="1 4 1 10 7 10" />
+                    <path d="M3.51 15a9 9 0 102.13-9.36L1 10" />
+                </svg> Zoom to Fit</button>
+            <button class="btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="4" y1="21" x2="4" y2="14" />
+                    <line x1="4" y1="10" x2="4" y2="3" />
+                    <line x1="12" y1="21" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12" y2="3" />
+                    <line x1="20" y1="21" x2="20" y2="16" />
+                    <line x1="20" y1="12" x2="20" y2="3" />
+                </svg> Filter</button>
+            <button class="btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" />
+                    <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
+                </svg> Dependencies</button>
+            <button class="btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 20h9" />
+                    <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+                </svg> Critical Path</button>
+        </div>
+
+        <!-- ============ GANTT SPLIT PANE ============ -->
+        <div class="gantt-container" id="ganttContainer">
+
+            <!-- LEFT: Task list -->
+            <div class="gantt-list">
+                <div class="gantt-list-header">
+                    <div class="glh-id">ID</div>
+                    <div class="glh-task">Task Name</div>
+                    <div class="glh-dur">Dur.</div>
+                    <div class="glh-res">Res.</div>
+                </div>
+                <div class="gantt-list-body" id="ganttListBody">
+                    <!-- Phase 1 -->
+                    <div class="gantt-row-left phase">
+                        <div class="grl-id">1</div>
+                        <div class="grl-task"><span class="tree-toggle">▾</span><span class="phase-dot"
+                                style="background:#7c5cfc;"></span><span
+                                class="task-name"><strong>Initiation</strong></span></div>
+                        <div class="grl-dur">12d</div>
+                        <div class="grl-res">—</div>
+                    </div>
+                    <div class="gantt-row-left">
+                        <div class="grl-id">2</div>
+                        <div class="grl-task"><span class="indent indent-1"></span><span class="task-name">Define
+                                project scope</span></div>
+                        <div class="grl-dur">3d</div>
+                        <div class="grl-res"><span class="resource-dot"
+                                style="background:linear-gradient(135deg,#f472b6,#ec4899);">AK</span></div>
+                    </div>
+                    <div class="gantt-row-left">
+                        <div class="grl-id">3</div>
+                        <div class="grl-task"><span class="indent indent-1"></span><span class="task-name">Stakeholder
+                                analysis</span></div>
+                        <div class="grl-dur">2d</div>
+                        <div class="grl-res"><span class="resource-dot"
+                                style="background:linear-gradient(135deg,#f472b6,#ec4899);">AK</span></div>
+                    </div>
+                    <div class="gantt-row-left">
+                        <div class="grl-id">4</div>
+                        <div class="grl-task"><span class="indent indent-1"></span><span class="task-name">Create
+                                project charter</span></div>
+                        <div class="grl-dur">4d</div>
+                        <div class="grl-res"><span class="resource-dot"
+                                style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">MK</span></div>
+                    </div>
+                    <div class="gantt-row-left milestone">
+                        <div class="grl-id">5</div>
+                        <div class="grl-task"><span class="indent indent-1"></span><span class="task-name">✦ Kickoff
+                                meeting</span></div>
+                        <div class="grl-dur">0d</div>
+                        <div class="grl-res"><span class="resource-dot" style="background:#6b7280;">T</span></div>
+                    </div>
+                    <!-- Phase 2 -->
+                    <div class="gantt-row-left phase">
+                        <div class="grl-id">6</div>
+                        <div class="grl-task"><span class="tree-toggle">▾</span><span class="phase-dot"
+                                style="background:#3b82f6;"></span><span
+                                class="task-name"><strong>Planning</strong></span></div>
+                        <div class="grl-dur">18d</div>
+                        <div class="grl-res">—</div>
+                    </div>
+                    <div class="gantt-row-left">
+                        <div class="grl-id">7</div>
+                        <div class="grl-task"><span class="indent indent-1"></span><span class="task-name">Information
+                                architecture</span></div>
+                        <div class="grl-dur">5d</div>
+                        <div class="grl-res"><span class="resource-dot"
+                                style="background:linear-gradient(135deg,#34d399,#10b981);">ES</span></div>
+                    </div>
+                    <div class="gantt-row-left">
+                        <div class="grl-id">8</div>
+                        <div class="grl-task"><span class="indent indent-1"></span><span class="task-name">Technical
+                                requirements</span></div>
+                        <div class="grl-dur">4d</div>
+                        <div class="grl-res"><span class="resource-dot"
+                                style="background:linear-gradient(135deg,#60a5fa,#3b82f6);">TR</span></div>
+                    </div>
+                    <div class="gantt-row-left">
+                        <div class="grl-id">9</div>
+                        <div class="grl-task"><span class="indent indent-1"></span><span class="task-name">Content
+                                strategy</span></div>
+                        <div class="grl-dur">5d</div>
+                        <div class="grl-res"><span class="resource-dot"
+                                style="background:linear-gradient(135deg,#34d399,#10b981);">ES</span></div>
+                    </div>
+                    <div class="gantt-row-left">
+                        <div class="grl-id">10</div>
+                        <div class="grl-task"><span class="indent indent-1"></span><span class="task-name">Risk
+                                assessment</span></div>
+                        <div class="grl-dur">3d</div>
+                        <div class="grl-res"><span class="resource-dot"
+                                style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">MK</span></div>
+                    </div>
+                    <div class="gantt-row-left milestone">
+                        <div class="grl-id">11</div>
+                        <div class="grl-task"><span class="indent indent-1"></span><span class="task-name">✦ Planning
+                                complete</span></div>
+                        <div class="grl-dur">0d</div>
+                        <div class="grl-res"><span class="resource-dot"
+                                style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">MK</span></div>
+                    </div>
+                    <!-- Phase 3 -->
+                    <div class="gantt-row-left phase">
+                        <div class="grl-id">12</div>
+                        <div class="grl-task"><span class="tree-toggle">▾</span><span class="phase-dot"
+                                style="background:#f59e0b;"></span><span
+                                class="task-name"><strong>Design</strong></span></div>
+                        <div class="grl-dur">25d</div>
+                        <div class="grl-res">—</div>
+                    </div>
+                    <div class="gantt-row-left">
+                        <div class="grl-id">13</div>
+                        <div class="grl-task"><span class="indent indent-1"></span><span class="task-name">Visual mood
+                                boards</span></div>
+                        <div class="grl-dur">4d</div>
+                        <div class="grl-res"><span class="resource-dot"
+                                style="background:linear-gradient(135deg,#f472b6,#ec4899);">KM</span></div>
+                    </div>
+                    <div class="gantt-row-left">
+                        <div class="grl-id">14</div>
+                        <div class="grl-task"><span class="indent indent-1"></span><span class="task-name">Wireframes
+                                (lo-fi)</span></div>
+                        <div class="grl-dur">6d</div>
+                        <div class="grl-res"><span class="resource-dot"
+                                style="background:linear-gradient(135deg,#f472b6,#ec4899);">KM</span></div>
+                    </div>
+                    <div class="gantt-row-left">
+                        <div class="grl-id">15</div>
+                        <div class="grl-task"><span class="indent indent-1"></span><span class="task-name">UI design
+                                (hi-fi)</span></div>
+                        <div class="grl-dur">10d</div>
+                        <div class="grl-res"><span class="resource-dot"
+                                style="background:linear-gradient(135deg,#f472b6,#ec4899);">KM</span></div>
+                    </div>
+                    <div class="gantt-row-left milestone">
+                        <div class="grl-id">16</div>
+                        <div class="grl-task"><span class="indent indent-1"></span><span class="task-name">✦ Design
+                                sign-off</span></div>
+                        <div class="grl-dur">0d</div>
+                        <div class="grl-res"><span class="resource-dot"
+                                style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">MK</span></div>
+                    </div>
+                    <!-- Phase 4 -->
+                    <div class="gantt-row-left phase">
+                        <div class="grl-id">17</div>
+                        <div class="grl-task"><span class="tree-toggle">▾</span><span class="phase-dot"
+                                style="background:#22c55e;"></span><span
+                                class="task-name"><strong>Development</strong></span></div>
+                        <div class="grl-dur">35d</div>
+                        <div class="grl-res">—</div>
+                    </div>
+                    <div class="gantt-row-left">
+                        <div class="grl-id">18</div>
+                        <div class="grl-task"><span class="indent indent-1"></span><span class="task-name">Frontend
+                                development</span></div>
+                        <div class="grl-dur">20d</div>
+                        <div class="grl-res"><span class="resource-dot"
+                                style="background:linear-gradient(135deg,#60a5fa,#3b82f6);">TR</span></div>
+                    </div>
+                    <div class="gantt-row-left">
+                        <div class="grl-id">19</div>
+                        <div class="grl-task"><span class="indent indent-1"></span><span class="task-name">Backend &amp;
+                                CMS</span></div>
+                        <div class="grl-dur">18d</div>
+                        <div class="grl-res"><span class="resource-dot" style="background:#6b7280;">PW</span></div>
+                    </div>
+                    <div class="gantt-row-left">
+                        <div class="grl-id">20</div>
+                        <div class="grl-task"><span class="indent indent-1"></span><span class="task-name">Integration
+                                &amp; API</span></div>
+                        <div class="grl-dur">10d</div>
+                        <div class="grl-res"><span class="resource-dot" style="background:#6b7280;">PW</span></div>
+                    </div>
+                    <div class="gantt-row-left milestone">
+                        <div class="grl-id">21</div>
+                        <div class="grl-task"><span class="indent indent-1"></span><span class="task-name">✦ Dev
+                                complete</span></div>
+                        <div class="grl-dur">0d</div>
+                        <div class="grl-res"><span class="resource-dot"
+                                style="background:linear-gradient(135deg,#60a5fa,#3b82f6);">TR</span></div>
+                    </div>
+                    <!-- Phase 5 -->
+                    <div class="gantt-row-left phase">
+                        <div class="grl-id">22</div>
+                        <div class="grl-task"><span class="tree-toggle">▸</span><span class="phase-dot"
+                                style="background:#ef4444;"></span><span class="task-name"><strong>Testing &amp;
+                                    QA</strong></span></div>
+                        <div class="grl-dur">15d</div>
+                        <div class="grl-res">—</div>
+                    </div>
+                    <!-- Phase 6 -->
+                    <div class="gantt-row-left phase">
+                        <div class="grl-id">23</div>
+                        <div class="grl-task"><span class="tree-toggle">▸</span><span class="phase-dot"
+                                style="background:#ec4899;"></span><span
+                                class="task-name"><strong>Deployment</strong></span></div>
+                        <div class="grl-dur">8d</div>
+                        <div class="grl-res">—</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: Gantt timeline -->
+            <div class="gantt-timeline" id="ganttTimeline">
+
+                <!-- Time header: months + weeks -->
+                <div class="gantt-time-header">
+                    <!-- Sep 2023: weeks 4-8 Sep, 11-15, 18-22, 25-29 -->
+                    <div class="gantt-month-group">
+                        <div class="gantt-month-label" style="width:160px;">Sep 2023</div>
+                        <div class="gantt-weeks">
+                            <div class="gantt-week-cell today">4</div>
+                            <div class="gantt-week-cell">11</div>
+                            <div class="gantt-week-cell">18</div>
+                            <div class="gantt-week-cell">25</div>
+                        </div>
+                    </div>
+                    <!-- Oct 2023 -->
+                    <div class="gantt-month-group">
+                        <div class="gantt-month-label" style="width:200px;">Oct 2023</div>
+                        <div class="gantt-weeks">
+                            <div class="gantt-week-cell">2</div>
+                            <div class="gantt-week-cell">9</div>
+                            <div class="gantt-week-cell">16</div>
+                            <div class="gantt-week-cell">23</div>
+                            <div class="gantt-week-cell">30</div>
+                        </div>
+                    </div>
+                    <!-- Nov 2023 -->
+                    <div class="gantt-month-group">
+                        <div class="gantt-month-label" style="width:200px;">Nov 2023</div>
+                        <div class="gantt-weeks">
+                            <div class="gantt-week-cell">6</div>
+                            <div class="gantt-week-cell">13</div>
+                            <div class="gantt-week-cell">20</div>
+                            <div class="gantt-week-cell">27</div>
+                            <div class="gantt-week-cell">—</div>
+                        </div>
+                    </div>
+                    <!-- Dec 2023 -->
+                    <div class="gantt-month-group">
+                        <div class="gantt-month-label" style="width:200px;">Dec 2023</div>
+                        <div class="gantt-weeks">
+                            <div class="gantt-week-cell">4</div>
+                            <div class="gantt-week-cell">11</div>
+                            <div class="gantt-week-cell">18</div>
+                            <div class="gantt-week-cell">25</div>
+                            <div class="gantt-week-cell">—</div>
+                        </div>
+                    </div>
+                    <!-- Jan 2024 -->
+                    <div class="gantt-month-group">
+                        <div class="gantt-month-label" style="width:200px;">Jan 2024</div>
+                        <div class="gantt-weeks">
+                            <div class="gantt-week-cell">1</div>
+                            <div class="gantt-week-cell">8</div>
+                            <div class="gantt-week-cell">15</div>
+                            <div class="gantt-week-cell">22</div>
+                            <div class="gantt-week-cell">29</div>
+                        </div>
+                    </div>
+                    <!-- Feb 2024 -->
+                    <div class="gantt-month-group">
+                        <div class="gantt-month-label" style="width:120px;">Feb 2024</div>
+                        <div class="gantt-weeks">
+                            <div class="gantt-week-cell">5</div>
+                            <div class="gantt-week-cell">12</div>
+                            <div class="gantt-week-cell">19</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline body with bars -->
+                <div class="gantt-timeline-body">
+
+                    <!-- Today line (Sep 4 = col 0, offset ~2px) -->
+                    <div class="gantt-today-line" style="left:6px;">
+                        <div class="gantt-today-marker"></div>
+                    </div>
+
+                    <!-- Grid rows (background) + bars rendered via SVG -->
+                    <svg width="1080" height="874"
+                        style="position:absolute;top:0;left:0;pointer-events:none;z-index:1;">
+                        <!-- Dependency arrows (FS = finish-to-start) -->
+                        <!-- ID2→ID3 -->
+                        <path d="M 54 57 h 6 v 38 h -20" fill="none" stroke="#c4b5fd" stroke-width="1.5"
+                            marker-end="url(#arrow)" />
+                        <!-- ID3→ID4 -->
+                        <path d="M 74 95 h 6 v 38 h -40" fill="none" stroke="#c4b5fd" stroke-width="1.5"
+                            marker-end="url(#arrow)" />
+                        <!-- ID4→ID5 -->
+                        <path d="M 114 133 h 6 v 38 h -20" fill="none" stroke="#c4b5fd" stroke-width="1.5"
+                            marker-end="url(#arrow)" />
+                        <!-- ID5→ID7,ID8 (parallel) -->
+                        <path d="M 122 171 h 6 v 57 h 20" fill="none" stroke="#93c5fd" stroke-width="1.5"
+                            marker-end="url(#arrow)" />
+                        <path d="M 122 171 h 6 v 95 h 20" fill="none" stroke="#93c5fd" stroke-width="1.5"
+                            marker-end="url(#arrow)" />
+                        <!-- ID7→ID9 -->
+                        <path d="M 196 247 h 6 v 38 h -10" fill="none" stroke="#93c5fd" stroke-width="1.5"
+                            marker-end="url(#arrow)" />
+                        <!-- ID9,ID8→ID10 -->
+                        <path d="M 268 285 h 6 v 38 h -30" fill="none" stroke="#93c5fd" stroke-width="1.5"
+                            marker-end="url(#arrow)" />
+                        <!-- ID10→ID11 -->
+                        <path d="M 288 323 h 6 v 38 h -10" fill="none" stroke="#93c5fd" stroke-width="1.5"
+                            marker-end="url(#arrow)" />
+                        <!-- ID11→ID13 -->
+                        <path d="M 312 399 h 6 v 38 h 10" fill="none" stroke="#fbbf24" stroke-width="1.5"
+                            marker-end="url(#arrowY)" />
+                        <!-- Arrow marker -->
+                        <defs>
+                            <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                                <path d="M 0 0 L 6 3 L 0 6 z" fill="#c4b5fd" />
+                            </marker>
+                            <marker id="arrowB" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                                <path d="M 0 0 L 6 3 L 0 6 z" fill="#93c5fd" />
+                            </marker>
+                            <marker id="arrowY" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                                <path d="M 0 0 L 6 3 L 0 6 z" fill="#fbbf24" />
+                            </marker>
+                        </defs>
+                    </svg>
+
+                    <!-- Row 1: Phase 1 summary -->
+                    <div class="gantt-row-right" style="background:#fafafe;">
+                        <div class="gantt-bar summary" style="left:2px; width:110px; background:#7c5cfc;"></div>
+                    </div>
+                    <!-- Row 2: Define scope (Sep 4-6, 3 days) -->
+                    <div class="gantt-row-right">
+                        <div class="gantt-bar" style="left:2px; width:52px; background:#7c5cfc;">
+                            <div class="bar-fill" style="width:100%; background:white;"></div>
+                            <span class="bar-label">Scope</span>
+                        </div>
+                    </div>
+                    <!-- Row 3: Stakeholder (Sep 7-8) -->
+                    <div class="gantt-row-right">
+                        <div class="gantt-bar" style="left:24px; width:50px; background:#7c5cfc;">
+                            <div class="bar-fill" style="width:100%; background:white;"></div>
+                            <span class="bar-label">Stakeholder</span>
+                        </div>
+                    </div>
+                    <!-- Row 4: Charter (Sep 9-14) -->
+                    <div class="gantt-row-right">
+                        <div class="gantt-bar" style="left:40px; width:74px; background:#7c5cfc;">
+                            <div class="bar-fill" style="width:100%; background:white;"></div>
+                            <span class="bar-label">Charter</span>
+                        </div>
+                    </div>
+                    <!-- Row 5: Kickoff milestone (Sep 19) -->
+                    <div class="gantt-row-right">
+                        <div class="gantt-milestone" style="left:102px; background:#7c5cfc;"></div>
+                    </div>
+                    <!-- Row 6: Phase 2 summary -->
+                    <div class="gantt-row-right" style="background:#fafafe;">
+                        <div class="gantt-bar summary" style="left:116px; width:178px; background:#3b82f6;"></div>
+                    </div>
+                    <!-- Row 7: Info arch (Sep 20-26) -->
+                    <div class="gantt-row-right">
+                        <div class="gantt-bar" style="left:120px; width:76px; background:#3b82f6;">
+                            <div class="bar-fill" style="width:100%; background:white;"></div>
+                            <span class="bar-label">Info arch</span>
+                        </div>
+                    </div>
+                    <!-- Row 8: Tech req (Sep 20-25, parallel) -->
+                    <div class="gantt-row-right">
+                        <div class="gantt-bar" style="left:120px; width:60px; background:#3b82f6;">
+                            <div class="bar-fill" style="width:100%; background:white;"></div>
+                            <span class="bar-label">Tech req</span>
+                        </div>
+                    </div>
+                    <!-- Row 9: Content (Sep 27 - Oct 3) -->
+                    <div class="gantt-row-right">
+                        <div class="gantt-bar" style="left:196px; width:72px; background:#3b82f6;">
+                            <div class="bar-fill" style="width:60%; background:white;"></div>
+                            <span class="bar-label">Content</span>
+                        </div>
+                    </div>
+                    <!-- Row 10: Risk (Oct 4-6) -->
+                    <div class="gantt-row-right">
+                        <div class="gantt-bar" style="left:244px; width:44px; background:#3b82f6;">
+                            <div class="bar-fill" style="width:20%; background:white;"></div>
+                            <span class="bar-label">Risk</span>
+                        </div>
+                    </div>
+                    <!-- Row 11: Planning complete milestone -->
+                    <div class="gantt-row-right">
+                        <div class="gantt-milestone" style="left:290px; background:#3b82f6;"></div>
+                    </div>
+                    <!-- Row 12: Phase 3 summary -->
+                    <div class="gantt-row-right" style="background:#fafafe;">
+                        <div class="gantt-bar summary" style="left:306px; width:244px; background:#f59e0b;"></div>
+                    </div>
+                    <!-- Row 13: Mood boards (Oct 16-19) -->
+                    <div class="gantt-row-right">
+                        <div class="gantt-bar" style="left:310px; width:46px; background:#f59e0b;">
+                            <span class="bar-label">Mood</span>
+                        </div>
+                    </div>
+                    <!-- Row 14: Wireframes (Oct 20-27) -->
+                    <div class="gantt-row-right">
+                        <div class="gantt-bar" style="left:356px; width:72px; background:#f59e0b;">
+                            <span class="bar-label">Wireframes</span>
+                        </div>
+                    </div>
+                    <!-- Row 15: UI design (Oct 30 - Nov 10) -->
+                    <div class="gantt-row-right">
+                        <div class="gantt-bar" style="left:428px; width:102px; background:#f59e0b;">
+                            <span class="bar-label">UI design (hi-fi)</span>
+                        </div>
+                    </div>
+                    <!-- Row 16: Design sign-off milestone -->
+                    <div class="gantt-row-right">
+                        <div class="gantt-milestone" style="left:543px; background:#f59e0b;"></div>
+                    </div>
+                    <!-- Row 17: Phase 4 summary -->
+                    <div class="gantt-row-right" style="background:#fafafe;">
+                        <div class="gantt-bar summary" style="left:558px; width:310px; background:#22c55e;"></div>
+                    </div>
+                    <!-- Row 18: Frontend (Nov 20 - Dec 15) -->
+                    <div class="gantt-row-right">
+                        <div class="gantt-bar" style="left:562px; width:186px; background:#22c55e;">
+                            <span class="bar-label">Frontend development</span>
+                        </div>
+                    </div>
+                    <!-- Row 19: Backend (Nov 20 - Dec 13) -->
+                    <div class="gantt-row-right">
+                        <div class="gantt-bar" style="left:562px; width:168px; background:#16a34a;">
+                            <span class="bar-label">Backend &amp; CMS</span>
+                        </div>
+                    </div>
+                    <!-- Row 20: Integration (Dec 18 - Jan 2) -->
+                    <div class="gantt-row-right">
+                        <div class="gantt-bar" style="left:748px; width:100px; background:#22c55e;">
+                            <span class="bar-label">Integration</span>
+                        </div>
+                    </div>
+                    <!-- Row 21: Dev complete milestone -->
+                    <div class="gantt-row-right">
+                        <div class="gantt-milestone" style="left:862px; background:#22c55e;"></div>
+                    </div>
+                    <!-- Row 22: Phase 5 summary -->
+                    <div class="gantt-row-right" style="background:#fafafe;">
+                        <div class="gantt-bar summary" style="left:876px; width:130px; background:#ef4444;"></div>
+                    </div>
+                    <!-- Row 23: Phase 6 summary -->
+                    <div class="gantt-row-right" style="background:#fafafe;">
+                        <div class="gantt-bar summary" style="left:1006px; width:66px; background:#ec4899;"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Synchronize scroll between left list and right timeline
+        const listBody = document.getElementById('ganttListBody');
+        const timeline = document.getElementById('ganttTimeline');
+
+        listBody.addEventListener('scroll', () => {
+            timeline.scrollTop = listBody.scrollTop;
+        });
+        timeline.addEventListener('scroll', () => {
+            listBody.scrollTop = timeline.scrollTop;
+        });
+    </script>
+
+</body>
+
+</html>

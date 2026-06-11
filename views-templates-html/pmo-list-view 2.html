@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbix Studio — PMO Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #ffffff;
+            --sidebar-bg: #fafafa;
+            --text-primary: #1a1a2e;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --border-light: #f3f4f6;
+            --accent-green: #22c55e;
+            --accent-blue: #3b82f6;
+            --accent-purple: #7c5cfc;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-pink: #ec4899;
+            --hover-bg: #f3f4f6;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* ===================== SIDEBAR ===================== */
+        .text-sidebar {
+            width: 220px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            height: 100vh;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .sidebar-logo .logo-icon {
+            width: 24px;
+            height: 24px;
+            background: #22c55e;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-logo .logo-icon svg {
+            width: 14px;
+            height: 14px;
+            color: white;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            padding: 0 8px;
+        }
+
+        .sidebar-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-decoration: none;
+            border-radius: 7px;
+        }
+
+        .sidebar-nav-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .sidebar-nav-item.active {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .sidebar-nav-item svg {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav-item .nav-chevron {
+            margin-left: auto;
+            font-size: 10px;
+            color: var(--text-muted);
+            transition: transform 0.2s;
+        }
+
+        .sidebar-nav-item.expanded .nav-chevron {
+            transform: rotate(90deg);
+        }
+
+        .sidebar-sub-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            padding: 2px 0 2px 18px;
+        }
+
+        .sidebar-sub-item {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 7px 10px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+            border-radius: 7px;
+        }
+
+        .sidebar-sub-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .sidebar-sub-item.active {
+            background: #ede9fe;
+            color: var(--accent-purple);
+            font-weight: 600;
+        }
+
+        .sidebar-sub-item svg {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-sub-item .nav-chevron {
+            margin-left: auto;
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .sidebar-sub-item.expanded .nav-chevron {
+            transform: rotate(90deg);
+        }
+
+        .sidebar-sub-sub-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            padding: 2px 0 2px 16px;
+        }
+
+        .sidebar-sub-sub-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 7px;
+            transition: all 0.15s;
+        }
+
+        .sidebar-sub-sub-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .sidebar-sub-sub-item .project-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .sidebar-section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 16px 8px;
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .sidebar-section-title .add-btn {
+            cursor: pointer;
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+
+        .bookmark-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .bookmark-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .bookmark-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .bookmark-dot.blue {
+            background: #3b82f6;
+        }
+
+        .bookmark-dot.orange {
+            background: #f59e0b;
+        }
+
+        .bookmark-dot.red {
+            background: #ef4444;
+        }
+
+        .bookmark-dot.pink {
+            background: #ec4899;
+        }
+
+        .bookmark-dot.dark-blue {
+            background: #1e3a5f;
+        }
+
+        .sidebar-spacer {
+            flex: 1;
+        }
+
+        .sidebar-bottom {
+            border-top: 1px solid var(--border);
+            padding: 10px 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .sidebar-bottom-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 7px;
+            transition: all 0.15s;
+        }
+
+        .sidebar-bottom-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .sidebar-bottom-item svg {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            cursor: pointer;
+            border-radius: 7px;
+            transition: background 0.15s;
+        }
+
+        .sidebar-user:hover {
+            background: var(--hover-bg);
+        }
+
+        .avatar-small {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .sidebar-user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .sidebar-user-email {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* ===================== MAIN ===================== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Search bar */
+        .global-search-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 24px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            max-width: 480px;
+            transition: border-color 0.15s;
+        }
+
+        .search-input-wrapper:focus-within {
+            border-color: #c4b5fd;
+        }
+
+        .search-input-wrapper svg {
+            width: 15px;
+            height: 15px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .search-input-wrapper input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: inherit;
+            font-size: 13px;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .search-input-wrapper input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-shortcut {
+            font-size: 11px;
+            background: var(--hover-bg);
+            padding: 2px 7px;
+            border-radius: 4px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .global-search-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: auto;
+        }
+
+        .global-search-right button {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.15s;
+        }
+
+        .global-search-right button:hover {
+            background: var(--hover-bg);
+        }
+
+        .premium-badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--text-primary);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .premium-badge svg {
+            width: 14px;
+            height: 14px;
+            color: #fbbf24;
+        }
+
+        /* Page header */
+        .top-bar {
+            padding: 18px 24px 0;
+            flex-shrink: 0;
+        }
+
+        .top-bar-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .page-title-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .page-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        .top-bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .top-bar-actions button {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--text-secondary);
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .top-bar-actions button:hover {
+            background: var(--hover-bg);
+        }
+
+        .top-bar-actions .more-btn {
+            width: 32px;
+            padding: 6px;
+            justify-content: center;
+        }
+
+        /* ===================== KPI STRIP ===================== */
+        .kpi-strip {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 14px;
+            padding: 20px 24px 0;
+            flex-shrink: 0;
+        }
+
+        .kpi-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .kpi-card.purple::before {
+            background: var(--accent-purple);
+        }
+
+        .kpi-card.green::before {
+            background: var(--accent-green);
+        }
+
+        .kpi-card.blue::before {
+            background: var(--accent-blue);
+        }
+
+        .kpi-card.orange::before {
+            background: var(--accent-orange);
+        }
+
+        .kpi-card.red::before {
+            background: var(--accent-red);
+        }
+
+        .kpi-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .kpi-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+        }
+
+        .kpi-value .unit {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .kpi-sub {
+            font-size: 11.5px;
+            color: var(--text-secondary);
+        }
+
+        .kpi-sub .trend-up {
+            color: #16a34a;
+        }
+
+        .kpi-sub .trend-down {
+            color: #dc2626;
+        }
+
+        /* ===================== TABS + ACTION BAR ===================== */
+        .tabs-row {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            flex-shrink: 0;
+            margin-top: 16px;
+        }
+
+        .tab {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            padding: 10px 16px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            color: var(--text-primary);
+            font-weight: 600;
+            border-bottom-color: var(--accent-purple);
+        }
+
+        .tab svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        .tab .tab-count {
+            background: var(--hover-bg);
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: 10px;
+        }
+
+        .action-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            font-family: inherit;
+            padding: 7px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            background: var(--hover-bg);
+        }
+
+        .btn-green {
+            background: var(--accent-green);
+            color: white;
+            border-color: var(--accent-green);
+            font-weight: 500;
+        }
+
+        .btn-green:hover {
+            background: #16a34a;
+        }
+
+        .btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* ===================== PROJECT TABLE ===================== */
+        .table-wrapper {
+            flex: 1;
+            overflow: auto;
+            padding: 0 24px 24px;
+        }
+
+        .project-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 13px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .project-table thead th {
+            position: sticky;
+            top: 0;
+            background: var(--sidebar-bg);
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border-bottom: 2px solid var(--border);
+            white-space: nowrap;
+            z-index: 2;
+        }
+
+        .project-table tbody td {
+            padding: 14px 14px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        .project-table tbody tr {
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+
+        .project-table tbody tr:hover td {
+            background: #f8f8fb;
+        }
+
+        .project-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Project name cell */
+        .proj-name-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .proj-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .proj-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .proj-title {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .proj-meta {
+            font-size: 11.5px;
+            color: var(--text-muted);
+        }
+
+        /* Status badge */
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11.5px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .status-pill::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .status-pill.active {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .status-pill.active::before {
+            background: #22c55e;
+        }
+
+        .status-pill.planning {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .status-pill.planning::before {
+            background: #3b82f6;
+        }
+
+        .status-pill.on-hold {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-pill.on-hold::before {
+            background: #f59e0b;
+        }
+
+        .status-pill.completed {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .status-pill.completed::before {
+            background: #9ca3af;
+        }
+
+        .status-pill.at-risk {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .status-pill.at-risk::before {
+            background: #ef4444;
+        }
+
+        /* Health indicator */
+        .health-dot {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .health-dot svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .health-dot.green {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .health-dot.orange {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .health-dot.red {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .health-dot.gray {
+            background: #f3f4f6;
+            color: #9ca3af;
+        }
+
+        /* Progress bar in table */
+        .tbl-progress {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tbl-pct-bar {
+            width: 80px;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .tbl-pct-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        .tbl-pct-label {
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 32px;
+        }
+
+        /* Priority */
+        .priority {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .priority.high {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .priority.medium {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .priority.low {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        /* Avatar stack */
+        .avatar-stack {
+            display: flex;
+            align-items: center;
+        }
+
+        .av {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 2px solid white;
+            margin-left: -8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .av:first-child {
+            margin-left: 0;
+        }
+
+        .av-more {
+            background: var(--hover-bg);
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        /* Dates */
+        .date-range {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .date-range .date-label {
+            display: block;
+            font-size: 10.5px;
+            color: var(--text-muted);
+        }
+
+        /* Budget cell */
+        .budget-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .budget-spent {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .budget-total {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .budget-mini-bar {
+            width: 60px;
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .budget-mini-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        /* Sparkline placeholder */
+        .sparkline {
+            width: 60px;
+            height: 24px;
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+        }
+
+        .spark-bar {
+            flex: 1;
+            border-radius: 2px 2px 0 0;
+            min-height: 3px;
+            transition: height 0.3s;
+        }
+
+        /* Next milestone */
+        .next-ms {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .next-ms .ms-diamond {
+            width: 12px;
+            height: 12px;
+            flex-shrink: 0;
+        }
+
+        .next-ms .ms-diamond svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .next-ms-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .next-ms-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .next-ms-date {
+            font-size: 10.5px;
+            color: var(--text-muted);
+        }
+
+        /* col alignment */
+        .col-center {
+            text-align: center;
+        }
+
+        @media (max-width: 1200px) {
+            .kpi-strip {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 800px) {
+            .text-sidebar {
+                width: 180px;
+            }
+
+            .kpi-strip {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .text-sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============ SIDEBAR ============ -->
+    <div class="text-sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <div class="logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                    </svg></div>
+                Orbix Studio
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <a class="sidebar-nav-item active" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                    <rect x="14" y="14" width="7" height="7" rx="1" />
+                </svg> Dashboard</a>
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="M9 11l3 3L22 4" />
+                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                </svg> ToDo Lists</a>
+            <a class="sidebar-nav-item expanded" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path
+                        d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                    <line x1="12" y1="22.08" x2="12" y2="12" />
+                </svg> Spaces <span class="nav-chevron">▸</span></a>
+            <div class="sidebar-sub-nav">
+                <div class="sidebar-sub-item expanded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" />
+                    </svg> Projects <span class="nav-chevron">▸</span></div>
+                <div class="sidebar-sub-sub-nav">
+                    <div class="sidebar-sub-sub-item"><span class="project-dot"
+                            style="background:var(--accent-purple);"></span> New company website</div>
+                    <div class="sidebar-sub-sub-item"><span class="project-dot"
+                            style="background:var(--accent-orange);"></span> Brand redesign</div>
+                </div>
+                <div class="sidebar-sub-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                    </svg> Documents</div>
+            </div>
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                </svg> Time Sheets</a>
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg> Growth Stats</a>
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path
+                        d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                </svg> Automation</a>
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <circle cx="12" cy="5" r="3" />
+                    <line x1="12" y1="8" x2="12" y2="16" />
+                    <circle cx="12" cy="19" r="3" />
+                    <line x1="6" y1="12" x2="18" y2="12" />
+                </svg> Integration</a>
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                    <path d="M16 3.13a4 4 0 010 7.75" />
+                </svg> Team Member</a>
+            <a class="sidebar-nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <line x1="2" y1="10" x2="22" y2="10" />
+                </svg> Financial</a>
+        </nav>
+        <div class="sidebar-section-title"><span>Bookmarks</span><span class="add-btn">+</span></div>
+        <div class="bookmark-item"><span class="bookmark-dot blue"></span> #General</div>
+        <div class="bookmark-item"><span class="bookmark-dot orange"></span> UI Design Projects</div>
+        <div class="bookmark-item"><span class="bookmark-dot red"></span> Recently done</div>
+        <div class="bookmark-item"><span class="bookmark-dot pink"></span> Call booked on por...</div>
+        <div class="bookmark-item"><span class="bookmark-dot dark-blue"></span> Design Phase</div>
+        <div class="sidebar-spacer"></div>
+        <div class="sidebar-bottom">
+            <div class="sidebar-bottom-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                        d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
+                </svg> Settings</div>
+            <div class="sidebar-bottom-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg> Help &amp; Support</div>
+            <div class="sidebar-user">
+                <div class="avatar-small">M</div>
+                <div class="sidebar-user-info"><span class="sidebar-user-name">Marcin K.</span><span
+                        class="sidebar-user-email">marcin@orbix.io</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ MAIN ============ -->
+    <div class="main-content">
+
+        <!-- Search bar -->
+        <div class="global-search-bar">
+            <div class="search-input-wrapper"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg><input type="text" placeholder="Search projects, spaces, tasks..."><span
+                    class="search-shortcut">⌘K</span></div>
+            <div class="global-search-right">
+                <button title="Notifications"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                        <path d="M13.73 21a2 2 0 01-3.46 0" />
+                    </svg></button>
+                <button title="Messages"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                    </svg></button>
+                <div class="premium-badge"><svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z" />
+                    </svg> Premium</div>
+            </div>
+        </div>
+
+        <!-- Page header -->
+        <div class="top-bar">
+            <div class="top-bar-row">
+                <div>
+                    <div class="page-title-area">
+                        <span class="page-title">PMO Portfolio</span>
+                    </div>
+                    <div class="page-subtitle">All projects across the organization</div>
+                </div>
+                <div class="top-bar-actions">
+                    <button><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg> Export</button>
+                    <button class="more-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="5" r="1.5" />
+                            <circle cx="12" cy="12" r="1.5" />
+                            <circle cx="12" cy="19" r="1.5" />
+                        </svg></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI strip -->
+        <div class="kpi-strip">
+            <div class="kpi-card purple">
+                <div class="kpi-label">Total Projects</div>
+                <div class="kpi-value">7</div>
+                <div class="kpi-sub">5 active, 1 on hold, 1 completed</div>
+            </div>
+            <div class="kpi-card green">
+                <div class="kpi-label">On Track</div>
+                <div class="kpi-value">4<span class="unit">/ 7</span></div>
+                <div class="kpi-sub"><span class="trend-up">▲ 57%</span> health rate</div>
+            </div>
+            <div class="kpi-card orange">
+                <div class="kpi-label">At Risk</div>
+                <div class="kpi-value">2</div>
+                <div class="kpi-sub">Schedule or budget concerns</div>
+            </div>
+            <div class="kpi-card blue">
+                <div class="kpi-label">Total Budget</div>
+                <div class="kpi-value">€ 412k</div>
+                <div class="kpi-sub">€ 127k spent (31%)</div>
+            </div>
+            <div class="kpi-card red">
+                <div class="kpi-label">Overdue Tasks</div>
+                <div class="kpi-value">4</div>
+                <div class="kpi-sub"><span class="trend-down">▲ 2</span> vs last week</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-row">
+            <div class="tab active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="8" y1="6" x2="21" y2="6" />
+                    <line x1="8" y1="12" x2="21" y2="12" />
+                    <line x1="8" y1="18" x2="21" y2="18" />
+                    <line x1="3" y1="6" x2="3.01" y2="6" />
+                    <line x1="3" y1="12" x2="3.01" y2="12" />
+                    <line x1="3" y1="18" x2="3.01" y2="18" />
+                </svg>
+                All Projects <span class="tab-count">7</span>
+            </div>
+            <div class="tab">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+                Active <span class="tab-count">5</span>
+            </div>
+            <div class="tab">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 22 12 12 22 2 12" />
+                </svg>
+                Milestones
+            </div>
+            <div class="tab">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                Risks
+            </div>
+            <div class="tab">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="1" x2="12" y2="23" />
+                    <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+                </svg>
+                Budget
+            </div>
+        </div>
+
+        <!-- Action bar -->
+        <div class="action-bar">
+            <button class="btn btn-green">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                New Project
+            </button>
+            <button class="btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg> Search</button>
+            <button class="btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="4" y1="21" x2="4" y2="14" />
+                    <line x1="4" y1="10" x2="4" y2="3" />
+                    <line x1="12" y1="21" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12" y2="3" />
+                    <line x1="20" y1="21" x2="20" y2="16" />
+                    <line x1="20" y1="12" x2="20" y2="3" />
+                </svg> Filter</button>
+            <button class="btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6" />
+                    <polyline points="3 12 9 12 21 12" />
+                    <polyline points="3 18 13 18 21 18" />
+                </svg> Group by Status</button>
+        </div>
+
+        <!-- Project Table -->
+        <div class="table-wrapper">
+            <table class="project-table">
+                <thead>
+                    <tr>
+                        <th>Project</th>
+                        <th>Status</th>
+                        <th class="col-center">Health</th>
+                        <th>Progress</th>
+                        <th>Priority</th>
+                        <th>Team</th>
+                        <th>Timeline</th>
+                        <th>Next Milestone</th>
+                        <th>Budget</th>
+                        <th>Velocity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Project 1 -->
+                    <tr>
+                        <td>
+                            <div class="proj-name-cell">
+                                <div class="proj-dot" style="background:var(--accent-purple);"></div>
+                                <div class="proj-info">
+                                    <div class="proj-title">New company website</div>
+                                    <div class="proj-meta">6 phases · 19 tasks</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="status-pill active">Active</span></td>
+                        <td class="col-center">
+                            <span class="health-dot green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg></span>
+                        </td>
+                        <td>
+                            <div class="tbl-progress">
+                                <div class="tbl-pct-bar">
+                                    <div class="tbl-pct-fill" style="width:32%;background:var(--accent-purple);"></div>
+                                </div>
+                                <span class="tbl-pct-label">32%</span>
+                            </div>
+                        </td>
+                        <td><span class="priority high">High</span></td>
+                        <td>
+                            <div class="avatar-stack">
+                                <div class="av" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">MK</div>
+                                <div class="av" style="background:linear-gradient(135deg,#f472b6,#ec4899);">AK</div>
+                                <div class="av" style="background:linear-gradient(135deg,#34d399,#10b981);">ES</div>
+                                <div class="av av-more">+3</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="date-range">
+                                <span class="date-label">Sep 4 – Feb 8</span>
+                                113 days
+                            </div>
+                        </td>
+                        <td>
+                            <div class="next-ms">
+                                <div class="ms-diamond"><svg viewBox="0 0 24 24" fill="#3b82f6" stroke="none">
+                                        <polygon points="12 2 22 12 12 22 2 12" />
+                                    </svg></div>
+                                <div class="next-ms-info">
+                                    <div class="next-ms-name">Planning complete</div>
+                                    <div class="next-ms-date">13 Oct 2023</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="budget-cell">
+                                <span class="budget-spent">€ 18.4k</span>
+                                <span class="budget-total">of € 85k</span>
+                                <div class="budget-mini-bar">
+                                    <div class="budget-mini-fill" style="width:22%;background:var(--accent-blue);">
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="sparkline">
+                                <div class="spark-bar" style="height:8px;background:#c4b5fd;"></div>
+                                <div class="spark-bar" style="height:14px;background:#c4b5fd;"></div>
+                                <div class="spark-bar" style="height:10px;background:#c4b5fd;"></div>
+                                <div class="spark-bar" style="height:18px;background:#7c5cfc;"></div>
+                                <div class="spark-bar" style="height:22px;background:#7c5cfc;"></div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Project 2 -->
+                    <tr>
+                        <td>
+                            <div class="proj-name-cell">
+                                <div class="proj-dot" style="background:var(--accent-orange);"></div>
+                                <div class="proj-info">
+                                    <div class="proj-title">Brand redesign</div>
+                                    <div class="proj-meta">4 phases · 12 tasks</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="status-pill active">Active</span></td>
+                        <td class="col-center">
+                            <span class="health-dot orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="3">
+                                    <line x1="12" y1="8" x2="12" y2="12" />
+                                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg></span>
+                        </td>
+                        <td>
+                            <div class="tbl-progress">
+                                <div class="tbl-pct-bar">
+                                    <div class="tbl-pct-fill" style="width:65%;background:var(--accent-orange);"></div>
+                                </div>
+                                <span class="tbl-pct-label">65%</span>
+                            </div>
+                        </td>
+                        <td><span class="priority high">High</span></td>
+                        <td>
+                            <div class="avatar-stack">
+                                <div class="av" style="background:linear-gradient(135deg,#f472b6,#ec4899);">KM</div>
+                                <div class="av" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">MK</div>
+                                <div class="av av-more">+1</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="date-range">
+                                <span class="date-label">Aug 21 – Nov 10</span>
+                                82 days
+                            </div>
+                        </td>
+                        <td>
+                            <div class="next-ms">
+                                <div class="ms-diamond"><svg viewBox="0 0 24 24" fill="#f59e0b" stroke="none">
+                                        <polygon points="12 2 22 12 12 22 2 12" />
+                                    </svg></div>
+                                <div class="next-ms-info">
+                                    <div class="next-ms-name">Brand guidelines</div>
+                                    <div class="next-ms-date">18 Oct 2023</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="budget-cell">
+                                <span class="budget-spent">€ 34.2k</span>
+                                <span class="budget-total">of € 48k</span>
+                                <div class="budget-mini-bar">
+                                    <div class="budget-mini-fill" style="width:71%;background:var(--accent-orange);">
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="sparkline">
+                                <div class="spark-bar" style="height:16px;background:#fde68a;"></div>
+                                <div class="spark-bar" style="height:20px;background:#fde68a;"></div>
+                                <div class="spark-bar" style="height:12px;background:#fde68a;"></div>
+                                <div class="spark-bar" style="height:8px;background:#f59e0b;"></div>
+                                <div class="spark-bar" style="height:6px;background:#f59e0b;"></div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Project 3 -->
+                    <tr>
+                        <td>
+                            <div class="proj-name-cell">
+                                <div class="proj-dot" style="background:var(--accent-green);"></div>
+                                <div class="proj-info">
+                                    <div class="proj-title">Mobile app MVP</div>
+                                    <div class="proj-meta">5 phases · 24 tasks</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="status-pill active">Active</span></td>
+                        <td class="col-center">
+                            <span class="health-dot green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg></span>
+                        </td>
+                        <td>
+                            <div class="tbl-progress">
+                                <div class="tbl-pct-bar">
+                                    <div class="tbl-pct-fill" style="width:12%;background:var(--accent-green);"></div>
+                                </div>
+                                <span class="tbl-pct-label">12%</span>
+                            </div>
+                        </td>
+                        <td><span class="priority high">High</span></td>
+                        <td>
+                            <div class="avatar-stack">
+                                <div class="av" style="background:linear-gradient(135deg,#60a5fa,#3b82f6);">TR</div>
+                                <div class="av" style="background:#6b7280;">PW</div>
+                                <div class="av av-more">+2</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="date-range">
+                                <span class="date-label">Oct 2 – Mar 15</span>
+                                165 days
+                            </div>
+                        </td>
+                        <td>
+                            <div class="next-ms">
+                                <div class="ms-diamond"><svg viewBox="0 0 24 24" fill="#22c55e" stroke="none">
+                                        <polygon points="12 2 22 12 12 22 2 12" />
+                                    </svg></div>
+                                <div class="next-ms-info">
+                                    <div class="next-ms-name">Tech stack approved</div>
+                                    <div class="next-ms-date">20 Oct 2023</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="budget-cell">
+                                <span class="budget-spent">€ 8.1k</span>
+                                <span class="budget-total">of € 120k</span>
+                                <div class="budget-mini-bar">
+                                    <div class="budget-mini-fill" style="width:7%;background:var(--accent-green);">
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="sparkline">
+                                <div class="spark-bar" style="height:4px;background:#bbf7d0;"></div>
+                                <div class="spark-bar" style="height:8px;background:#bbf7d0;"></div>
+                                <div class="spark-bar" style="height:12px;background:#22c55e;"></div>
+                                <div class="spark-bar" style="height:16px;background:#22c55e;"></div>
+                                <div class="spark-bar" style="height:14px;background:#22c55e;"></div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Project 4 -->
+                    <tr>
+                        <td>
+                            <div class="proj-name-cell">
+                                <div class="proj-dot" style="background:var(--accent-blue);"></div>
+                                <div class="proj-info">
+                                    <div class="proj-title">CRM migration</div>
+                                    <div class="proj-meta">3 phases · 16 tasks</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="status-pill active">Active</span></td>
+                        <td class="col-center">
+                            <span class="health-dot red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="3">
+                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                    <line x1="6" y1="6" x2="18" y2="18" />
+                                </svg></span>
+                        </td>
+                        <td>
+                            <div class="tbl-progress">
+                                <div class="tbl-pct-bar">
+                                    <div class="tbl-pct-fill" style="width:48%;background:var(--accent-blue);"></div>
+                                </div>
+                                <span class="tbl-pct-label">48%</span>
+                            </div>
+                        </td>
+                        <td><span class="priority medium">Med</span></td>
+                        <td>
+                            <div class="avatar-stack">
+                                <div class="av" style="background:linear-gradient(135deg,#60a5fa,#3b82f6);">TR</div>
+                                <div class="av" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">MK</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="date-range">
+                                <span class="date-label">Jul 10 – Dec 1</span>
+                                145 days
+                            </div>
+                        </td>
+                        <td>
+                            <div class="next-ms">
+                                <div class="ms-diamond"><svg viewBox="0 0 24 24" fill="#ef4444" stroke="none">
+                                        <polygon points="12 2 22 12 12 22 2 12" />
+                                    </svg></div>
+                                <div class="next-ms-info">
+                                    <div class="next-ms-name">Data migration</div>
+                                    <div class="next-ms-date">8 Oct (overdue)</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="budget-cell">
+                                <span class="budget-spent">€ 41.5k</span>
+                                <span class="budget-total">of € 65k</span>
+                                <div class="budget-mini-bar">
+                                    <div class="budget-mini-fill" style="width:64%;background:var(--accent-red);"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="sparkline">
+                                <div class="spark-bar" style="height:20px;background:#bfdbfe;"></div>
+                                <div class="spark-bar" style="height:16px;background:#bfdbfe;"></div>
+                                <div class="spark-bar" style="height:10px;background:#93c5fd;"></div>
+                                <div class="spark-bar" style="height:6px;background:#3b82f6;"></div>
+                                <div class="spark-bar" style="height:4px;background:#3b82f6;"></div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Project 5 -->
+                    <tr>
+                        <td>
+                            <div class="proj-name-cell">
+                                <div class="proj-dot" style="background:var(--accent-pink);"></div>
+                                <div class="proj-info">
+                                    <div class="proj-title">Marketing automation</div>
+                                    <div class="proj-meta">4 phases · 14 tasks</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="status-pill active">Active</span></td>
+                        <td class="col-center">
+                            <span class="health-dot green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg></span>
+                        </td>
+                        <td>
+                            <div class="tbl-progress">
+                                <div class="tbl-pct-bar">
+                                    <div class="tbl-pct-fill" style="width:78%;background:var(--accent-pink);"></div>
+                                </div>
+                                <span class="tbl-pct-label">78%</span>
+                            </div>
+                        </td>
+                        <td><span class="priority medium">Med</span></td>
+                        <td>
+                            <div class="avatar-stack">
+                                <div class="av" style="background:linear-gradient(135deg,#f472b6,#ec4899);">AK</div>
+                                <div class="av" style="background:linear-gradient(135deg,#34d399,#10b981);">ES</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="date-range">
+                                <span class="date-label">Aug 1 – Oct 31</span>
+                                92 days
+                            </div>
+                        </td>
+                        <td>
+                            <div class="next-ms">
+                                <div class="ms-diamond"><svg viewBox="0 0 24 24" fill="#ec4899" stroke="none">
+                                        <polygon points="12 2 22 12 12 22 2 12" />
+                                    </svg></div>
+                                <div class="next-ms-info">
+                                    <div class="next-ms-name">Go-live</div>
+                                    <div class="next-ms-date">31 Oct 2023</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="budget-cell">
+                                <span class="budget-spent">€ 18.9k</span>
+                                <span class="budget-total">of € 24k</span>
+                                <div class="budget-mini-bar">
+                                    <div class="budget-mini-fill" style="width:79%;background:var(--accent-pink);">
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="sparkline">
+                                <div class="spark-bar" style="height:10px;background:#fbcfe8;"></div>
+                                <div class="spark-bar" style="height:16px;background:#f9a8d4;"></div>
+                                <div class="spark-bar" style="height:20px;background:#ec4899;"></div>
+                                <div class="spark-bar" style="height:24px;background:#ec4899;"></div>
+                                <div class="spark-bar" style="height:22px;background:#ec4899;"></div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Project 6 -->
+                    <tr>
+                        <td>
+                            <div class="proj-name-cell">
+                                <div class="proj-dot" style="background:#6b7280;"></div>
+                                <div class="proj-info">
+                                    <div class="proj-title">Office relocation plan</div>
+                                    <div class="proj-meta">3 phases · 9 tasks</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="status-pill on-hold">On Hold</span></td>
+                        <td class="col-center">
+                            <span class="health-dot orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="3">
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                </svg></span>
+                        </td>
+                        <td>
+                            <div class="tbl-progress">
+                                <div class="tbl-pct-bar">
+                                    <div class="tbl-pct-fill" style="width:25%;background:#9ca3af;"></div>
+                                </div>
+                                <span class="tbl-pct-label">25%</span>
+                            </div>
+                        </td>
+                        <td><span class="priority low">Low</span></td>
+                        <td>
+                            <div class="avatar-stack">
+                                <div class="av" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">MK</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="date-range">
+                                <span class="date-label">Sep 15 – Jan 30</span>
+                                138 days
+                            </div>
+                        </td>
+                        <td>
+                            <div class="next-ms">
+                                <div class="ms-diamond"><svg viewBox="0 0 24 24" fill="#9ca3af" stroke="none">
+                                        <polygon points="12 2 22 12 12 22 2 12" />
+                                    </svg></div>
+                                <div class="next-ms-info">
+                                    <div class="next-ms-name">Lease signed</div>
+                                    <div class="next-ms-date">Paused</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="budget-cell">
+                                <span class="budget-spent">€ 6.2k</span>
+                                <span class="budget-total">of € 35k</span>
+                                <div class="budget-mini-bar">
+                                    <div class="budget-mini-fill" style="width:18%;background:#9ca3af;"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="sparkline">
+                                <div class="spark-bar" style="height:12px;background:#e5e7eb;"></div>
+                                <div class="spark-bar" style="height:10px;background:#e5e7eb;"></div>
+                                <div class="spark-bar" style="height:6px;background:#d1d5db;"></div>
+                                <div class="spark-bar" style="height:2px;background:#d1d5db;"></div>
+                                <div class="spark-bar" style="height:2px;background:#d1d5db;"></div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Project 7 -->
+                    <tr>
+                        <td>
+                            <div class="proj-name-cell">
+                                <div class="proj-dot" style="background:var(--accent-green);"></div>
+                                <div class="proj-info">
+                                    <div class="proj-title">Q2 sales enablement</div>
+                                    <div class="proj-meta">3 phases · 11 tasks</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="status-pill completed">Completed</span></td>
+                        <td class="col-center">
+                            <span class="health-dot gray"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg></span>
+                        </td>
+                        <td>
+                            <div class="tbl-progress">
+                                <div class="tbl-pct-bar">
+                                    <div class="tbl-pct-fill" style="width:100%;background:var(--accent-green);"></div>
+                                </div>
+                                <span class="tbl-pct-label">100%</span>
+                            </div>
+                        </td>
+                        <td><span class="priority low">Low</span></td>
+                        <td>
+                            <div class="avatar-stack">
+                                <div class="av" style="background:linear-gradient(135deg,#f472b6,#ec4899);">AK</div>
+                                <div class="av" style="background:linear-gradient(135deg,#34d399,#10b981);">ES</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="date-range">
+                                <span class="date-label">Apr 3 – Jul 28</span>
+                                117 days
+                            </div>
+                        </td>
+                        <td>
+                            <div class="next-ms">
+                                <div class="ms-diamond"><svg viewBox="0 0 24 24" fill="#22c55e" stroke="none">
+                                        <polygon points="12 2 22 12 12 22 2 12" />
+                                    </svg></div>
+                                <div class="next-ms-info">
+                                    <div class="next-ms-name">All delivered</div>
+                                    <div class="next-ms-date">28 Jul 2023</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="budget-cell">
+                                <span class="budget-spent">€ 35k</span>
+                                <span class="budget-total">of € 35k</span>
+                                <div class="budget-mini-bar">
+                                    <div class="budget-mini-fill" style="width:100%;background:var(--accent-green);">
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="sparkline">
+                                <div class="spark-bar" style="height:14px;background:#bbf7d0;"></div>
+                                <div class="spark-bar" style="height:18px;background:#86efac;"></div>
+                                <div class="spark-bar" style="height:22px;background:#22c55e;"></div>
+                                <div class="spark-bar" style="height:24px;background:#22c55e;"></div>
+                                <div class="spark-bar" style="height:24px;background:#16a34a;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

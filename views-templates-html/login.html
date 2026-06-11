@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbix Studio — Logowanie</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #ffffff;
+            --sidebar-bg: #fafafa;
+            --text-primary: #1a1a2e;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --border-light: #f3f4f6;
+            --accent-green: #22c55e;
+            --accent-blue: #3b82f6;
+            --accent-purple: #7c5cfc;
+            --accent-orange: #f59e0b;
+            --hover-bg: #f3f4f6;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* ===================== LEFT PANEL ===================== */
+        .login-brand-panel {
+            width: 45%;
+            min-width: 420px;
+            background: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 40px 48px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-brand-panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(124, 92, 252, 0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(124, 92, 252, 0.06) 1px, transparent 1px);
+            background-size: 32px 32px;
+            pointer-events: none;
+        }
+
+        .login-brand-panel::after {
+            content: '';
+            position: absolute;
+            top: -80px;
+            right: -120px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(124, 92, 252, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .brand-top {
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 64px;
+        }
+
+        .brand-logo .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--accent-green);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-logo .logo-icon svg {
+            width: 20px;
+            height: 20px;
+            color: white;
+        }
+
+        .brand-logo span {
+            font-weight: 700;
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        .brand-headline {
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+            max-width: 380px;
+        }
+
+        .brand-headline .accent {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand-subtext {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.6;
+            max-width: 340px;
+        }
+
+        .brand-preview {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 48px;
+        }
+
+        .preview-card {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 16px 18px;
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .preview-card .card-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .preview-card .card-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .preview-card .card-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .preview-card .card-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 3px;
+        }
+
+        .preview-card .card-meta {
+            font-size: 11.5px;
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        .preview-card .card-progress {
+            width: 56px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .preview-card .card-progress-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        .brand-bottom {
+            position: relative;
+            z-index: 1;
+            padding-top: 32px;
+        }
+
+        .oss-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px 16px;
+        }
+
+        .oss-badge svg {
+            width: 18px;
+            height: 18px;
+            color: rgba(255, 255, 255, 0.5);
+            flex-shrink: 0;
+        }
+
+        .oss-badge span {
+            font-size: 12.5px;
+            color: rgba(255, 255, 255, 0.45);
+        }
+
+        .oss-badge a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .oss-badge a:hover {
+            color: #ffffff;
+        }
+
+        .glow-1 {
+            position: absolute;
+            bottom: -100px;
+            left: -60px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(34, 197, 94, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .glow-2 {
+            position: absolute;
+            top: 40%;
+            right: -40px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* ===================== RIGHT PANEL ===================== */
+        .login-form-panel {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .login-form-container {
+            width: 100%;
+            max-width: 380px;
+        }
+
+        .login-welcome {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            letter-spacing: -0.02em;
+        }
+
+        .login-welcome-sub {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 36px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .form-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: white;
+            transition: all 0.15s;
+        }
+
+        .form-input-wrapper:hover {
+            border-color: #d1d5db;
+        }
+
+        .form-input-wrapper:focus-within {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 3px rgba(124, 92, 252, 0.1);
+        }
+
+        .form-input-wrapper svg {
+            width: 16px;
+            height: 16px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .form-input-wrapper input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: inherit;
+            font-size: 13.5px;
+            color: var(--text-primary);
+            padding: 12px 0;
+        }
+
+        .form-input-wrapper input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-input-wrapper .toggle-password {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            color: var(--text-muted);
+            transition: color 0.15s;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-input-wrapper .toggle-password:hover {
+            color: var(--text-secondary);
+        }
+
+        .form-input-wrapper .toggle-password svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .form-extras {
+            display: flex;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            border: 1.5px solid var(--border);
+            border-radius: 5px;
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            transition: all 0.15s;
+            position: relative;
+            background: white;
+        }
+
+        .remember-me input[type="checkbox"]:checked {
+            background: var(--accent-purple);
+            border-color: var(--accent-purple);
+        }
+
+        .remember-me input[type="checkbox"]:checked::after {
+            content: '';
+            position: absolute;
+            left: 4.5px;
+            top: 1.5px;
+            width: 5px;
+            height: 8px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .remember-me span {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .login-submit {
+            width: 100%;
+            padding: 13px;
+            background: var(--accent-purple);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .login-submit:hover {
+            background: #6842e8;
+            box-shadow: 0 4px 16px rgba(124, 92, 252, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .login-submit:active {
+            transform: translateY(0);
+        }
+
+        .login-submit svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .signup-text {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .signup-text a {
+            color: var(--accent-purple);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.15s;
+        }
+
+        .signup-text a:hover {
+            color: #6842e8;
+        }
+
+        /* ===================== ANIMATIONS ===================== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .brand-logo {
+            animation: fadeInLeft 0.5s ease both;
+        }
+
+        .brand-headline {
+            animation: fadeInLeft 0.5s ease 0.1s both;
+        }
+
+        .brand-subtext {
+            animation: fadeInLeft 0.5s ease 0.15s both;
+        }
+
+        .preview-card:nth-child(1) {
+            animation: fadeInUp 0.5s ease 0.2s both;
+        }
+
+        .preview-card:nth-child(2) {
+            animation: fadeInUp 0.5s ease 0.3s both;
+        }
+
+        .preview-card:nth-child(3) {
+            animation: fadeInUp 0.5s ease 0.4s both;
+        }
+
+        .login-welcome {
+            animation: fadeInUp 0.5s ease 0.15s both;
+        }
+
+        .login-welcome-sub {
+            animation: fadeInUp 0.5s ease 0.2s both;
+        }
+
+        .form-group:nth-of-type(1) {
+            animation: fadeInUp 0.5s ease 0.25s both;
+        }
+
+        .form-group:nth-of-type(2) {
+            animation: fadeInUp 0.5s ease 0.3s both;
+        }
+
+        .form-extras {
+            animation: fadeInUp 0.5s ease 0.35s both;
+        }
+
+        .login-submit {
+            animation: fadeInUp 0.5s ease 0.4s both;
+        }
+
+        .signup-text {
+            animation: fadeInUp 0.5s ease 0.45s both;
+        }
+
+        /* ===================== RESPONSIVE ===================== */
+        @media (max-width: 960px) {
+            .login-brand-panel {
+                width: 40%;
+                min-width: 320px;
+                padding: 32px;
+            }
+
+            .brand-headline {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 720px) {
+            body {
+                flex-direction: column;
+            }
+
+            .login-brand-panel {
+                width: 100%;
+                min-width: unset;
+                padding: 28px 24px;
+                height: auto;
+            }
+
+            .brand-preview,
+            .brand-bottom {
+                display: none;
+            }
+
+            .brand-headline {
+                font-size: 24px;
+                margin-bottom: 8px;
+            }
+
+            .brand-subtext {
+                font-size: 13px;
+            }
+
+            .brand-logo {
+                margin-bottom: 24px;
+            }
+
+            .login-form-panel {
+                padding: 32px 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============ LEFT PANEL ============ -->
+    <div class="login-brand-panel">
+        <div class="glow-1"></div>
+        <div class="glow-2"></div>
+
+        <div class="brand-top">
+            <div class="brand-logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                    </svg>
+                </div>
+                <span>Orbix Studio</span>
+            </div>
+
+            <h1 class="brand-headline">
+                Zarządzaj projektami<br><span class="accent">bez chaosu.</span>
+            </h1>
+            <p class="brand-subtext">
+                Harmonogramy, WBS, wykresy Gantta i śledzenie postępów — wszystko w jednym miejscu dla Twojego zespołu.
+            </p>
+
+            <div class="brand-preview">
+                <div class="preview-card">
+                    <div class="card-icon" style="background: rgba(124, 92, 252, 0.15);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#7c5cfc" stroke-width="2">
+                            <polygon points="12 2 22 12 12 22 2 12" />
+                        </svg>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">New company website</div>
+                        <div class="card-meta">6 faz · 19 zadań · 3 kamienie milowe</div>
+                    </div>
+                    <div class="card-progress">
+                        <div class="card-progress-fill" style="width: 38%; background: var(--accent-purple);"></div>
+                    </div>
+                </div>
+
+                <div class="preview-card">
+                    <div class="card-icon" style="background: rgba(245, 158, 11, 0.15);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                        </svg>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Brand redesign</div>
+                        <div class="card-meta">4 fazy · 12 zadań</div>
+                    </div>
+                    <div class="card-progress">
+                        <div class="card-progress-fill" style="width: 65%; background: var(--accent-orange);"></div>
+                    </div>
+                </div>
+
+                <div class="preview-card">
+                    <div class="card-icon" style="background: rgba(34, 197, 94, 0.15);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                        </svg>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Mobile app MVP</div>
+                        <div class="card-meta">5 faz · 24 zadania</div>
+                    </div>
+                    <div class="card-progress">
+                        <div class="card-progress-fill" style="width: 12%; background: var(--accent-green);"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="brand-bottom">
+            <div class="oss-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22" />
+                </svg>
+                <span>Open source — <a href="#">GitHub</a></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ RIGHT PANEL ============ -->
+    <div class="login-form-panel">
+        <div class="login-form-container">
+            <h2 class="login-welcome">Witaj ponownie</h2>
+            <p class="login-welcome-sub">Zaloguj się, aby wrócić do swoich projektów</p>
+
+            <div class="form-group">
+                <label class="form-label">Adres e-mail</label>
+                <div class="form-input-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="4" width="20" height="16" rx="2" />
+                        <polyline points="22,4 12,13 2,4" />
+                    </svg>
+                    <input type="email" placeholder="marcin@orbix.io">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Hasło</label>
+                <div class="form-input-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0110 0v4" />
+                    </svg>
+                    <input type="password" placeholder="Wprowadź hasło" id="passwordInput">
+                    <button class="toggle-password" onclick="togglePassword()" type="button">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="eyeIcon">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-extras">
+                <label class="remember-me">
+                    <input type="checkbox" checked>
+                    <span>Zapamiętaj mnie</span>
+                </label>
+            </div>
+
+            <button class="login-submit" type="button">
+                Zaloguj się
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                </svg>
+            </button>
+
+            <p class="signup-text">
+                Nie masz jeszcze konta? <a href="#">Załóż konto</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const input = document.getElementById('passwordInput');
+            const icon = document.getElementById('eyeIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+            } else {
+                input.type = 'password';
+                icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+            }
+        }
+    </script>
+
+</body>
+
+</html>

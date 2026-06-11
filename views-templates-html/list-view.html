@@ -1,0 +1,2047 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbix Studio — New company website</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #ffffff;
+            --sidebar-bg: #fafafa;
+            --text-primary: #1a1a2e;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --border-light: #f3f4f6;
+            --accent-green: #22c55e;
+            --accent-blue: #3b82f6;
+            --accent-purple: #7c5cfc;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-pink: #ec4899;
+            --hover-bg: #f3f4f6;
+            --new-project-green: #22c55e;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* ===================== SIDEBAR ===================== */
+        .text-sidebar {
+            width: 220px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            height: 100vh;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            padding: 16px 16px;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .sidebar-logo .logo-icon {
+            width: 24px;
+            height: 24px;
+            background: #22c55e;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-logo .logo-icon svg {
+            width: 14px;
+            height: 14px;
+            color: white;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            padding: 0 8px;
+        }
+
+        .sidebar-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-decoration: none;
+            border-radius: 7px;
+        }
+
+        .sidebar-nav-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .sidebar-nav-item.active {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .sidebar-nav-item svg {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav-item .nav-chevron {
+            margin-left: auto;
+            font-size: 10px;
+            color: var(--text-muted);
+            transition: transform 0.2s;
+        }
+
+        .sidebar-nav-item.expanded .nav-chevron {
+            transform: rotate(90deg);
+        }
+
+        .sidebar-sub-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            padding: 2px 0 2px 18px;
+        }
+
+        .sidebar-sub-item {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 7px 10px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+            border-radius: 7px;
+        }
+
+        .sidebar-sub-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .sidebar-sub-item.active {
+            background: #ede9fe;
+            color: var(--accent-purple);
+            font-weight: 600;
+        }
+
+        .sidebar-sub-item svg {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-sub-item .nav-chevron {
+            margin-left: auto;
+            font-size: 10px;
+            color: var(--text-muted);
+            transition: transform 0.2s;
+        }
+
+        .sidebar-sub-item.expanded .nav-chevron {
+            transform: rotate(90deg);
+        }
+
+        /* Third-level: individual projects inside Projects */
+        .sidebar-sub-sub-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            padding: 2px 0 2px 16px;
+        }
+
+        .sidebar-sub-sub-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+            border-radius: 7px;
+        }
+
+        .sidebar-sub-sub-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .sidebar-sub-sub-item.active {
+            background: #ede9fe;
+            color: var(--accent-purple);
+            font-weight: 600;
+        }
+
+        .sidebar-sub-sub-item .project-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* Status badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11.5px;
+            font-weight: 500;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-left: 10px;
+        }
+
+        .status-badge.open {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .status-badge.open::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #22c55e;
+        }
+
+        .sidebar-section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 16px 8px;
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .sidebar-section-title .add-btn {
+            cursor: pointer;
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+
+        .bookmark-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .bookmark-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .bookmark-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .bookmark-dot.blue {
+            background: #3b82f6;
+        }
+
+        .bookmark-dot.orange {
+            background: #f59e0b;
+        }
+
+        .bookmark-dot.red {
+            background: #ef4444;
+        }
+
+        .bookmark-dot.pink {
+            background: #ec4899;
+        }
+
+        .bookmark-dot.dark-blue {
+            background: #1e3a5f;
+        }
+
+        .sidebar-spacer {
+            flex: 1;
+        }
+
+        .sidebar-bottom {
+            border-top: 1px solid var(--border);
+            padding: 10px 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .sidebar-bottom-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 7px;
+            transition: all 0.15s;
+        }
+
+        .sidebar-bottom-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .sidebar-bottom-item svg {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            cursor: pointer;
+            border-radius: 7px;
+            transition: background 0.15s;
+        }
+
+        .sidebar-user:hover {
+            background: var(--hover-bg);
+        }
+
+        .avatar-small {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .sidebar-user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .sidebar-user-email {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* ===================== MAIN CONTENT ===================== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: var(--bg);
+        }
+
+        /* ===================== GLOBAL SEARCH BAR ===================== */
+        .global-search-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 24px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg);
+            flex-shrink: 0;
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            transition: border-color 0.15s;
+            max-width: 480px;
+        }
+
+        .search-input-wrapper:hover,
+        .search-input-wrapper:focus-within {
+            border-color: #c4b5fd;
+        }
+
+        .search-input-wrapper svg {
+            width: 15px;
+            height: 15px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .search-input-wrapper input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: inherit;
+            font-size: 13px;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .search-input-wrapper input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-shortcut {
+            font-size: 11px;
+            background: var(--hover-bg);
+            padding: 2px 7px;
+            border-radius: 4px;
+            color: var(--text-muted);
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .global-search-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: auto;
+        }
+
+        .global-search-right button {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.15s;
+        }
+
+        .global-search-right button:hover {
+            background: var(--hover-bg);
+        }
+
+        .premium-badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--text-primary);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .premium-badge:hover {
+            background: #2d2d4e;
+        }
+
+        .premium-badge svg {
+            width: 14px;
+            height: 14px;
+            color: #fbbf24;
+        }
+
+        /* ===================== PAGE HEADER ===================== */
+        .top-bar {
+            padding: 18px 24px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .top-bar-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .page-title-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .page-title-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .page-title-icons svg {
+            width: 16px;
+            height: 16px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .page-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .top-bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .top-bar-actions button {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--text-secondary);
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .top-bar-actions button:hover {
+            background: var(--hover-bg);
+        }
+
+        .top-bar-actions .more-btn {
+            width: 32px;
+            padding: 6px;
+            justify-content: center;
+        }
+
+        /* ===================== TABS ===================== */
+        .tabs-row {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            flex-shrink: 0;
+        }
+
+        .tab {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            padding: 10px 16px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            color: var(--text-primary);
+            font-weight: 600;
+            border-bottom-color: var(--accent-purple);
+        }
+
+        .tab svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        /* ===================== ACTION BAR ===================== */
+        .action-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            font-family: inherit;
+            padding: 7px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            background: var(--hover-bg);
+        }
+
+        .btn-green {
+            background: var(--new-project-green);
+            color: white;
+            border-color: var(--new-project-green);
+            font-weight: 500;
+        }
+
+        .btn-green:hover {
+            background: #16a34a;
+        }
+
+        .btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* ===================== SUB HEADER ===================== */
+        .sub-header {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0 24px 8px;
+            flex-shrink: 0;
+        }
+
+        .sub-header .milestone-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .sub-header .milestone-label svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        /* ===================== CALENDAR TOOLBAR ===================== */
+        .calendar-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 24px 12px;
+            flex-shrink: 0;
+        }
+
+        .calendar-toolbar .date-label {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .calendar-nav button {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+            transition: all 0.15s;
+        }
+
+        .calendar-nav button:hover {
+            background: var(--hover-bg);
+        }
+
+        .calendar-nav .today-btn {
+            width: auto;
+            padding: 0 10px;
+        }
+
+        .calendar-nav .week-btn {
+            width: auto;
+            padding: 0 10px;
+            gap: 4px;
+            display: flex;
+            align-items: center;
+        }
+
+        .calendar-toolbar .toolbar-icons {
+            display: flex;
+            gap: 4px;
+        }
+
+        .calendar-toolbar .toolbar-icons button {
+            width: 28px;
+            height: 28px;
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: all 0.15s;
+        }
+
+        .calendar-toolbar .toolbar-icons button:hover {
+            background: var(--hover-bg);
+        }
+
+        /* ===================== CALENDAR GRID ===================== */
+        .calendar-wrapper {
+            flex: 1;
+            overflow: auto;
+            padding: 0 24px 24px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: 70px repeat(7, 1fr);
+            min-height: 600px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .cal-header {
+            background: var(--sidebar-bg);
+            padding: 12px 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .cal-header.time-col {
+            border-right: 1px solid var(--border);
+        }
+
+        .cal-header .day-name {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .cal-header .day-num {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 2px;
+        }
+
+        .cal-header.today-col .day-num {
+            color: var(--accent-purple);
+        }
+
+        .time-cell {
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border-light);
+            padding: 8px 6px;
+            font-size: 11.5px;
+            color: var(--text-muted);
+            text-align: right;
+            background: var(--sidebar-bg);
+        }
+
+        .day-cell {
+            border-right: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+            position: relative;
+            min-height: 56px;
+        }
+
+        .day-cell:last-child {
+            border-right: none;
+        }
+
+        /* ===================== TASK CARDS ===================== */
+        .task-card {
+            position: absolute;
+            left: 4px;
+            right: 4px;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: box-shadow 0.15s;
+            border: 1px solid;
+            overflow: hidden;
+        }
+
+        .task-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-card-green {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+
+        .task-card-blue {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+        }
+
+        .task-card-orange {
+            background: #fffbeb;
+            border-color: #fde68a;
+        }
+
+        .task-card-title {
+            font-weight: 600;
+            font-size: 12.5px;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+
+        .task-card-time {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .task-card-time svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .task-card-thumbnails {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+
+        .task-card-thumbnails .thumb {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            background: #e5e7eb;
+        }
+
+        .task-card-thumbnails .thumb.dark {
+            background: #1f2937;
+        }
+
+        .task-card-thumbnails .thumb.mid {
+            background: #9ca3af;
+        }
+
+        .task-progress {
+            margin-bottom: 6px;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        .progress-fill.green {
+            background: var(--accent-green);
+        }
+
+        .progress-fill.blue {
+            background: var(--accent-blue);
+        }
+
+        .progress-fill.orange {
+            background: var(--accent-orange);
+        }
+
+        .progress-fill.red {
+            background: var(--accent-red);
+        }
+
+        .progress-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .progress-label .status {
+            font-weight: 500;
+        }
+
+        .task-card-footer {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 6px;
+        }
+
+        .avatar-stack {
+            display: flex;
+        }
+
+        .avatar-circle {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid white;
+            margin-left: -6px;
+        }
+
+        .avatar-circle:first-child {
+            margin-left: 0;
+        }
+
+        .avatar-circle.a1 {
+            background: linear-gradient(135deg, #f472b6, #ec4899);
+        }
+
+        .avatar-circle.a2 {
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+        }
+
+        .avatar-count {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-left: 4px;
+            font-weight: 600;
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        .today-line {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: var(--accent-purple);
+            opacity: 0.5;
+            z-index: 1;
+        }
+
+        .today-dot {
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            background: var(--accent-purple);
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+            z-index: 2;
+        }
+
+        /* ===================== WBS TABLE ===================== */
+        .wbs-wrapper {
+            flex: 1;
+            overflow: auto;
+            padding: 0 24px 24px;
+        }
+
+        .wbs-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 13px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .wbs-table thead th {
+            position: sticky;
+            top: 0;
+            background: var(--sidebar-bg);
+            padding: 10px 12px;
+            text-align: left;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border-bottom: 2px solid var(--border);
+            white-space: nowrap;
+            z-index: 2;
+        }
+
+        .wbs-table thead th.col-milestone,
+        .wbs-table thead th.col-id,
+        .wbs-table thead th.col-wbs {
+            text-align: center;
+        }
+
+        .wbs-table tbody td {
+            padding: 9px 12px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        .wbs-table tbody tr:hover td {
+            background: #f8f8fb;
+        }
+
+        .wbs-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Column widths */
+        .col-id {
+            width: 42px;
+            text-align: center;
+            color: var(--text-muted) !important;
+            font-size: 12px;
+        }
+
+        .col-wbs {
+            width: 50px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        .col-task {
+            min-width: 220px;
+        }
+
+        .col-duration {
+            width: 80px;
+        }
+
+        .col-start,
+        .col-finish {
+            width: 110px;
+            font-size: 12.5px;
+        }
+
+        .col-pct {
+            width: 120px;
+        }
+
+        .col-predecessors {
+            width: 90px;
+            text-align: center;
+        }
+
+        .col-resource {
+            width: 100px;
+        }
+
+        .col-milestone {
+            width: 36px;
+            text-align: center;
+        }
+
+        .col-priority {
+            width: 65px;
+            text-align: center;
+        }
+
+        .col-status {
+            width: 100px;
+        }
+
+        /* Phase rows (summary tasks) */
+        .wbs-phase td {
+            background: #fafafe;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .wbs-phase td.col-task {
+            font-size: 13.5px;
+        }
+
+        .wbs-phase td.col-task strong {
+            font-weight: 700;
+        }
+
+        /* Tree elements */
+        .tree-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            font-size: 11px;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 4px;
+            margin-right: 4px;
+            transition: background 0.15s;
+            vertical-align: middle;
+        }
+
+        .tree-toggle:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .phase-icon {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        .indent-1 {
+            display: inline-block;
+            width: 32px;
+        }
+
+        /* Progress bar in table */
+        .col-pct {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        thead .col-pct {
+            display: table-cell;
+        }
+
+        .pct-bar {
+            width: 52px;
+            height: 5px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .pct-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: var(--accent-blue);
+        }
+
+        .col-pct span {
+            font-size: 12px;
+            font-weight: 500;
+            min-width: 32px;
+        }
+
+        /* Resource tags */
+        .resource-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            background: #f0f0f5;
+            border-radius: 12px;
+            font-size: 11.5px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        /* Priority badges */
+        .priority {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .priority.high {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .priority.medium {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .priority.low {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        /* Status badges */
+        .task-status {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .task-status.done {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .task-status.progress {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .task-status.pending {
+            background: #f3f4f6;
+            color: #9ca3af;
+        }
+
+        .task-status.blocked {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Milestone row subtle highlight */
+        .milestone-row td {
+            background: #fefcf3;
+        }
+
+        .milestone-row:hover td {
+            background: #fdf8e8;
+        }
+
+        @media (max-width: 800px) {
+            .text-sidebar {
+                width: 180px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .text-sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============ SIDEBAR ============ -->
+    <div class="text-sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                    </svg>
+                </div>
+                Orbix Studio
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a class="sidebar-nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                    <rect x="14" y="14" width="7" height="7" rx="1" />
+                </svg>
+                Dashboard
+            </a>
+
+            <a class="sidebar-nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 11l3 3L22 4" />
+                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                </svg>
+                ToDo Lists
+            </a>
+
+            <a class="sidebar-nav-item expanded" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                        d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                    <line x1="12" y1="22.08" x2="12" y2="12" />
+                </svg>
+                Spaces
+                <span class="nav-chevron">▸</span>
+            </a>
+
+            <div class="sidebar-sub-nav">
+                <div class="sidebar-sub-item expanded">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" />
+                    </svg>
+                    Projects
+                    <span class="nav-chevron">▸</span>
+                </div>
+
+                <div class="sidebar-sub-sub-nav">
+                    <div class="sidebar-sub-sub-item active">
+                        <span class="project-dot" style="background: var(--accent-purple);"></span>
+                        New company website
+                    </div>
+                    <div class="sidebar-sub-sub-item">
+                        <span class="project-dot" style="background: var(--accent-orange);"></span>
+                        Brand redesign
+                    </div>
+                </div>
+
+                <div class="sidebar-sub-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                    </svg>
+                    Documents
+                </div>
+            </div>
+
+            <a class="sidebar-nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                </svg>
+                Time Sheets
+            </a>
+            <a class="sidebar-nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+                Growth Stats
+            </a>
+            <a class="sidebar-nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                        d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                </svg>
+                Automation
+            </a>
+            <a class="sidebar-nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="5" r="3" />
+                    <line x1="12" y1="8" x2="12" y2="16" />
+                    <circle cx="12" cy="19" r="3" />
+                    <line x1="6" y1="12" x2="18" y2="12" />
+                </svg>
+                Integration
+            </a>
+            <a class="sidebar-nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                    <path d="M16 3.13a4 4 0 010 7.75" />
+                </svg>
+                Team Member
+            </a>
+            <a class="sidebar-nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <line x1="2" y1="10" x2="22" y2="10" />
+                </svg>
+                Financial
+            </a>
+        </nav>
+
+        <div class="sidebar-section-title">
+            <span>Bookmarks</span>
+            <span class="add-btn">+</span>
+        </div>
+
+        <div class="bookmark-item"><span class="bookmark-dot blue"></span> #General</div>
+        <div class="bookmark-item"><span class="bookmark-dot orange"></span> UI Design Projects</div>
+        <div class="bookmark-item"><span class="bookmark-dot red"></span> Recently done</div>
+        <div class="bookmark-item"><span class="bookmark-dot pink"></span> Call booked on por...</div>
+        <div class="bookmark-item"><span class="bookmark-dot dark-blue"></span> Design Phase</div>
+
+        <div class="sidebar-spacer"></div>
+
+        <div class="sidebar-bottom">
+            <div class="sidebar-bottom-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                        d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
+                </svg>
+                Settings
+            </div>
+            <div class="sidebar-bottom-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                Help & Support
+            </div>
+            <div class="sidebar-user">
+                <div class="avatar-small">M</div>
+                <div class="sidebar-user-info">
+                    <span class="sidebar-user-name">Marcin K.</span>
+                    <span class="sidebar-user-email">marcin@orbix.io</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ MAIN CONTENT ============ -->
+    <div class="main-content">
+
+        <!-- Global search bar -->
+        <div class="global-search-bar">
+            <div class="search-input-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input type="text" placeholder="Search projects, spaces, tasks...">
+                <span class="search-shortcut">⌘K</span>
+            </div>
+            <div class="global-search-right">
+                <button title="Notifications">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                        <path d="M13.73 21a2 2 0 01-3.46 0" />
+                    </svg>
+                </button>
+                <button title="Messages">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                    </svg>
+                </button>
+                <div class="premium-badge">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z" />
+                    </svg>
+                    Premium
+                </div>
+            </div>
+        </div>
+
+        <!-- Page header -->
+        <div class="top-bar">
+            <div class="top-bar-row">
+                <div>
+                    <div class="page-title-area">
+                        <span class="page-title">New company website</span>
+                        <span class="status-badge open">Open</span>
+                        <div class="page-title-icons">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="16" x2="12" y2="12" />
+                                <line x1="12" y1="8" x2="12.01" y2="8" />
+                            </svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon
+                                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="page-subtitle">Spaces › Projects › New company website</div>
+                </div>
+                <div class="top-bar-actions">
+                    <button>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                        </svg>
+                        Activity
+                    </button>
+                    <button class="more-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="5" r="1.5" />
+                            <circle cx="12" cy="12" r="1.5" />
+                            <circle cx="12" cy="19" r="1.5" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Waterfall tabs -->
+        <div class="tabs-row">
+            <div class="tab">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                </svg>
+                Main View
+            </div>
+            <div class="tab active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="8" y1="6" x2="21" y2="6" />
+                    <line x1="8" y1="12" x2="21" y2="12" />
+                    <line x1="8" y1="18" x2="21" y2="18" />
+                    <line x1="3" y1="6" x2="3.01" y2="6" />
+                    <line x1="3" y1="12" x2="3.01" y2="12" />
+                    <line x1="3" y1="18" x2="3.01" y2="18" />
+                </svg>
+                List View
+            </div>
+            <div class="tab">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <line x1="3" y1="9" x2="21" y2="9" />
+                    <line x1="9" y1="3" x2="9" y2="9" />
+                    <rect x="12" y="12" width="4" height="2" rx="0.5" />
+                    <rect x="12" y="16" width="6" height="2" rx="0.5" />
+                    <rect x="5" y="14" width="5" height="2" rx="0.5" />
+                </svg>
+                Gantt View
+            </div>
+            <div class="tab">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                Calendar View
+            </div>
+            <div class="tab" style="color:var(--text-muted);">+</div>
+        </div>
+
+        <!-- Action bar -->
+        <div class="action-bar">
+            <button class="btn btn-green">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                New Task
+            </button>
+            <button class="btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                Search
+            </button>
+            <button class="btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="4" y1="21" x2="4" y2="14" />
+                    <line x1="4" y1="10" x2="4" y2="3" />
+                    <line x1="12" y1="21" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12" y2="3" />
+                    <line x1="20" y1="21" x2="20" y2="16" />
+                    <line x1="20" y1="12" x2="20" y2="3" />
+                </svg>
+                Filter
+            </button>
+            <button class="btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6" />
+                    <polyline points="3 12 9 12 21 12" />
+                    <polyline points="3 18 13 18 21 18" />
+                </svg>
+                Group by Phase
+            </button>
+            <button class="btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                    <rect x="14" y="14" width="7" height="7" />
+                </svg>
+                Columns
+            </button>
+            <button class="btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Export
+            </button>
+        </div>
+
+        <!-- WBS Table -->
+        <div class="wbs-wrapper">
+            <table class="wbs-table">
+                <thead>
+                    <tr>
+                        <th class="col-id">ID</th>
+                        <th class="col-wbs">WBS</th>
+                        <th class="col-task">Task Name</th>
+                        <th class="col-duration">Duration</th>
+                        <th class="col-start">Start</th>
+                        <th class="col-finish">Finish</th>
+                        <th class="col-pct">% Complete</th>
+                        <th class="col-predecessors">Predecessors</th>
+                        <th class="col-resource">Resource</th>
+                        <th class="col-milestone">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polygon points="12 2 22 12 12 22 2 12" />
+                            </svg>
+                        </th>
+                        <th class="col-priority">Priority</th>
+                        <th class="col-status">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Phase 1: Initiation -->
+                    <tr class="wbs-phase expanded">
+                        <td class="col-id">1</td>
+                        <td class="col-wbs">1</td>
+                        <td class="col-task">
+                            <span class="tree-toggle">▾</span>
+                            <span class="phase-icon" style="background:#7c5cfc;"></span>
+                            <strong>Initiation</strong>
+                        </td>
+                        <td class="col-duration">12 days</td>
+                        <td class="col-start">04 Sep 2023</td>
+                        <td class="col-finish">19 Sep 2023</td>
+                        <td class="col-pct">
+                            <div class="pct-bar">
+                                <div class="pct-fill" style="width:100%; background:var(--accent-green);"></div>
+                            </div><span>100%</span>
+                        </td>
+                        <td class="col-predecessors">—</td>
+                        <td class="col-resource">—</td>
+                        <td class="col-milestone"></td>
+                        <td class="col-priority">—</td>
+                        <td class="col-status"><span class="task-status done">Done</span></td>
+                    </tr>
+                    <tr class="wbs-task level-1">
+                        <td class="col-id">2</td>
+                        <td class="col-wbs">1.1</td>
+                        <td class="col-task"><span class="indent-1"></span>Define project scope &amp; goals</td>
+                        <td class="col-duration">3 days</td>
+                        <td class="col-start">04 Sep 2023</td>
+                        <td class="col-finish">06 Sep 2023</td>
+                        <td class="col-pct">
+                            <div class="pct-bar">
+                                <div class="pct-fill" style="width:100%; background:var(--accent-green);"></div>
+                            </div><span>100%</span>
+                        </td>
+                        <td class="col-predecessors">—</td>
+                        <td class="col-resource"><span class="resource-tag">Anna K.</span></td>
+                        <td class="col-milestone"></td>
+                        <td class="col-priority"><span class="priority high">High</span></td>
+                        <td class="col-status"><span class="task-status done">Done</span></td>
+                    </tr>
+                    <tr class="wbs-task level-1">
+                        <td class="col-id">3</td>
+                        <td class="col-wbs">1.2</td>
+                        <td class="col-task"><span class="indent-1"></span>Stakeholder analysis</td>
+                        <td class="col-duration">2 days</td>
+                        <td class="col-start">07 Sep 2023</td>
+                        <td class="col-finish">08 Sep 2023</td>
+                        <td class="col-pct">
+                            <div class="pct-bar">
+                                <div class="pct-fill" style="width:100%; background:var(--accent-green);"></div>
+                            </div><span>100%</span>
+                        </td>
+                        <td class="col-predecessors">2</td>
+                        <td class="col-resource"><span class="resource-tag">Anna K.</span></td>
+                        <td class="col-milestone"></td>
+                        <td class="col-priority"><span class="priority medium">Med</span></td>
+                        <td class="col-status"><span class="task-status done">Done</span></td>
+                    </tr>
+                    <tr class="wbs-task level-1">
+                        <td class="col-id">4</td>
+                        <td class="col-wbs">1.3</td>
+                        <td class="col-task"><span class="indent-1"></span>Create project charter</td>
+                        <td class="col-duration">4 days</td>
+                        <td class="col-start">09 Sep 2023</td>
+                        <td class="col-finish">14 Sep 2023</td>
+                        <td class="col-pct">
+                            <div class="pct-bar">
+                                <div class="pct-fill" style="width:100%; background:var(--accent-green);"></div>
+                            </div><span>100%</span>
+                        </td>
+                        <td class="col-predecessors">3</td>
+                        <td class="col-resource"><span class="resource-tag">Marcin K.</span></td>
+                        <td class="col-milestone"></td>
+                        <td class="col-priority"><span class="priority high">High</span></td>
+                        <td class="col-status"><span class="task-status done">Done</span></td>
+                    </tr>
+                    <tr class="wbs-task level-1 milestone-row">
+                        <td class="col-id">5</td>
+                        <td class="col-wbs">1.4</td>
+                        <td class="col-task"><span class="indent-1"></span>✦ Kickoff meeting</td>
+                        <td class="col-duration">0 days</td>
+                        <td class="col-start">19 Sep 2023</td>
+                        <td class="col-finish">19 Sep 2023</td>
+                        <td class="col-pct">
+                            <div class="pct-bar">
+                                <div class="pct-fill" style="width:100%; background:var(--accent-green);"></div>
+                            </div><span>100%</span>
+                        </td>
+                        <td class="col-predecessors">4</td>
+                        <td class="col-resource"><span class="resource-tag">Team</span></td>
+                        <td class="col-milestone"><svg viewBox="0 0 24 24" width="14" height="14"
+                                fill="var(--accent-purple)" stroke="none">
+                                <polygon points="12 2 22 12 12 22 2 12" />
+                            </svg></td>
+                        <td class="col-priority"><span class="priority high">High</span></td>
+                        <td class="col-status"><span class="task-status done">Done</span></td>
+                    </tr>
+
+                    <!-- Phase 2: Planning -->
+                    <tr class="wbs-phase expanded">
+                        <td class="col-id">6</td>
+                        <td class="col-wbs">2</td>
+                        <td class="col-task">
+                            <span class="tree-toggle">▾</span>
+                            <span class="phase-icon" style="background:#3b82f6;"></span>
+                            <strong>Planning</strong>
+                        </td>
+                        <td class="col-duration">18 days</td>
+                        <td class="col-start">20 Sep 2023</td>
+                        <td class="col-finish">13 Oct 2023</td>
+                        <td class="col-pct">
+                            <div class="pct-bar">
+                                <div class="pct-fill" style="width:75%; background:var(--accent-blue);"></div>
+                            </div><span>75%</span>
+                        </td>
+                        <td class="col-predecessors">5</td>
+                        <td class="col-resource">—</td>
+                        <td class="col-milestone"></td>
+                        <td class="col-priority">—</td>
+                        <td class="col-status"><span class="task-status progress">In Progress</span></td>
+                    </tr>
+                    <tr class="wbs-task level-1">
+                        <td class="col-id">7</td>
+                        <td class="col-wbs">2.1</td>
+                        <td class="col-task"><span class="indent-1"></span>Information architecture</td>
+                        <td class="col-duration">5 days</td>
+                        <td class="col-start">20 Sep 2023</td>
+                        <td class="col-finish">26 Sep 2023</td>
+                        <td class="col-pct">
+                            <div class="pct-bar">
+                                <div class="pct-fill" style="width:100%; background:var(--accent-green);"></div>
+                            </div><span>100%</span>
+                        </td>
+                        <td class="col-predecessors">5</td>
+                        <td class="col-resource"><span class="resource-tag">Ewa S.</span></td>
+                        <td class="col-milestone"></td>
+                        <td class="col-priority"><span class="priority high">High</span></td>
+                        <td class="col-status"><span class="task-status done">Done</span></td>
+                    </tr>
+                    <tr class="wbs-task level-1">
+                        <td class="col-id">8</td>
+                        <td class="col-wbs">2.2</td>
+                        <td class="col-task"><span class="indent-1"></span>Technical requirements</td>
+                        <td class="col-duration">4 days</td>
+                        <td class="col-start">20 Sep 2023</td>
+                        <td class="col-finish">25 Sep 2023</td>
+                        <td class="col-pct">
+                            <div class="pct-bar">
+                                <div class="pct-fill" style="width:100%; background:var(--accent-green);"></div>
+                            </div><span>100%</span>
+                        </td>
+                        <td class="col-predecessors">5</td>
+                        <td class="col-resource"><span class="resource-tag">Tomek R.</span></td>
+                        <td class="col-milestone"></td>
+                        <td class="col-priority"><span class="priority high">High</span></td>
+                        <td class="col-status"><span class="task-status done">Done</span></td>
+                    </tr>
+                    <tr class="wbs-task level-1">
+                        <td class="col-id">9</td>
+                        <td class="col-wbs">2.3</td>
+                        <td class="col-task"><span class="indent-1"></span>Content strategy &amp; sitemap</td>
+                        <td class="col-duration">5 days</td>
+                        <td class="col-start">27 Sep 2023</td>
+                        <td class="col-finish">03 Oct 2023</td>
+                        <td class="col-pct">
+                            <div class="pct-bar">
+                                <div class="pct-fill" style="width:60%; background:var(--accent-blue);"></div>
+                            </div><span>60%</span>
+                        </td>
+                        <td class="col-predecessors">7</td>
+                        <td class="col-resource"><span class="resource-tag">Ewa S.</span></td>
+                        <td class="col-milestone"></td>
+                        <td class="col-priority"><span class="priority medium">Med</span></td>
+                        <td class="col-status"><span class="task-status progress">In Progress</span></td>
+                    </tr>
+                    <tr class="wbs-task level-1">
+                        <td class="col-id">10</td>
+                        <td class="col-wbs">2.4</td>
+                        <td class="col-task"><span class="indent-1"></span>Risk assessment</td>
+                        <td class="col-duration">3 days</td>
+                        <td class="col-start">04 Oct 2023</td>
+                        <td class="col-finish">06 Oct 2023</td>
+                        <td class="col-pct">
+                            <div class="pct-bar">
+                                <div class="pct-fill" style="width:20%; background:var(--accent-orange);"></div>
+                            </div><span>20%</span>
+                        </td>
+                        <td class="col-predecessors">8, 9</td>
+                        <td class="col-resource"><span class="resource-tag">Marcin K.</span></td>
+                        <td class="col-milestone"></td>
+                        <td class="col-priority"><span class="priority medium">Med</span></td>
+                        <td class="col-status"><span class="task-status progress">In Progress</span></td>
+                    </tr>
+                    <tr class="wbs-task level-1 milestone-row">
+                        <td class="col-id">11</td>
+                        <td class="col-wbs">2.5</td>
+                        <td class="col-task"><span class="indent-1"></span>✦ Planning complete</td>
+                        <td class="col-duration">0 days</td>
+                        <td class="col-start">13 Oct 2023</td>
+                        <td class="col-finish">13 Oct 2023</td>
+                        <td class="col-pct">
+                            <div class="pct-bar">
+                                <div class="pct-fill" style="width:0%;"></div>
+                            </div><span>0%</span>
+                        </td>
+                        <td class="col-predecessors">10</td>
+                        <td class="col-resource"><span class="resource-tag">Marcin K.</span></td>
+                        <td class="col-milestone"><svg viewBox="0 0 24 24" width="14" height="14"
+                                fill="var(--accent-blue)" stroke="none">
+                                <polygon points="12 2 22 12 12 22 2 12" />
+                            </svg></td>
+                        <td class="col-priority"><span class="priority high">High</span></td>
+                        <td class="col-status"><span class="task-status pending">Pending</span></td>
+                    </tr>
+
+                    <!-- Phase 3: Design -->
+                    <tr class="wbs-phase expanded">
+                        <td class="col-id">12</td>
+                        <td class="col-wbs">3</td>
+                        <td class="col-task">
+                            <span class="tree-toggle">▾</span>
+                            <span class="phase-icon" style="background:#f59e0b;"></span>
+                            <strong>Design</strong>
+                        </td>
+                        <td class="col-duration">25 days</td>
+                        <td class="col-start">16 Oct 2023</td>
+                        <td class="col-finish">17 Nov 2023</td>
+                        <td class="col-pct">
+                            <div class="pct-bar">
+                                <div class="pct-fill" style="width:0%;"></div>
+                            </div><span>0%</span>
+                        </td>
+                        <td class="col-predecessors">11</td>
+                        <td class="col-resource">—</td>
+                        <td class="col-milestone"></td>
+                        <td class="col-priority">—</td>
+                        <td class="col-status"><span class="task-status pending">Pending</span></td>
+                    </tr>
+                    <tr class="wbs-task level-1">
+                        <td class="col-id">13</td>
+                        <td class="col-wbs">3.1</td>
+                        <td class="col-task"><span class="indent-1"></span>Create visual mood boards</td>
+                        <td class="col-duration">4 days</td>
+                        <td class="col-start">16 Oct 2023</td>
+                        <td class="col-finish">19 Oct 2023</td>
+                        <td class="col-pct">
+                            <div class="pct-bar">
+                                <div class="pct-fill" style="width:0%;"></div>
+                            </div><span>0%</span>
+                        </td>
+                        <td class="col-predecessors">11</td>
+                        <td class="col-resource"><span class="resource-tag">Kasia M.</span></td>
+                        <td class="col-milestone"></td>
+                        <td class="col-priority"><span class="priority medium">Med</span></td>
+                        <td class="col-status"><span class="task-status pending">Pending</span></td>
+                    </tr>
+                    <tr class="wbs-task level-1">
+                        <td class="col-id">14</td>
+                        <td class="col-wbs">3.2</td>
+                        <td class="col-task"><span class="indent-1"></span>Wireframes (low fidelity)</td>
+                        <td class="col-duration">6 days</td>
+                        <td class="col-start">20 Oct 2023</td>
+                        <td class="col-finish">27 Oct 2023</td>
+                        <td class="col-pct">
+                            <div class="pct-bar">
+                                <div class="pct-fill" style="width:0%;"></div>
+                            </div><span>0%</span>
+                        </td>
+                        <td class="col-predecessors">13</td>
+                        <td class="col-resource"><span class="resource-tag">Kasia M.</span></td>
+                        <td class="col-milestone"></td>
+                        <td class="col-priority"><span class="priority high">High</span></td>
+                        <td class="col-status"><span class="task-status pending">Pending</span></td>
+                    </tr>
+                    <tr class="wbs-task level-1">
+                        <td class="col-id">15</td>
+                        <td class="col-wbs">3.3</td>
+                        <td class="col-task"><span class="indent-1"></span>UI design (high fidelity)</td>
+                        <td class="col-duration">10 days</td>
+                        <td class="col-start">30 Oct 2023</td>
+                        <td class="col-finish">10 Nov 2023</td>
+                        <td class="col-pct">
+                            <div class="pct-bar">
+                                <div class="pct-fill" style="width:0%;"></div>
+                            </div><span>0%</span>
+                        </td>
+                        <td class="col-predecessors">14</td>
+                        <td class="col-resource"><span class="resource-tag">Kasia M.</span></td>
+                        <td class="col-milestone"></td>
+                        <td class="col-priority"><span class="priority high">High</span></td>
+                        <td class="col-status"><span class="task-status pending">Pending</span></td>
+                    </tr>
+                    <tr class="wbs-task level-1 milestone-row">
+                        <td class="col-id">16</td>
+                        <td class="col-wbs">3.4</td>
+                        <td class="col-task"><span class="indent-1"></span>✦ Design sign-off</td>
+                        <td class="col-duration">0 days</td>
+                        <td class="col-start">17 Nov 2023</td>
+                        <td class="col-finish">17 Nov 2023</td>
+                        <td class="col-pct">
+                            <div class="pct-bar">
+                                <div class="pct-fill" style="width:0%;"></div>
+                            </div><span>0%</span>
+                        </td>
+                        <td class="col-predecessors">15</td>
+                        <td class="col-resource"><span class="resource-tag">Marcin K.</span></td>
+                        <td class="col-milestone"><svg viewBox="0 0 24 24" width="14" height="14"
+                                fill="var(--accent-orange)" stroke="none">
+                                <polygon points="12 2 22 12 12 22 2 12" />
+                            </svg></td>
+                        <td class="col-priority"><span class="priority high">High</span></td>
+                        <td class="col-status"><span class="task-status pending">Pending</span></td>
+                    </tr>
+
+                    <!-- Phase 4: Development -->
+                    <tr class="wbs-phase">
+                        <td class="col-id">17</td>
+                        <td class="col-wbs">4</td>
+                        <td class="col-task">
+                            <span class="tree-toggle">▸</span>
+                            <span class="phase-icon" style="background:#22c55e;"></span>
+                            <strong>Development</strong>
+                        </td>
+                        <td class="col-duration">35 days</td>
+                        <td class="col-start">20 Nov 2023</td>
+                        <td class="col-finish">08 Jan 2024</td>
+                        <td class="col-pct">
+                            <div class="pct-bar">
+                                <div class="pct-fill" style="width:0%;"></div>
+                            </div><span>0%</span>
+                        </td>
+                        <td class="col-predecessors">16</td>
+                        <td class="col-resource">—</td>
+                        <td class="col-milestone"></td>
+                        <td class="col-priority">—</td>
+                        <td class="col-status"><span class="task-status pending">Pending</span></td>
+                    </tr>
+
+                    <!-- Phase 5: Testing & QA -->
+                    <tr class="wbs-phase">
+                        <td class="col-id">18</td>
+                        <td class="col-wbs">5</td>
+                        <td class="col-task">
+                            <span class="tree-toggle">▸</span>
+                            <span class="phase-icon" style="background:#ef4444;"></span>
+                            <strong>Testing &amp; QA</strong>
+                        </td>
+                        <td class="col-duration">15 days</td>
+                        <td class="col-start">09 Jan 2024</td>
+                        <td class="col-finish">29 Jan 2024</td>
+                        <td class="col-pct">
+                            <div class="pct-bar">
+                                <div class="pct-fill" style="width:0%;"></div>
+                            </div><span>0%</span>
+                        </td>
+                        <td class="col-predecessors">17</td>
+                        <td class="col-resource">—</td>
+                        <td class="col-milestone"></td>
+                        <td class="col-priority">—</td>
+                        <td class="col-status"><span class="task-status pending">Pending</span></td>
+                    </tr>
+
+                    <!-- Phase 6: Deployment & Go-Live -->
+                    <tr class="wbs-phase">
+                        <td class="col-id">19</td>
+                        <td class="col-wbs">6</td>
+                        <td class="col-task">
+                            <span class="tree-toggle">▸</span>
+                            <span class="phase-icon" style="background:#ec4899;"></span>
+                            <strong>Deployment &amp; Go-Live</strong>
+                        </td>
+                        <td class="col-duration">8 days</td>
+                        <td class="col-start">30 Jan 2024</td>
+                        <td class="col-finish">08 Feb 2024</td>
+                        <td class="col-pct">
+                            <div class="pct-bar">
+                                <div class="pct-fill" style="width:0%;"></div>
+                            </div><span>0%</span>
+                        </td>
+                        <td class="col-predecessors">18</td>
+                        <td class="col-resource">—</td>
+                        <td class="col-milestone"></td>
+                        <td class="col-priority">—</td>
+                        <td class="col-status"><span class="task-status pending">Pending</span></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -14,6 +14,7 @@ import { SpaceModule } from './modules/space/space.module';
 import { ProjectModule } from './modules/project/project.module';
 import { TaskModule } from './modules/task/task.module';
 import { CommentModule } from './modules/comment/comment.module';
+import { DependencyModule } from './modules/dependency/dependency.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { CommentModule } from './modules/comment/comment.module';
     ProjectModule,
     TaskModule,
     CommentModule,
+    DependencyModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },

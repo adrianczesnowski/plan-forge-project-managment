@@ -21,5 +21,10 @@
   "This invitation was sent to a different email address": "To zaproszenie zostało wysłane na inny adres email",
   "Leave your current organization before accepting an invitation": "Opuść obecną organizację, zanim zaakceptujesz zaproszenie",
   "You cannot invite yourself": "Nie możesz zaprosić samego siebie",
-  "fallback": "Coś poszło nie tak, spróbuj ponownie później"
+  "fallback": "Coś poszło nie tak, spróbuj ponownie później",
+  "Dependency not found": "Nie znaleziono zależności",
+  "Both tasks must belong to the same project": "Oba zadania muszą należeć do tego samego projektu",
+  "These tasks are already linked": "Te zadania są już połączone",
+  "This dependency would create a cycle": "Ta zależność utworzyłaby cykl",
+  "Task cannot depend on itself": "Zadanie nie może zależeć od samego siebie"
 }

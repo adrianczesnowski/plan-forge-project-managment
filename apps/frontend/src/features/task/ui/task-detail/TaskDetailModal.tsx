@@ -9,6 +9,7 @@ import { TaskTitle } from './TaskTitle';
 import { TaskMetaGrid } from './TaskMetaGrid';
 import { TaskDescription } from './TaskDescription';
 import { TaskSubtasks } from './TaskSubtasks';
+import { TaskDependencies } from './TaskDependencies';
 import { TaskComments } from './TaskComments';
 
 interface TaskDetailModalProps {
@@ -73,6 +74,7 @@ export function TaskDetailModal({ project, taskId }: TaskDetailModalProps) {
             <TaskMetaGrid task={task} projectId={project.id} canEdit={canEdit} />
             <TaskDescription task={task} projectId={project.id} canEdit={canEdit} />
             <TaskSubtasks task={task} projectId={project.id} canEdit={canEdit} />
+            <TaskDependencies task={task} projectId={project.id} canEdit={canEdit} />
           </div>
           <div className="w-80 shrink-0 border-l border-border bg-muted/20">
             <TaskComments taskId={task.id} />

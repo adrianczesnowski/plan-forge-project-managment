@@ -8,6 +8,10 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      // frappe-gantt's exports map hides its stylesheet — point straight at the file.
+      'frappe-gantt.css': fileURLToPath(
+        new URL('../../node_modules/frappe-gantt/dist/frappe-gantt.css', import.meta.url),
+      ),
     },
   },
   server: {

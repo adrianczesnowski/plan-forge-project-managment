@@ -60,6 +60,13 @@ export const MESSAGES = {
     ASSIGNEE_NO_ACCESS: 'Assignee must have access to the project',
     NOT_IN_PROJECT: 'All tasks must belong to the same project',
   },
+  DEPENDENCY: {
+    NOT_FOUND: 'Dependency not found',
+    DIFFERENT_PROJECT: 'Both tasks must belong to the same project',
+    ALREADY_EXISTS: 'These tasks are already linked',
+    CYCLE: 'This dependency would create a cycle',
+    SELF: 'Task cannot depend on itself',
+  },
   COMMENT: {
     NOT_FOUND: 'Comment not found',
     NOT_AUTHOR: 'Only the author can modify this comment',

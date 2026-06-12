@@ -59,5 +59,30 @@
       "yes": "Tak",
       "no": "Nie"
     }
+  },
+  "gantt": {
+    "viewMode": {
+      "Day": "Dzień",
+      "Week": "Tydzień",
+      "Month": "Miesiąc"
+    },
+    "legend": {
+      "task": "Zadanie",
+      "parent": "Faza",
+      "milestone": "Kamień milowy",
+      "critical": "Ścieżka krytyczna"
+    },
+    "empty": "Brak zadań z datami — ustaw daty rozpoczęcia i zakończenia, aby zobaczyć je na wykresie.",
+    "popupProgress": "Postęp"
+  },
+  "dependencies": {
+    "title": "Zależności",
+    "predecessors": "Poprzedniki",
+    "successors": "Następniki",
+    "selectTask": "Wybierz zadanie…",
+    "direction": {
+      "predecessor": "poprzednik",
+      "successor": "następnik"
+    }
   }
 }

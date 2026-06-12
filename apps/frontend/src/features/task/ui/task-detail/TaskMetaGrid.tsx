@@ -7,6 +7,7 @@ import { Checkbox } from '@/shared/ui/checkbox';
 import { useUpdateTask } from '../../hooks/use-task-mutations';
 import { TaskStatusSelect } from '../TaskStatusSelect';
 import { TaskPrioritySelect } from '../TaskPrioritySelect';
+import { TaskDateField } from './TaskDateField';
 
 function MetaCell({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -16,9 +17,6 @@ function MetaCell({ label, children }: { label: string; children: ReactNode }) {
     </div>
   );
 }
-
-const dateInputClass =
-  'rounded-md border border-transparent bg-transparent px-1 py-0.5 text-[13px] outline-none transition-colors hover:border-border focus:border-primary';
 
 interface TaskMetaGridProps {
   task: TaskTreeNode;
@@ -32,7 +30,6 @@ export function TaskMetaGrid({ task, projectId, canEdit }: TaskMetaGridProps) {
   const currentUser = useAuthStore((s) => s.user);
   const { data: members } = useProjectMembers(projectId);
 
-  const isParent = task.children.length > 0;
   const update = (input: Parameters<typeof updateTask.mutate>[0]['input']) =>
     updateTask.mutate({ taskId: task.id, input });
 
@@ -85,23 +82,19 @@ export function TaskMetaGrid({ task, projectId, canEdit }: TaskMetaGridProps) {
       </MetaCell>
 
       <MetaCell label={t('modal.meta.startDate')}>
-        <input
-          type="date"
-          disabled={!canEdit || isParent}
+        <TaskDateField
           value={toDateInput(task.startDate)}
-          onChange={(e) => update({ startDate: e.target.value || null })}
-          className={dateInputClass}
+          disabled={!canEdit}
+          onCommit={(startDate) => update({ startDate })}
         />
       </MetaCell>
 
       <MetaCell label={t('modal.meta.endDate')}>
-        <input
-          type="date"
-          disabled={!canEdit || isParent}
+        <TaskDateField
           value={toDateInput(task.endDate)}
+          disabled={!canEdit}
           min={toDateInput(task.startDate) || undefined}
-          onChange={(e) => update({ endDate: e.target.value || null })}
-          className={dateInputClass}
+          onCommit={(endDate) => update({ endDate })}
         />
       </MetaCell>
 

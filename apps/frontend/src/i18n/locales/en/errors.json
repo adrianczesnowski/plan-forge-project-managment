@@ -21,5 +21,10 @@
   "This invitation was sent to a different email address": "This invitation was sent to a different email address",
   "Leave your current organization before accepting an invitation": "Leave your current organization before accepting an invitation",
   "You cannot invite yourself": "You cannot invite yourself",
-  "fallback": "Something went wrong, please try again later"
+  "fallback": "Something went wrong, please try again later",
+  "Dependency not found": "Dependency not found",
+  "Both tasks must belong to the same project": "Both tasks must belong to the same project",
+  "These tasks are already linked": "These tasks are already linked",
+  "This dependency would create a cycle": "This dependency would create a cycle",
+  "Task cannot depend on itself": "Task cannot depend on itself"
 }

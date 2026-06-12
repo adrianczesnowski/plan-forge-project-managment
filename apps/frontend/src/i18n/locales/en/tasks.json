@@ -59,5 +59,30 @@
       "yes": "Yes",
       "no": "No"
     }
+  },
+  "gantt": {
+    "viewMode": {
+      "Day": "Day",
+      "Week": "Week",
+      "Month": "Month"
+    },
+    "legend": {
+      "task": "Task",
+      "parent": "Phase",
+      "milestone": "Milestone",
+      "critical": "Critical path"
+    },
+    "empty": "No tasks with dates yet — set start and end dates to see them on the chart.",
+    "popupProgress": "Progress"
+  },
+  "dependencies": {
+    "title": "Dependencies",
+    "predecessors": "Predecessors",
+    "successors": "Successors",
+    "selectTask": "Select a task…",
+    "direction": {
+      "predecessor": "predecessor",
+      "successor": "successor"
+    }
   }
 }

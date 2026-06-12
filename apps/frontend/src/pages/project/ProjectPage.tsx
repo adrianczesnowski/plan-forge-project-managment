@@ -9,12 +9,13 @@ import { useState } from 'react';
 import { ProjectOverviewTab } from './tabs/ProjectOverviewTab';
 import { WbsTab } from './tabs/wbs/WbsTab';
 import { KanbanTab } from './tabs/kanban/KanbanTab';
+import { GanttTab } from './tabs/gantt/GanttTab';
 
 const TABS = ['overview', 'wbs', 'kanban', 'gantt', 'table'] as const;
 type ProjectTab = (typeof TABS)[number];
 
-/** Gantt/Table arrive later in phase 2 of the roadmap. */
-const IMPLEMENTED_TABS: ProjectTab[] = ['overview', 'wbs', 'kanban'];
+/** Table view arrives later in phase 2 of the roadmap. */
+const IMPLEMENTED_TABS: ProjectTab[] = ['overview', 'wbs', 'kanban', 'gantt'];
 
 export function ProjectPage() {
   const { t } = useTranslation('projects');
@@ -62,6 +63,7 @@ export function ProjectPage() {
         {activeTab === 'overview' && <ProjectOverviewTab project={project} />}
         {activeTab === 'wbs' && <WbsTab project={project} />}
         {activeTab === 'kanban' && <KanbanTab project={project} />}
+        {activeTab === 'gantt' && <GanttTab project={project} />}
       </div>
 
       {taskId && <TaskDetailModal project={project} taskId={taskId} />}

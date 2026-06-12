@@ -31,7 +31,8 @@ export function toTaskDto(task: TaskWithAssignee): Task {
 
 /**
  * Builds the WBS tree and rolls parent values up from their subtree:
- * progress = % of DONE leaf descendants, dates = min(start)/max(end).
+ * progress = % of DONE leaf descendants; dates fall back to min(start)/
+ * max(end) of the subtree only when the task has no dates of its own.
  */
 export function buildTaskTree(tasks: TaskWithAssignee[]): TaskTreeNode[] {
   const nodes = new Map<string, TaskTreeNode>();
@@ -70,8 +71,9 @@ export function buildTaskTree(tasks: TaskWithAssignee[]): TaskTreeNode[] {
     }
 
     node.progress = leaves > 0 ? Math.round((done / leaves) * 100) : 0;
-    node.startDate = minStart ?? node.startDate;
-    node.endDate = maxEnd ?? node.endDate;
+    // Own dates win — the subtree range is only a fallback for undated tasks.
+    node.startDate = node.startDate ?? minStart;
+    node.endDate = node.endDate ?? maxEnd;
     return { leaves, done };
   };
 

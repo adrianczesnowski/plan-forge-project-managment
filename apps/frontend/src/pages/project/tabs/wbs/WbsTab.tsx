@@ -9,6 +9,7 @@ import {
   useDeleteTask,
   useUpdateTask,
 } from '@/features/task/hooks/use-task-mutations';
+import { useMoveTask } from '@/features/task/hooks/use-move-task';
 import { FullPageSpinner } from '@/shared/ui/full-page-spinner';
 import { WbsTable } from './WbsTable';
 import { WbsQuickAdd } from './WbsQuickAdd';
@@ -25,6 +26,7 @@ export function WbsTab({ project }: { project: ProjectWithRole }) {
   const createTask = useCreateTask(project.id);
   const updateTask = useUpdateTask(project.id);
   const deleteTask = useDeleteTask(project.id);
+  const moveTask = useMoveTask(project.id);
 
   const [subtaskTarget, setSubtaskTarget] = useState<SubtaskTarget | null>(null);
   const canEdit = project.myRole !== 'VIEWER';
@@ -60,6 +62,9 @@ export function WbsTab({ project }: { project: ProjectWithRole }) {
             onAddSubtask={handleAddSubtask}
             onDelete={handleDelete}
             onOpenTask={(taskId) => navigate(`/projects/${project.id}/tasks/${taskId}`)}
+            onMove={(taskId, parentId, index) =>
+              moveTask.mutate({ taskId, input: { parentId, order: index } })
+            }
           />
         ) : (
           <div className="m-6 flex flex-col items-center gap-2 rounded-2xl border border-dashed border-border py-16 text-center">

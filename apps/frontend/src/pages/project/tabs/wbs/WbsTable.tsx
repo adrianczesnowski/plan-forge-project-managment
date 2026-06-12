@@ -1,5 +1,14 @@
 import { useMemo, useState } from 'react';
 import {
+  DndContext,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import {
   flexRender,
   getCoreRowModel,
   getExpandedRowModel,
@@ -14,6 +23,11 @@ import type { TaskPriority, TaskStatus, TaskTreeNode } from '@planforge/shared';
 import { cn } from '@/shared/lib/utils';
 import { TaskStatusSelect } from '@/features/task/ui/TaskStatusSelect';
 import { TaskPrioritySelect } from '@/features/task/ui/TaskPrioritySelect';
+import { getDropProjection, type FlatTask } from '@/features/task/lib/wbs-dnd';
+import { WbsSortableRow } from './WbsSortableRow';
+
+/** Must match the per-level padding used in the title cell. */
+const INDENT_WIDTH = 20;
 
 export interface WbsTableCallbacks {
   onStatusChange: (taskId: string, status: TaskStatus) => void;
@@ -21,6 +35,7 @@ export interface WbsTableCallbacks {
   onAddSubtask: (task: TaskTreeNode) => void;
   onDelete: (taskId: string) => void;
   onOpenTask: (taskId: string) => void;
+  onMove: (taskId: string, parentId: string | null, index: number) => void;
 }
 
 interface WbsTableProps extends WbsTableCallbacks {
@@ -61,9 +76,11 @@ export function WbsTable({
   onAddSubtask,
   onDelete,
   onOpenTask,
+  onMove,
 }: WbsTableProps) {
   const { t } = useTranslation('tasks');
   const [expanded, setExpanded] = useState<ExpandedState>(true);
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
   const columns = useMemo<ColumnDef<TaskTreeNode>[]>(
     () => [
@@ -198,32 +215,56 @@ export function WbsTable({
     getExpandedRowModel: getExpandedRowModel(),
   });
 
+  const rows = table.getRowModel().rows;
+  // Render-ordered flat view of the visible rows — the input for drop projection.
+  const flatItems = useMemo<FlatTask[]>(
+    () => rows.map((row) => ({ id: row.original.id, parentId: row.original.parentId, depth: row.depth })),
+    [rows],
+  );
+
+  const handleDragEnd = ({ active, over, delta }: DragEndEvent) => {
+    if (!over) return;
+    // Dropped in place without horizontal movement → no structural change intended.
+    if (active.id === over.id && Math.abs(delta.x) < INDENT_WIDTH) return;
+    const projection = getDropProjection(
+      flatItems,
+      String(active.id),
+      String(over.id),
+      delta.x,
+      INDENT_WIDTH,
+    );
+    if (!projection) return;
+    onMove(String(active.id), projection.parentId, projection.index);
+  };
+
   return (
-    <table className="w-full border-collapse">
-      <thead>
-        <tr className="border-b border-border">
-          {table.getFlatHeaders().map((header) => (
-            <th
-              key={header.id}
-              style={{ width: header.getSize() }}
-              className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-faint"
-            >
-              {flexRender(header.column.columnDef.header, header.getContext())}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {table.getRowModel().rows.map((row) => (
-          <tr key={row.id} className="group border-b border-border-light transition-colors hover:bg-muted/40">
-            {row.getVisibleCells().map((cell) => (
-              <td key={cell.id} className="px-3 py-1.5">
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </td>
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <table className="w-full border-collapse">
+        <thead>
+          <tr className="border-b border-border">
+            <th className="w-7" />
+            {table.getFlatHeaders().map((header) => (
+              <th
+                key={header.id}
+                style={{ width: header.getSize() }}
+                className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-faint"
+              >
+                {flexRender(header.column.columnDef.header, header.getContext())}
+              </th>
             ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <SortableContext
+            items={flatItems.map((i) => i.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            {rows.map((row) => (
+              <WbsSortableRow key={row.id} row={row} canEdit={canEdit} />
+            ))}
+          </SortableContext>
+        </tbody>
+      </table>
+    </DndContext>
   );
 }

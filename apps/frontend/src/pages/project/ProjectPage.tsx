@@ -8,12 +8,13 @@ import { cn } from '@/shared/lib/utils';
 import { useState } from 'react';
 import { ProjectOverviewTab } from './tabs/ProjectOverviewTab';
 import { WbsTab } from './tabs/wbs/WbsTab';
+import { KanbanTab } from './tabs/kanban/KanbanTab';
 
 const TABS = ['overview', 'wbs', 'kanban', 'gantt', 'table'] as const;
 type ProjectTab = (typeof TABS)[number];
 
-/** Kanban/Gantt/Table arrive in phase 2 of the roadmap. */
-const IMPLEMENTED_TABS: ProjectTab[] = ['overview', 'wbs'];
+/** Gantt/Table arrive later in phase 2 of the roadmap. */
+const IMPLEMENTED_TABS: ProjectTab[] = ['overview', 'wbs', 'kanban'];
 
 export function ProjectPage() {
   const { t } = useTranslation('projects');
@@ -60,6 +61,7 @@ export function ProjectPage() {
       <div className="flex-1 overflow-y-auto">
         {activeTab === 'overview' && <ProjectOverviewTab project={project} />}
         {activeTab === 'wbs' && <WbsTab project={project} />}
+        {activeTab === 'kanban' && <KanbanTab project={project} />}
       </div>
 
       {taskId && <TaskDetailModal project={project} taskId={taskId} />}

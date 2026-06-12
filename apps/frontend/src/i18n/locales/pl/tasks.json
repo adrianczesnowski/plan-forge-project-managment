@@ -1,0 +1,37 @@
+{
+  "columns": {
+    "wbs": "WBS",
+    "title": "Tytuł",
+    "status": "Status",
+    "priority": "Priorytet",
+    "assignee": "Przypisany",
+    "dueDate": "Termin",
+    "progress": "Postęp"
+  },
+  "status": {
+    "TODO": "Do zrobienia",
+    "IN_PROGRESS": "W trakcie",
+    "IN_REVIEW": "W review",
+    "DONE": "Ukończone",
+    "CANCELLED": "Anulowane"
+  },
+  "priority": {
+    "NONE": "Brak",
+    "LOW": "Niski",
+    "MEDIUM": "Średni",
+    "HIGH": "Wysoki",
+    "URGENT": "Pilny"
+  },
+  "actions": {
+    "addTask": "Nowe zadanie",
+    "addSubtask": "Dodaj podzadanie",
+    "delete": "Usuń zadanie",
+    "deleteConfirm": "Usunąć zadanie wraz z podzadaniami?"
+  },
+  "quickAdd": {
+    "placeholder": "Dodaj zadanie i naciśnij Enter...",
+    "subtaskPlaceholder": "Nazwa podzadania..."
+  },
+  "empty": "Brak zadań w projekcie.",
+  "emptyHint": "Dodaj pierwsze zadanie lub fazę poniżej."
+}

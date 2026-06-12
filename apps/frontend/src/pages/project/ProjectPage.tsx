@@ -6,12 +6,13 @@ import { FullPageSpinner } from '@/shared/ui/full-page-spinner';
 import { cn } from '@/shared/lib/utils';
 import { useState } from 'react';
 import { ProjectOverviewTab } from './tabs/ProjectOverviewTab';
+import { WbsTab } from './tabs/wbs/WbsTab';
 
 const TABS = ['overview', 'wbs', 'kanban', 'gantt', 'table'] as const;
 type ProjectTab = (typeof TABS)[number];
 
-/** Tabs other than Overview arrive with the tasks module (phase 1/2 of the roadmap). */
-const IMPLEMENTED_TABS: ProjectTab[] = ['overview'];
+/** Kanban/Gantt/Table arrive in phase 2 of the roadmap. */
+const IMPLEMENTED_TABS: ProjectTab[] = ['overview', 'wbs'];
 
 export function ProjectPage() {
   const { t } = useTranslation('projects');
@@ -56,6 +57,7 @@ export function ProjectPage() {
 
       <div className="flex-1 overflow-y-auto">
         {activeTab === 'overview' && <ProjectOverviewTab project={project} />}
+        {activeTab === 'wbs' && <WbsTab project={project} />}
       </div>
     </div>
   );

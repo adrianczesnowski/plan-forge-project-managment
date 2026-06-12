@@ -52,6 +52,14 @@ export const MESSAGES = {
     CANNOT_REMOVE_OWNER: 'Project owner cannot be removed by an admin',
     IMPLICIT_ACCESS: 'This user has implicit access and cannot be managed here',
   },
+  TASK: {
+    NOT_FOUND: 'Task not found',
+    PARENT_NOT_FOUND: 'Parent task not found',
+    PARENT_DIFFERENT_PROJECT: 'Parent task must belong to the same project',
+    CYCLIC_HIERARCHY: 'Cannot move a task under its own subtask',
+    ASSIGNEE_NO_ACCESS: 'Assignee must have access to the project',
+    NOT_IN_PROJECT: 'All tasks must belong to the same project',
+  },
   VALIDATION: {
     FAILED: 'Validation failed',
   },

@@ -12,6 +12,7 @@ import { OrganizationModule } from './modules/organization/organization.module';
 import { InvitationModule } from './modules/invitation/invitation.module';
 import { SpaceModule } from './modules/space/space.module';
 import { ProjectModule } from './modules/project/project.module';
+import { TaskModule } from './modules/task/task.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ProjectModule } from './modules/project/project.module';
     InvitationModule,
     SpaceModule,
     ProjectModule,
+    TaskModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },

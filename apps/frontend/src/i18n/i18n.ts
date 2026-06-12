@@ -8,12 +8,14 @@ import enErrors from './locales/en/errors.json';
 import enOnboarding from './locales/en/onboarding.json';
 import enProjects from './locales/en/projects.json';
 import enSpaces from './locales/en/spaces.json';
+import enTasks from './locales/en/tasks.json';
 import plAuth from './locales/pl/auth.json';
 import plCommon from './locales/pl/common.json';
 import plErrors from './locales/pl/errors.json';
 import plOnboarding from './locales/pl/onboarding.json';
 import plProjects from './locales/pl/projects.json';
 import plSpaces from './locales/pl/spaces.json';
+import plTasks from './locales/pl/tasks.json';
 
 export const defaultNS = 'common';
 
@@ -25,6 +27,7 @@ export const resources = {
     onboarding: enOnboarding,
     spaces: enSpaces,
     projects: enProjects,
+    tasks: enTasks,
   },
   pl: {
     common: plCommon,
@@ -33,6 +36,7 @@ export const resources = {
     onboarding: plOnboarding,
     spaces: plSpaces,
     projects: plProjects,
+    tasks: plTasks,
   },
 } as const;
 

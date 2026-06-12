@@ -1,0 +1,37 @@
+{
+  "subtitle": "Wybierz lub utwórz organizację, aby rozpocząć",
+  "steps": {
+    "registration": "Rejestracja",
+    "organization": "Organizacja",
+    "firstProject": "Pierwszy projekt"
+  },
+  "tabs": {
+    "invitations": "Zaproszenia",
+    "create": "Utwórz organizację"
+  },
+  "invitations": {
+    "from": "Zaproszenie od {{email}}",
+    "accept": "Dołącz",
+    "decline": "Odrzuć",
+    "declined": "Odrzucono",
+    "empty": "Nie masz oczekujących zaproszeń.",
+    "emptyHint": "Poproś administratora o zaproszenie albo utwórz własną organizację."
+  },
+  "create": {
+    "nameLabel": "Nazwa organizacji",
+    "namePlaceholder": "np. Moja Firma Sp. z o.o.",
+    "nameRequired": "Podaj nazwę organizacji",
+    "inviteDivider": "Zaproś członków zespołu (opcjonalnie)",
+    "emailPlaceholder": "adres@email.com",
+    "addPerson": "Dodaj kolejną osobę",
+    "removePerson": "Usuń"
+  },
+  "roles": {
+    "MEMBER": "Member",
+    "ADMIN": "Admin"
+  },
+  "footer": {
+    "skip": "Pomiń ten krok",
+    "continue": "Dalej"
+  }
+}

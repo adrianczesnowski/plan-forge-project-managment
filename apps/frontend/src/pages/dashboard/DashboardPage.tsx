@@ -2,10 +2,12 @@ import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/auth.store';
 import { Button } from '@/shared/ui/button';
 import { useLogout } from '@/features/auth/hooks/use-auth';
+import { useCurrentOrganization } from '@/entities/organization/hooks/use-current-organization';
 
 export function DashboardPage() {
   const { t } = useTranslation('common');
   const user = useAuthStore((s) => s.user);
+  const { data: organization } = useCurrentOrganization();
   const logout = useLogout();
 
   return (
@@ -13,7 +15,9 @@ export function DashboardPage() {
       <h1 className="text-2xl font-semibold">
         {t('welcome', { name: user?.firstName ?? '' })}
       </h1>
-      <p className="text-muted-foreground">{t('dashboard')}</p>
+      <p className="text-muted-foreground">
+        {organization?.name} · {t('dashboard')}
+      </p>
       <Button variant="outline" onClick={() => logout.mutate()} isLoading={logout.isPending}>
         {t('logout')}
       </Button>

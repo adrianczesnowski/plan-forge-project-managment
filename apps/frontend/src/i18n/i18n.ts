@@ -5,15 +5,17 @@ import { initReactI18next } from 'react-i18next';
 import enAuth from './locales/en/auth.json';
 import enCommon from './locales/en/common.json';
 import enErrors from './locales/en/errors.json';
+import enOnboarding from './locales/en/onboarding.json';
 import plAuth from './locales/pl/auth.json';
 import plCommon from './locales/pl/common.json';
 import plErrors from './locales/pl/errors.json';
+import plOnboarding from './locales/pl/onboarding.json';
 
 export const defaultNS = 'common';
 
 export const resources = {
-  en: { common: enCommon, auth: enAuth, errors: enErrors },
-  pl: { common: plCommon, auth: plAuth, errors: plErrors },
+  en: { common: enCommon, auth: enAuth, errors: enErrors, onboarding: enOnboarding },
+  pl: { common: plCommon, auth: plAuth, errors: plErrors, onboarding: plOnboarding },
 } as const;
 
 void i18n

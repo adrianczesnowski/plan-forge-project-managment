@@ -30,6 +30,7 @@ export const MESSAGES = {
     NOT_PENDING: 'Invitation is no longer pending',
     NOT_FOR_YOU: 'This invitation was sent to a different email address',
     USER_IN_ORGANIZATION: 'Leave your current organization before accepting an invitation',
+    CANNOT_INVITE_SELF: 'You cannot invite yourself',
   },
   VALIDATION: {
     FAILED: 'Validation failed',

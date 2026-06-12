@@ -1,0 +1,37 @@
+{
+  "subtitle": "Choose or create an organization to get started",
+  "steps": {
+    "registration": "Registration",
+    "organization": "Organization",
+    "firstProject": "First project"
+  },
+  "tabs": {
+    "invitations": "Invitations",
+    "create": "Create organization"
+  },
+  "invitations": {
+    "from": "Invited by {{email}}",
+    "accept": "Join",
+    "decline": "Decline",
+    "declined": "Declined",
+    "empty": "You have no pending invitations.",
+    "emptyHint": "Ask an administrator for an invitation or create your own organization."
+  },
+  "create": {
+    "nameLabel": "Organization name",
+    "namePlaceholder": "e.g. Acme Inc.",
+    "nameRequired": "Enter an organization name",
+    "inviteDivider": "Invite team members (optional)",
+    "emailPlaceholder": "name@email.com",
+    "addPerson": "Add another person",
+    "removePerson": "Remove"
+  },
+  "roles": {
+    "MEMBER": "Member",
+    "ADMIN": "Admin"
+  },
+  "footer": {
+    "skip": "Skip this step",
+    "continue": "Continue"
+  }
+}

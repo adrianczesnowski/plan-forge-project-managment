@@ -1,0 +1,20 @@
+{
+  "sectionTitle": "Spaces",
+  "empty": "No spaces yet",
+  "emptyHintAdmin": "Create your first space with the + button",
+  "emptyHintMember": "Ask an administrator for access to a space",
+  "create": {
+    "title": "New space",
+    "nameLabel": "Name",
+    "namePlaceholder": "e.g. Development",
+    "nameRequired": "Enter a space name",
+    "descriptionLabel": "Description (optional)",
+    "descriptionPlaceholder": "What is this space for?",
+    "colorLabel": "Color",
+    "submit": "Create space"
+  },
+  "page": {
+    "projectsSoon": "Projects in this space will appear here.",
+    "projectsSoonHint": "The projects module is next on the roadmap."
+  }
+}

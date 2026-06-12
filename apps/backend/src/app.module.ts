@@ -10,6 +10,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { OrganizationModule } from './modules/organization/organization.module';
 import { InvitationModule } from './modules/invitation/invitation.module';
+import { SpaceModule } from './modules/space/space.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { InvitationModule } from './modules/invitation/invitation.module';
     UserModule,
     OrganizationModule,
     InvitationModule,
+    SpaceModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },

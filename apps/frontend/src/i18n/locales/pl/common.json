@@ -10,5 +10,13 @@
   "settings": "Ustawienia",
   "logout": "Wyloguj",
   "dashboard": "Pulpit",
-  "welcome": "Witaj, {{name}}"
+  "welcome": "Witaj, {{name}}",
+  "nav": {
+    "dashboard": "Dashboard",
+    "settings": "Ustawienia",
+    "helpSupport": "Pomoc i wsparcie"
+  },
+  "topbar": {
+    "searchPlaceholder": "Szukaj projektów, przestrzeni, zadań..."
+  }
 }

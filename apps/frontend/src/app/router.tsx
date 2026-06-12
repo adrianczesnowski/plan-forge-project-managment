@@ -3,6 +3,8 @@ import { LoginPage } from '@/pages/auth/LoginPage';
 import { RegisterPage } from '@/pages/auth/RegisterPage';
 import { DashboardPage } from '@/pages/dashboard/DashboardPage';
 import { OnboardingPage } from '@/pages/onboarding/OnboardingPage';
+import { SpacePage } from '@/pages/space/SpacePage';
+import { AppLayout } from './layouts/AppLayout';
 import { GuestRoute } from './guards/GuestRoute';
 import { ProtectedRoute } from './guards/ProtectedRoute';
 import { RequireOrganization } from './guards/RequireOrganization';
@@ -22,7 +24,15 @@ export const router = createBrowserRouter([
       { path: '/onboarding', element: <OnboardingPage /> },
       {
         element: <RequireOrganization />,
-        children: [{ path: '/', element: <DashboardPage /> }],
+        children: [
+          {
+            element: <AppLayout />,
+            children: [
+              { path: '/', element: <DashboardPage /> },
+              { path: '/spaces/:spaceId', element: <SpacePage /> },
+            ],
+          },
+        ],
       },
     ],
   },

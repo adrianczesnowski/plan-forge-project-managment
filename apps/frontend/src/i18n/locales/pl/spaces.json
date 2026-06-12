@@ -1,0 +1,20 @@
+{
+  "sectionTitle": "Przestrzenie",
+  "empty": "Brak przestrzeni",
+  "emptyHintAdmin": "Utwórz pierwszą przestrzeń przyciskiem +",
+  "emptyHintMember": "Poproś administratora o dostęp do przestrzeni",
+  "create": {
+    "title": "Nowa przestrzeń",
+    "nameLabel": "Nazwa",
+    "namePlaceholder": "np. Development",
+    "nameRequired": "Podaj nazwę przestrzeni",
+    "descriptionLabel": "Opis (opcjonalnie)",
+    "descriptionPlaceholder": "Czemu służy ta przestrzeń?",
+    "colorLabel": "Kolor",
+    "submit": "Utwórz przestrzeń"
+  },
+  "page": {
+    "projectsSoon": "Projekty w tej przestrzeni pojawią się tutaj.",
+    "projectsSoonHint": "Moduł projektów jest następny na roadmapie."
+  }
+}

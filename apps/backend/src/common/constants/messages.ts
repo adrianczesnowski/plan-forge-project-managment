@@ -32,6 +32,16 @@ export const MESSAGES = {
     USER_IN_ORGANIZATION: 'Leave your current organization before accepting an invitation',
     CANNOT_INVITE_SELF: 'You cannot invite yourself',
   },
+  SPACE: {
+    NOT_FOUND: 'Space not found',
+    FORBIDDEN: 'You do not have permission to manage this space',
+    ALREADY_MEMBER: 'User is already a member of this space',
+    MEMBER_NOT_FOUND: 'User is not a member of this space',
+    NOT_IN_ORGANIZATION: 'User must belong to the organization first',
+    CANNOT_GRANT_HIGHER_ROLE: 'You cannot grant a role higher than your own',
+    CANNOT_REMOVE_OWNER: 'Space owner cannot be removed by an admin',
+    IMPLICIT_ACCESS: 'Organization owners and admins have implicit access and cannot be managed here',
+  },
   VALIDATION: {
     FAILED: 'Validation failed',
   },

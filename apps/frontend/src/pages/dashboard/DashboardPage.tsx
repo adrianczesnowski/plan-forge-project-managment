@@ -1,26 +1,22 @@
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/auth.store';
-import { Button } from '@/shared/ui/button';
-import { useLogout } from '@/features/auth/hooks/use-auth';
 import { useCurrentOrganization } from '@/entities/organization/hooks/use-current-organization';
 
 export function DashboardPage() {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const user = useAuthStore((s) => s.user);
   const { data: organization } = useCurrentOrganization();
-  const logout = useLogout();
+
+  const today = new Intl.DateTimeFormat(i18n.language, { dateStyle: 'full' }).format(new Date());
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-8">
-      <h1 className="text-2xl font-semibold">
+    <div className="p-6">
+      <h1 className="text-2xl font-bold tracking-tight">
         {t('welcome', { name: user?.firstName ?? '' })}
       </h1>
-      <p className="text-muted-foreground">
-        {organization?.name} · {t('dashboard')}
+      <p className="mt-1 text-sm text-muted-foreground">
+        {today} · {organization?.name}
       </p>
-      <Button variant="outline" onClick={() => logout.mutate()} isLoading={logout.isPending}>
-        {t('logout')}
-      </Button>
     </div>
   );
 }

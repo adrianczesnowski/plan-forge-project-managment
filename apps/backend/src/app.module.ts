@@ -11,6 +11,7 @@ import { UserModule } from './modules/user/user.module';
 import { OrganizationModule } from './modules/organization/organization.module';
 import { InvitationModule } from './modules/invitation/invitation.module';
 import { SpaceModule } from './modules/space/space.module';
+import { ProjectModule } from './modules/project/project.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { SpaceModule } from './modules/space/space.module';
     OrganizationModule,
     InvitationModule,
     SpaceModule,
+    ProjectModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },

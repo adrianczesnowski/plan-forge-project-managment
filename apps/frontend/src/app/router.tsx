@@ -4,6 +4,7 @@ import { RegisterPage } from '@/pages/auth/RegisterPage';
 import { DashboardPage } from '@/pages/dashboard/DashboardPage';
 import { OnboardingPage } from '@/pages/onboarding/OnboardingPage';
 import { SpacePage } from '@/pages/space/SpacePage';
+import { ProjectPage } from '@/pages/project/ProjectPage';
 import { AppLayout } from './layouts/AppLayout';
 import { GuestRoute } from './guards/GuestRoute';
 import { ProtectedRoute } from './guards/ProtectedRoute';
@@ -30,6 +31,7 @@ export const router = createBrowserRouter([
             children: [
               { path: '/', element: <DashboardPage /> },
               { path: '/spaces/:spaceId', element: <SpacePage /> },
+              { path: '/projects/:projectId', element: <ProjectPage /> },
             ],
           },
         ],

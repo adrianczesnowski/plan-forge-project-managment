@@ -1,0 +1,41 @@
+{
+  "sectionTitle": "Projekty",
+  "newProject": "Nowy projekt",
+  "sidebarEmpty": "Brak projektów",
+  "empty": "Brak projektów w tej przestrzeni.",
+  "emptyHintAdmin": "Utwórz pierwszy projekt, aby zacząć planować.",
+  "emptyHintMember": "Poproś administratora o dostęp do projektu.",
+  "status": {
+    "PLANNING": "Planowanie",
+    "ACTIVE": "Aktywny",
+    "ON_HOLD": "Wstrzymany",
+    "COMPLETED": "Ukończony",
+    "ARCHIVED": "Zarchiwizowany"
+  },
+  "create": {
+    "title": "Nowy projekt",
+    "nameLabel": "Nazwa projektu",
+    "namePlaceholder": "np. Redesign strony",
+    "nameRequired": "Podaj nazwę projektu",
+    "descriptionLabel": "Opis (opcjonalnie)",
+    "descriptionPlaceholder": "Czego dotyczy ten projekt?",
+    "startDateLabel": "Data rozpoczęcia",
+    "endDateLabel": "Data zakończenia",
+    "submit": "Utwórz projekt"
+  },
+  "tabs": {
+    "overview": "Przegląd",
+    "wbs": "WBS",
+    "kanban": "Kanban",
+    "gantt": "Gantt",
+    "table": "Tabela"
+  },
+  "overview": {
+    "description": "Opis",
+    "noDescription": "Brak opisu projektu.",
+    "dates": "Harmonogram",
+    "noDates": "Nie ustawiono dat",
+    "tasksSoon": "Zadania i struktura WBS pojawią się tutaj.",
+    "tasksSoonHint": "Moduł zadań jest następny na roadmapie."
+  }
+}

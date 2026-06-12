@@ -1,0 +1,41 @@
+{
+  "sectionTitle": "Projects",
+  "newProject": "New project",
+  "sidebarEmpty": "No projects",
+  "empty": "No projects in this space.",
+  "emptyHintAdmin": "Create the first project to start planning.",
+  "emptyHintMember": "Ask an administrator for access to a project.",
+  "status": {
+    "PLANNING": "Planning",
+    "ACTIVE": "Active",
+    "ON_HOLD": "On hold",
+    "COMPLETED": "Completed",
+    "ARCHIVED": "Archived"
+  },
+  "create": {
+    "title": "New project",
+    "nameLabel": "Project name",
+    "namePlaceholder": "e.g. Website redesign",
+    "nameRequired": "Enter a project name",
+    "descriptionLabel": "Description (optional)",
+    "descriptionPlaceholder": "What is this project about?",
+    "startDateLabel": "Start date",
+    "endDateLabel": "End date",
+    "submit": "Create project"
+  },
+  "tabs": {
+    "overview": "Overview",
+    "wbs": "WBS",
+    "kanban": "Kanban",
+    "gantt": "Gantt",
+    "table": "Table"
+  },
+  "overview": {
+    "description": "Description",
+    "noDescription": "This project has no description.",
+    "dates": "Schedule",
+    "noDates": "No dates set",
+    "tasksSoon": "Tasks and the WBS structure will appear here.",
+    "tasksSoonHint": "The tasks module is next on the roadmap."
+  }
+}

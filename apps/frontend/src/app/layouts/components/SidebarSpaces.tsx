@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { cn } from '@/shared/lib/utils';
 import { useSpaces } from '@/entities/space/hooks/use-spaces';
 import { useCurrentOrganization } from '@/entities/organization/hooks/use-current-organization';
 import { CreateSpaceDialog } from '@/features/space/ui/CreateSpaceDialog';
+import { SidebarSpaceItem } from './SidebarSpaceItem';
 
 export function SidebarSpaces() {
   const { t } = useTranslation('spaces');
@@ -33,24 +32,7 @@ export function SidebarSpaces() {
       </div>
 
       <div className="flex flex-col gap-0.5 px-2">
-        {spaces?.map((space) => (
-          <NavLink
-            key={space.id}
-            to={`/spaces/${space.id}`}
-            className={({ isActive }) =>
-              cn(
-                'flex items-center gap-2.5 rounded-[7px] px-2.5 py-1.5 text-[13px] text-muted-foreground transition-colors hover:bg-muted hover:text-foreground',
-                isActive && 'bg-muted font-semibold text-foreground',
-              )
-            }
-          >
-            <span
-              className="h-2 w-2 shrink-0 rounded-full"
-              style={{ background: space.color ?? '#9ca3af' }}
-            />
-            <span className="truncate">{space.name}</span>
-          </NavLink>
-        ))}
+        {spaces?.map((space) => <SidebarSpaceItem key={space.id} space={space} />)}
         {spaces?.length === 0 && (
           <p className="px-2.5 py-1.5 text-xs text-faint">
             {canCreate ? t('emptyHintAdmin') : t('emptyHintMember')}

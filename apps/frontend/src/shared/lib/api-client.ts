@@ -34,6 +34,18 @@ async function refreshAccessToken(): Promise<string> {
   return accessToken;
 }
 
+/**
+ * Single-flight session refresh. Refresh tokens rotate on every use, so two
+ * concurrent calls (e.g. StrictMode double-effect + a 401 retry) must share
+ * one request — the second would otherwise invalidate the first.
+ */
+export function refreshSession(): Promise<string> {
+  refreshPromise ??= refreshAccessToken().finally(() => {
+    refreshPromise = null;
+  });
+  return refreshPromise;
+}
+
 apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError<ApiErrorResponse>) => {
@@ -46,10 +58,7 @@ apiClient.interceptors.response.use(
 
     config._retried = true;
     try {
-      refreshPromise ??= refreshAccessToken().finally(() => {
-        refreshPromise = null;
-      });
-      const accessToken = await refreshPromise;
+      const accessToken = await refreshSession();
       config.headers.Authorization = `Bearer ${accessToken}`;
       return apiClient.request(config);
     } catch {

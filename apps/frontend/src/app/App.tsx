@@ -1,23 +1,20 @@
 import { RouterProvider } from 'react-router-dom';
 import { useAuthStore } from '@/stores/auth.store';
-import { authApi } from '@/features/auth/api/auth.api';
+import { refreshSession } from '@/shared/lib/api-client';
 import { useEffect } from 'react';
 import { router } from './router';
 
 /**
- * Session bootstrap lives here (not in a hook used by routes) so it runs
- * exactly once, before the router decides between guest and protected trees.
+ * Session bootstrap. refreshSession() is single-flight, so StrictMode's
+ * double-effect shares one request — crucial because refresh tokens rotate
+ * and a duplicate call would invalidate the first one.
  */
 export function App() {
-  const setAuth = useAuthStore((s) => s.setAuth);
   const clearAuth = useAuthStore((s) => s.clearAuth);
 
   useEffect(() => {
-    authApi
-      .refresh()
-      .then(({ user, accessToken }) => setAuth(user, accessToken))
-      .catch(() => clearAuth());
-  }, [setAuth, clearAuth]);
+    refreshSession().catch(() => clearAuth());
+  }, [clearAuth]);
 
   return <RouterProvider router={router} />;
 }

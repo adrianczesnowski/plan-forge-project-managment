@@ -42,6 +42,16 @@ export const MESSAGES = {
     CANNOT_REMOVE_OWNER: 'Space owner cannot be removed by an admin',
     IMPLICIT_ACCESS: 'Organization owners and admins have implicit access and cannot be managed here',
   },
+  PROJECT: {
+    NOT_FOUND: 'Project not found',
+    FORBIDDEN: 'You do not have permission to manage this project',
+    ALREADY_MEMBER: 'User is already a member of this project',
+    MEMBER_NOT_FOUND: 'User is not a member of this project',
+    NOT_IN_SPACE: 'User must belong to the space first',
+    CANNOT_GRANT_HIGHER_ROLE: 'You cannot grant a role higher than your own',
+    CANNOT_REMOVE_OWNER: 'Project owner cannot be removed by an admin',
+    IMPLICIT_ACCESS: 'This user has implicit access and cannot be managed here',
+  },
   VALIDATION: {
     FAILED: 'Validation failed',
   },

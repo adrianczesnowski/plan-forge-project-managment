@@ -6,18 +6,34 @@ import enAuth from './locales/en/auth.json';
 import enCommon from './locales/en/common.json';
 import enErrors from './locales/en/errors.json';
 import enOnboarding from './locales/en/onboarding.json';
+import enProjects from './locales/en/projects.json';
 import enSpaces from './locales/en/spaces.json';
 import plAuth from './locales/pl/auth.json';
 import plCommon from './locales/pl/common.json';
 import plErrors from './locales/pl/errors.json';
 import plOnboarding from './locales/pl/onboarding.json';
+import plProjects from './locales/pl/projects.json';
 import plSpaces from './locales/pl/spaces.json';
 
 export const defaultNS = 'common';
 
 export const resources = {
-  en: { common: enCommon, auth: enAuth, errors: enErrors, onboarding: enOnboarding, spaces: enSpaces },
-  pl: { common: plCommon, auth: plAuth, errors: plErrors, onboarding: plOnboarding, spaces: plSpaces },
+  en: {
+    common: enCommon,
+    auth: enAuth,
+    errors: enErrors,
+    onboarding: enOnboarding,
+    spaces: enSpaces,
+    projects: enProjects,
+  },
+  pl: {
+    common: plCommon,
+    auth: plAuth,
+    errors: plErrors,
+    onboarding: plOnboarding,
+    spaces: plSpaces,
+    projects: plProjects,
+  },
 } as const;
 
 void i18n

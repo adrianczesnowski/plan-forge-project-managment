@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ListTodo } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { ProjectWithRole, TaskTreeNode } from '@planforge/shared';
@@ -19,6 +20,7 @@ interface SubtaskTarget {
 
 export function WbsTab({ project }: { project: ProjectWithRole }) {
   const { t } = useTranslation('tasks');
+  const navigate = useNavigate();
   const { data: tasks, isPending } = useProjectTasks(project.id);
   const createTask = useCreateTask(project.id);
   const updateTask = useUpdateTask(project.id);
@@ -57,6 +59,7 @@ export function WbsTab({ project }: { project: ProjectWithRole }) {
             }
             onAddSubtask={handleAddSubtask}
             onDelete={handleDelete}
+            onOpenTask={(taskId) => navigate(`/projects/${project.id}/tasks/${taskId}`)}
           />
         ) : (
           <div className="m-6 flex flex-col items-center gap-2 rounded-2xl border border-dashed border-border py-16 text-center">

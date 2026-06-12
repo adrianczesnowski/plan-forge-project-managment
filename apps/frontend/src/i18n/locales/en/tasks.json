@@ -33,5 +33,31 @@
     "subtaskPlaceholder": "Subtask name..."
   },
   "empty": "No tasks in this project.",
-  "emptyHint": "Add the first task or phase below."
+  "emptyHint": "Add the first task or phase below.",
+  "modal": {
+    "description": "Description",
+    "descriptionPlaceholder": "Add a task description... (Markdown)",
+    "noDescription": "No description — click to add one.",
+    "subtasks": "Subtasks",
+    "addSubtask": "Add subtask",
+    "comments": "Comments",
+    "commentPlaceholder": "Write a comment...",
+    "send": "Send",
+    "noComments": "No comments yet. Start the discussion!",
+    "deleteComment": "Delete comment",
+    "meta": {
+      "status": "Status",
+      "priority": "Priority",
+      "startDate": "Start date",
+      "endDate": "Due date",
+      "assignee": "Assignee",
+      "unassigned": "Unassigned",
+      "milestone": "Milestone",
+      "progress": "Progress",
+      "estimatedHours": "Estimate (h)",
+      "wbs": "WBS",
+      "yes": "Yes",
+      "no": "No"
+    }
+  }
 }

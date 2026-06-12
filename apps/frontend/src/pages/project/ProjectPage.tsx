@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useProject } from '@/entities/project/hooks/use-projects';
 import { ProjectStatusBadge } from '@/entities/project/ui/ProjectStatusBadge';
+import { TaskDetailModal } from '@/features/task/ui/task-detail/TaskDetailModal';
 import { FullPageSpinner } from '@/shared/ui/full-page-spinner';
 import { cn } from '@/shared/lib/utils';
 import { useState } from 'react';
@@ -16,9 +17,10 @@ const IMPLEMENTED_TABS: ProjectTab[] = ['overview', 'wbs'];
 
 export function ProjectPage() {
   const { t } = useTranslation('projects');
-  const { projectId } = useParams<{ projectId: string }>();
+  const { projectId, taskId } = useParams<{ projectId: string; taskId?: string }>();
   const { data: project, isPending } = useProject(projectId);
-  const [activeTab, setActiveTab] = useState<ProjectTab>('overview');
+  // Deep-linked task modal defaults the underlying view to the WBS tab.
+  const [activeTab, setActiveTab] = useState<ProjectTab>(taskId ? 'wbs' : 'overview');
 
   if (isPending) return <FullPageSpinner />;
   if (!project) return null;
@@ -59,6 +61,8 @@ export function ProjectPage() {
         {activeTab === 'overview' && <ProjectOverviewTab project={project} />}
         {activeTab === 'wbs' && <WbsTab project={project} />}
       </div>
+
+      {taskId && <TaskDetailModal project={project} taskId={taskId} />}
     </div>
   );
 }

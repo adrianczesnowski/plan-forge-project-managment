@@ -20,6 +20,7 @@ export interface WbsTableCallbacks {
   onPriorityChange: (taskId: string, priority: TaskPriority) => void;
   onAddSubtask: (task: TaskTreeNode) => void;
   onDelete: (taskId: string) => void;
+  onOpenTask: (taskId: string) => void;
 }
 
 interface WbsTableProps extends WbsTableCallbacks {
@@ -59,6 +60,7 @@ export function WbsTable({
   onPriorityChange,
   onAddSubtask,
   onDelete,
+  onOpenTask,
 }: WbsTableProps) {
   const { t } = useTranslation('tasks');
   const [expanded, setExpanded] = useState<ExpandedState>(true);
@@ -93,15 +95,17 @@ export function WbsTable({
               <span className="w-5 shrink-0" />
             )}
             {row.original.isMilestone && <Gem className="h-3.5 w-3.5 shrink-0 text-accent-purple" />}
-            <span
+            <button
+              type="button"
+              onClick={() => onOpenTask(row.original.id)}
               className={cn(
-                'truncate text-[13px]',
+                'truncate text-left text-[13px] hover:text-primary hover:underline',
                 row.original.children.length > 0 && 'font-semibold',
                 row.original.status === 'CANCELLED' && 'text-faint line-through',
               )}
             >
               {row.original.title}
-            </span>
+            </button>
           </div>
         ),
       },
@@ -181,7 +185,7 @@ export function WbsTable({
           ),
       },
     ],
-    [t, canEdit, onStatusChange, onPriorityChange, onAddSubtask, onDelete],
+    [t, canEdit, onStatusChange, onPriorityChange, onAddSubtask, onDelete, onOpenTask],
   );
 
   const table = useReactTable({

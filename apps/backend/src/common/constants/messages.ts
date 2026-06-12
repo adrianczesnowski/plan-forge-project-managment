@@ -60,6 +60,10 @@ export const MESSAGES = {
     ASSIGNEE_NO_ACCESS: 'Assignee must have access to the project',
     NOT_IN_PROJECT: 'All tasks must belong to the same project',
   },
+  COMMENT: {
+    NOT_FOUND: 'Comment not found',
+    NOT_AUTHOR: 'Only the author can modify this comment',
+  },
   VALIDATION: {
     FAILED: 'Validation failed',
   },

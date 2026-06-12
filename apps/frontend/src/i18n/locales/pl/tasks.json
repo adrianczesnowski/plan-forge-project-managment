@@ -33,5 +33,31 @@
     "subtaskPlaceholder": "Nazwa podzadania..."
   },
   "empty": "Brak zadań w projekcie.",
-  "emptyHint": "Dodaj pierwsze zadanie lub fazę poniżej."
+  "emptyHint": "Dodaj pierwsze zadanie lub fazę poniżej.",
+  "modal": {
+    "description": "Opis",
+    "descriptionPlaceholder": "Dodaj opis zadania... (Markdown)",
+    "noDescription": "Brak opisu — kliknij, aby dodać.",
+    "subtasks": "Podzadania",
+    "addSubtask": "Dodaj podzadanie",
+    "comments": "Komentarze",
+    "commentPlaceholder": "Napisz komentarz...",
+    "send": "Wyślij",
+    "noComments": "Brak komentarzy. Rozpocznij dyskusję!",
+    "deleteComment": "Usuń komentarz",
+    "meta": {
+      "status": "Status",
+      "priority": "Priorytet",
+      "startDate": "Data rozpoczęcia",
+      "endDate": "Termin",
+      "assignee": "Przypisany",
+      "unassigned": "Nieprzypisane",
+      "milestone": "Kamień milowy",
+      "progress": "Postęp",
+      "estimatedHours": "Szacowany czas (h)",
+      "wbs": "WBS",
+      "yes": "Tak",
+      "no": "Nie"
+    }
+  }
 }

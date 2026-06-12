@@ -32,6 +32,8 @@ export const router = createBrowserRouter([
               { path: '/', element: <DashboardPage /> },
               { path: '/spaces/:spaceId', element: <SpacePage /> },
               { path: '/projects/:projectId', element: <ProjectPage /> },
+              // Deep link to the task modal rendered on top of the project view.
+              { path: '/projects/:projectId/tasks/:taskId', element: <ProjectPage /> },
             ],
           },
         ],

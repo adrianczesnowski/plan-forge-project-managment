@@ -1,6 +1,7 @@
 import type {
   CreateProjectInput,
   Project,
+  ProjectMember,
   ProjectWithRole,
   UpdateProjectInput,
 } from '@planforge/shared';
@@ -22,4 +23,7 @@ export const projectApi = {
     apiClient.patch<never>(`/projects/${id}`, input).then((res) => unwrap<Project>(res)),
 
   delete: (id: string) => apiClient.delete(`/projects/${id}`).then(() => undefined),
+
+  listMembers: (id: string) =>
+    apiClient.get<never>(`/projects/${id}/members`).then((res) => unwrap<ProjectMember[]>(res)),
 };

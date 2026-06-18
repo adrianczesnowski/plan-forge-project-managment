@@ -84,5 +84,20 @@
       "predecessor": "predecessor",
       "successor": "successor"
     }
+  },
+  "filters": {
+    "searchPlaceholder": "Search tasks…",
+    "status": "Status",
+    "priority": "Priority",
+    "anyAssignee": "Any assignee",
+    "clear": "Clear",
+    "noResults": "No tasks match the filters"
+  },
+  "moveMenu": {
+    "title": "Move",
+    "indent": "Indent — subtask of previous",
+    "outdent": "Outdent one level",
+    "moveUp": "Move up",
+    "moveDown": "Move down"
   }
 }

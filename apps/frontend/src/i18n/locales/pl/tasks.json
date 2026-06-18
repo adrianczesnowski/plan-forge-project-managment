@@ -84,5 +84,20 @@
       "predecessor": "poprzednik",
       "successor": "następnik"
     }
+  },
+  "filters": {
+    "searchPlaceholder": "Szukaj zadań…",
+    "status": "Status",
+    "priority": "Priorytet",
+    "anyAssignee": "Dowolny przypisany",
+    "clear": "Wyczyść",
+    "noResults": "Brak zadań pasujących do filtrów"
+  },
+  "moveMenu": {
+    "title": "Przenieś",
+    "indent": "Wsuń — podzadanie poprzedniego",
+    "outdent": "Wynieś o poziom wyżej",
+    "moveUp": "Przesuń w górę",
+    "moveDown": "Przesuń w dół"
   }
 }

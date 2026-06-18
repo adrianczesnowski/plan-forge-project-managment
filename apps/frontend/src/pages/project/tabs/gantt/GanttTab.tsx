@@ -7,6 +7,7 @@ import type { GanttPopupContext } from 'frappe-gantt';
 import { useProjectTasks } from '@/entities/task/hooks/use-tasks';
 import { useProjectDependencies } from '@/entities/dependency/hooks/use-dependencies';
 import { useUpdateTask } from '@/features/task/hooks/use-task-mutations';
+import { filterTaskTree, type TaskFilters } from '@/features/task/model/task-filters';
 import { FullPageSpinner } from '@/shared/ui/full-page-spinner';
 import { cn } from '@/shared/lib/utils';
 import { GanttChart, type GanttViewMode } from './GanttChart';
@@ -21,7 +22,12 @@ const LEGEND: Array<{ key: 'task' | 'parent' | 'milestone' | 'critical'; swatch:
   { key: 'critical', swatch: 'bg-[#ef4444]' },
 ];
 
-export function GanttTab({ project }: { project: ProjectWithRole }) {
+interface GanttTabProps {
+  project: ProjectWithRole;
+  filters: TaskFilters;
+}
+
+export function GanttTab({ project, filters }: GanttTabProps) {
   const { t } = useTranslation('tasks');
   const navigate = useNavigate();
   const { data: tree, isPending: treePending } = useProjectTasks(project.id);
@@ -30,8 +36,8 @@ export function GanttTab({ project }: { project: ProjectWithRole }) {
   const [viewMode, setViewMode] = useState<GanttViewMode>('Day');
 
   const tasks = useMemo(
-    () => buildGanttTasks(tree ?? [], dependencies ?? []),
-    [tree, dependencies],
+    () => buildGanttTasks(filterTaskTree(tree ?? [], filters), dependencies ?? []),
+    [tree, dependencies, filters],
   );
 
   if (treePending || depsPending) return <FullPageSpinner />;

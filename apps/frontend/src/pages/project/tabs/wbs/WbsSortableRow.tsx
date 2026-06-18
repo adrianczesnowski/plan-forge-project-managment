@@ -8,10 +8,12 @@ import { cn } from '@/shared/lib/utils';
 interface WbsSortableRowProps {
   row: Row<TaskTreeNode>;
   canEdit: boolean;
+  /** This row would become the dragged task's parent if dropped now. */
+  isDropParent?: boolean;
 }
 
 /** Table row wired into dnd-kit sortable, with a drag handle in the first cell. */
-export function WbsSortableRow({ row, canEdit }: WbsSortableRowProps) {
+export function WbsSortableRow({ row, canEdit, isDropParent = false }: WbsSortableRowProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: row.original.id,
     disabled: !canEdit,
@@ -23,7 +25,8 @@ export function WbsSortableRow({ row, canEdit }: WbsSortableRowProps) {
       style={{ transform: CSS.Translate.toString(transform), transition }}
       className={cn(
         'group border-b border-border-light transition-colors hover:bg-muted/40',
-        isDragging && 'relative z-10 bg-white opacity-80 shadow-lg',
+        isDragging && 'relative z-10 bg-primary/5 opacity-90 shadow-lg ring-1 ring-inset ring-primary/30',
+        isDropParent && 'bg-primary/5',
       )}
     >
       <td className="w-7 pl-2">

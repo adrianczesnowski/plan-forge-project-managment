@@ -6,6 +6,8 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
+  type DragMoveEvent,
+  type DragStartEvent,
 } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import {
@@ -23,11 +25,23 @@ import type { TaskPriority, TaskStatus, TaskTreeNode } from '@planforge/shared';
 import { cn } from '@/shared/lib/utils';
 import { TaskStatusSelect } from '@/features/task/ui/TaskStatusSelect';
 import { TaskPrioritySelect } from '@/features/task/ui/TaskPrioritySelect';
-import { getDropProjection, type FlatTask } from '@/features/task/lib/wbs-dnd';
+import {
+  collectDescendantIds,
+  getDropProjection,
+  type DropProjection,
+  type FlatTask,
+} from '@/features/task/lib/wbs-dnd';
 import { WbsSortableRow } from './WbsSortableRow';
+import { WbsMoveMenu } from './WbsMoveMenu';
 
 /** Must match the per-level padding used in the title cell. */
 const INDENT_WIDTH = 20;
+
+/** Drag state shared with column cells through the table's meta. */
+interface WbsTableMeta {
+  activeId: string | null;
+  projectedDepth: number | null;
+}
 
 export interface WbsTableCallbacks {
   onStatusChange: (taskId: string, status: TaskStatus) => void;
@@ -41,6 +55,8 @@ export interface WbsTableCallbacks {
 interface WbsTableProps extends WbsTableCallbacks {
   tasks: TaskTreeNode[];
   canEdit: boolean;
+  /** Row drag & drop — disabled while filters hide part of the tree. */
+  dndEnabled?: boolean;
 }
 
 function AssigneeCell({ task }: { task: TaskTreeNode }) {
@@ -71,6 +87,7 @@ function ProgressCell({ value }: { value: number }) {
 export function WbsTable({
   tasks,
   canEdit,
+  dndEnabled = true,
   onStatusChange,
   onPriorityChange,
   onAddSubtask,
@@ -80,6 +97,8 @@ export function WbsTable({
 }: WbsTableProps) {
   const { t } = useTranslation('tasks');
   const [expanded, setExpanded] = useState<ExpandedState>(true);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [projection, setProjection] = useState<DropProjection | null>(null);
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
   const columns = useMemo<ColumnDef<TaskTreeNode>[]>(
@@ -96,8 +115,15 @@ export function WbsTable({
         id: 'title',
         header: t('columns.title'),
         size: 400,
-        cell: ({ row }) => (
-          <div className="flex items-center gap-1" style={{ paddingLeft: row.depth * 20 }}>
+        cell: ({ row, table }) => {
+          // While dragging, the active row previews its projected nesting level.
+          const meta = table.options.meta as WbsTableMeta | undefined;
+          const depth =
+            meta?.activeId === row.original.id && meta.projectedDepth !== null
+              ? meta.projectedDepth
+              : row.depth;
+          return (
+            <div className="flex items-center gap-1" style={{ paddingLeft: depth * INDENT_WIDTH }}>
             {row.getCanExpand() ? (
               <button
                 type="button"
@@ -123,8 +149,9 @@ export function WbsTable({
             >
               {row.original.title}
             </button>
-          </div>
-        ),
+            </div>
+          );
+        },
       },
       {
         id: 'status',
@@ -181,7 +208,7 @@ export function WbsTable({
         size: 70,
         cell: ({ row }) =>
           canEdit && (
-            <div className="flex justify-end gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+            <div className="flex justify-end gap-1 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
               <button
                 type="button"
                 title={t('actions.addSubtask')}
@@ -190,6 +217,7 @@ export function WbsTable({
               >
                 <Plus className="h-3.5 w-3.5" />
               </button>
+              <WbsMoveMenu tasks={tasks} taskId={row.original.id} onMove={onMove} />
               <button
                 type="button"
                 title={t('actions.delete')}
@@ -202,13 +230,17 @@ export function WbsTable({
           ),
       },
     ],
-    [t, canEdit, onStatusChange, onPriorityChange, onAddSubtask, onDelete, onOpenTask],
+    [t, canEdit, tasks, onStatusChange, onPriorityChange, onAddSubtask, onDelete, onOpenTask, onMove],
   );
 
   const table = useReactTable({
     data: tasks,
     columns,
     state: { expanded },
+    meta: {
+      activeId,
+      projectedDepth: projection?.depth ?? null,
+    } satisfies WbsTableMeta,
     onExpandedChange: setExpanded,
     getSubRows: (row) => row.children,
     getCoreRowModel: getCoreRowModel(),
@@ -222,23 +254,56 @@ export function WbsTable({
     [rows],
   );
 
+  // The dragged subtree is hidden for the duration of the drag, so the drop
+  // target can never be one of the dragged task's own descendants.
+  const hiddenIds = useMemo(
+    () => (activeId ? collectDescendantIds(flatItems, activeId) : new Set<string>()),
+    [flatItems, activeId],
+  );
+  const visibleRows = activeId ? rows.filter((row) => !hiddenIds.has(row.original.id)) : rows;
+
+  const resetDragState = () => {
+    setActiveId(null);
+    setProjection(null);
+  };
+
+  const handleDragStart = ({ active }: DragStartEvent) => setActiveId(String(active.id));
+
+  const handleDragMove = ({ active, over, delta }: DragMoveEvent) => {
+    if (!over) {
+      setProjection(null);
+      return;
+    }
+    setProjection(
+      getDropProjection(flatItems, String(active.id), String(over.id), delta.x, INDENT_WIDTH),
+    );
+  };
+
   const handleDragEnd = ({ active, over, delta }: DragEndEvent) => {
+    resetDragState();
     if (!over) return;
     // Dropped in place without horizontal movement → no structural change intended.
     if (active.id === over.id && Math.abs(delta.x) < INDENT_WIDTH) return;
-    const projection = getDropProjection(
+    const drop = getDropProjection(
       flatItems,
       String(active.id),
       String(over.id),
       delta.x,
       INDENT_WIDTH,
     );
-    if (!projection) return;
-    onMove(String(active.id), projection.parentId, projection.index);
+    if (!drop) return;
+    onMove(String(active.id), drop.parentId, drop.index);
   };
 
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
+      onDragMove={handleDragMove}
+      onDragEnd={handleDragEnd}
+      onDragCancel={resetDragState}
+    >
       <table className="w-full border-collapse">
         <thead>
           <tr className="border-b border-border">
@@ -256,11 +321,16 @@ export function WbsTable({
         </thead>
         <tbody>
           <SortableContext
-            items={flatItems.map((i) => i.id)}
+            items={visibleRows.map((row) => row.original.id)}
             strategy={verticalListSortingStrategy}
           >
-            {rows.map((row) => (
-              <WbsSortableRow key={row.id} row={row} canEdit={canEdit} />
+            {visibleRows.map((row) => (
+              <WbsSortableRow
+                key={row.id}
+                row={row}
+                canEdit={canEdit && dndEnabled}
+                isDropParent={activeId !== null && projection?.parentId === row.original.id}
+              />
             ))}
           </SortableContext>
         </tbody>

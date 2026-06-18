@@ -13,6 +13,7 @@ import { TaskStatus, type ProjectWithRole, type TaskTreeNode } from '@planforge/
 import { useProjectTasks } from '@/entities/task/hooks/use-tasks';
 import { flattenTree } from '@/entities/task/lib/flatten-tree';
 import { useUpdateTask } from '@/features/task/hooks/use-task-mutations';
+import { matchesFilters, type TaskFilters } from '@/features/task/model/task-filters';
 import { FullPageSpinner } from '@/shared/ui/full-page-spinner';
 import { KanbanColumn } from './KanbanColumn';
 import { KanbanCard } from './KanbanCard';
@@ -25,7 +26,12 @@ const BOARD_COLUMNS: TaskStatus[] = [
   TaskStatus.DONE,
 ];
 
-export function KanbanTab({ project }: { project: ProjectWithRole }) {
+interface KanbanTabProps {
+  project: ProjectWithRole;
+  filters: TaskFilters;
+}
+
+export function KanbanTab({ project, filters }: KanbanTabProps) {
   const navigate = useNavigate();
   const { data: tree, isPending } = useProjectTasks(project.id);
   const updateTask = useUpdateTask(project.id);
@@ -35,13 +41,13 @@ export function KanbanTab({ project }: { project: ProjectWithRole }) {
   const canEdit = project.myRole !== 'VIEWER';
 
   const tasksByStatus = useMemo(() => {
-    const flat = tree ? flattenTree(tree) : [];
+    const flat = (tree ? flattenTree(tree) : []).filter((task) => matchesFilters(task, filters));
     const groups = new Map<TaskStatus, TaskTreeNode[]>(BOARD_COLUMNS.map((s) => [s, []]));
     for (const task of flat) {
       groups.get(task.status)?.push(task);
     }
     return groups;
-  }, [tree]);
+  }, [tree, filters]);
 
   if (isPending) return <FullPageSpinner />;
 

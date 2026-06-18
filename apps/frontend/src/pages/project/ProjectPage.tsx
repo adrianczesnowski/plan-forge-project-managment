@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useProject } from '@/entities/project/hooks/use-projects';
 import { ProjectStatusBadge } from '@/entities/project/ui/ProjectStatusBadge';
 import { TaskDetailModal } from '@/features/task/ui/task-detail/TaskDetailModal';
+import { TaskFiltersBar } from '@/features/task/ui/filters/TaskFiltersBar';
+import { EMPTY_FILTERS, type TaskFilters } from '@/features/task/model/task-filters';
 import { FullPageSpinner } from '@/shared/ui/full-page-spinner';
 import { cn } from '@/shared/lib/utils';
 import { useState } from 'react';
@@ -14,6 +16,9 @@ import { GanttTab } from './tabs/gantt/GanttTab';
 const TABS = ['overview', 'wbs', 'kanban', 'gantt', 'table'] as const;
 type ProjectTab = (typeof TABS)[number];
 
+/** Tabs that render tasks and react to the shared filters toolbar. */
+const TASK_TABS: ProjectTab[] = ['wbs', 'kanban', 'gantt'];
+
 /** Table view arrives later in phase 2 of the roadmap. */
 const IMPLEMENTED_TABS: ProjectTab[] = ['overview', 'wbs', 'kanban', 'gantt'];
 
@@ -23,6 +28,7 @@ export function ProjectPage() {
   const { data: project, isPending } = useProject(projectId);
   // Deep-linked task modal defaults the underlying view to the WBS tab.
   const [activeTab, setActiveTab] = useState<ProjectTab>(taskId ? 'wbs' : 'overview');
+  const [filters, setFilters] = useState<TaskFilters>(EMPTY_FILTERS);
 
   if (isPending) return <FullPageSpinner />;
   if (!project) return null;
@@ -59,11 +65,17 @@ export function ProjectPage() {
         </div>
       </div>
 
+      {TASK_TABS.includes(activeTab) && (
+        <div className="border-b border-border px-6 py-2.5">
+          <TaskFiltersBar projectId={project.id} filters={filters} onChange={setFilters} />
+        </div>
+      )}
+
       <div className="flex-1 overflow-y-auto">
         {activeTab === 'overview' && <ProjectOverviewTab project={project} />}
-        {activeTab === 'wbs' && <WbsTab project={project} />}
-        {activeTab === 'kanban' && <KanbanTab project={project} />}
-        {activeTab === 'gantt' && <GanttTab project={project} />}
+        {activeTab === 'wbs' && <WbsTab project={project} filters={filters} />}
+        {activeTab === 'kanban' && <KanbanTab project={project} filters={filters} />}
+        {activeTab === 'gantt' && <GanttTab project={project} filters={filters} />}
       </div>
 
       {taskId && <TaskDetailModal project={project} taskId={taskId} />}

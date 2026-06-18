@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ListTodo } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +10,11 @@ import {
   useUpdateTask,
 } from '@/features/task/hooks/use-task-mutations';
 import { useMoveTask } from '@/features/task/hooks/use-move-task';
+import {
+  filterTaskTree,
+  hasActiveFilters,
+  type TaskFilters,
+} from '@/features/task/model/task-filters';
 import { FullPageSpinner } from '@/shared/ui/full-page-spinner';
 import { WbsTable } from './WbsTable';
 import { WbsQuickAdd } from './WbsQuickAdd';
@@ -19,10 +24,16 @@ interface SubtaskTarget {
   parentTitle: string;
 }
 
-export function WbsTab({ project }: { project: ProjectWithRole }) {
+interface WbsTabProps {
+  project: ProjectWithRole;
+  filters: TaskFilters;
+}
+
+export function WbsTab({ project, filters }: WbsTabProps) {
   const { t } = useTranslation('tasks');
   const navigate = useNavigate();
   const { data: tasks, isPending } = useProjectTasks(project.id);
+  const visibleTasks = useMemo(() => filterTaskTree(tasks ?? [], filters), [tasks, filters]);
   const createTask = useCreateTask(project.id);
   const updateTask = useUpdateTask(project.id);
   const deleteTask = useDeleteTask(project.id);
@@ -51,10 +62,11 @@ export function WbsTab({ project }: { project: ProjectWithRole }) {
   return (
     <div className="flex h-full flex-col">
       <div className="flex-1 overflow-y-auto">
-        {tasks && tasks.length > 0 ? (
+        {visibleTasks.length > 0 ? (
           <WbsTable
-            tasks={tasks}
+            tasks={visibleTasks}
             canEdit={canEdit}
+            dndEnabled={!hasActiveFilters(filters)}
             onStatusChange={(taskId, status) => updateTask.mutate({ taskId, input: { status } })}
             onPriorityChange={(taskId, priority) =>
               updateTask.mutate({ taskId, input: { priority } })
@@ -69,8 +81,10 @@ export function WbsTab({ project }: { project: ProjectWithRole }) {
         ) : (
           <div className="m-6 flex flex-col items-center gap-2 rounded-2xl border border-dashed border-border py-16 text-center">
             <ListTodo className="h-8 w-8 text-faint" />
-            <p className="text-sm font-medium text-muted-foreground">{t('empty')}</p>
-            <p className="text-[13px] text-faint">{t('emptyHint')}</p>
+            <p className="text-sm font-medium text-muted-foreground">
+              {hasActiveFilters(filters) ? t('filters.noResults') : t('empty')}
+            </p>
+            {!hasActiveFilters(filters) && <p className="text-[13px] text-faint">{t('emptyHint')}</p>}
           </div>
         )}
       </div>

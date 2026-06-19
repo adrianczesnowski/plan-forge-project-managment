@@ -5,6 +5,7 @@
     "status": "Status",
     "priority": "Priority",
     "assignee": "Assignee",
+    "startDate": "Start date",
     "dueDate": "Due date",
     "progress": "Progress"
   },

@@ -12,15 +12,16 @@ import { ProjectOverviewTab } from './tabs/ProjectOverviewTab';
 import { WbsTab } from './tabs/wbs/WbsTab';
 import { KanbanTab } from './tabs/kanban/KanbanTab';
 import { GanttTab } from './tabs/gantt/GanttTab';
+import { TableTab } from './tabs/table/TableTab';
+import { ProjectActionsMenu } from '@/features/project/ui/ProjectActionsMenu';
 
 const TABS = ['overview', 'wbs', 'kanban', 'gantt', 'table'] as const;
 type ProjectTab = (typeof TABS)[number];
 
 /** Tabs that render tasks and react to the shared filters toolbar. */
-const TASK_TABS: ProjectTab[] = ['wbs', 'kanban', 'gantt'];
+const TASK_TABS: ProjectTab[] = ['wbs', 'kanban', 'gantt', 'table'];
 
-/** Table view arrives later in phase 2 of the roadmap. */
-const IMPLEMENTED_TABS: ProjectTab[] = ['overview', 'wbs', 'kanban', 'gantt'];
+const IMPLEMENTED_TABS: ProjectTab[] = ['overview', 'wbs', 'kanban', 'gantt', 'table'];
 
 export function ProjectPage() {
   const { t } = useTranslation('projects');
@@ -39,6 +40,7 @@ export function ProjectPage() {
         <div className="mb-3 flex items-center gap-3">
           <h1 className="text-xl font-bold tracking-tight">{project.name}</h1>
           <ProjectStatusBadge status={project.status} />
+          <ProjectActionsMenu project={project} />
         </div>
 
         <div className="flex gap-1">
@@ -76,6 +78,7 @@ export function ProjectPage() {
         {activeTab === 'wbs' && <WbsTab project={project} filters={filters} />}
         {activeTab === 'kanban' && <KanbanTab project={project} filters={filters} />}
         {activeTab === 'gantt' && <GanttTab project={project} filters={filters} />}
+        {activeTab === 'table' && <TableTab project={project} filters={filters} />}
       </div>
 
       {taskId && <TaskDetailModal project={project} taskId={taskId} />}

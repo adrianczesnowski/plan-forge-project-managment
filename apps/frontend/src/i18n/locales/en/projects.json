@@ -30,6 +30,40 @@
     "gantt": "Gantt",
     "table": "Table"
   },
+  "menu": {
+    "title": "Project actions",
+    "data": "Data import & export",
+    "dataHint": "Export tasks or import from CSV / XLSX"
+  },
+  "dataTransfer": {
+    "title": "Project data",
+    "exportTitle": "Export",
+    "exportHint": "Download all tasks (WBS order) as a CSV or XLSX file.",
+    "exportButton": "Export tasks",
+    "importTitle": "Import",
+    "importHint": "Upload a CSV or XLSX file. Required columns: WBS and Title. Optional: Description, Status, Priority, Start Date, End Date, Progress, Milestone.",
+    "importNoPermission": "You don't have permission to import tasks into this project.",
+    "parseFailed": "Could not read this file. Make sure it is a valid CSV or XLSX.",
+    "readyToImport": "Ready to import {{n}} tasks from \"{{file}}\".",
+    "importButton": "Import {{n}} tasks",
+    "importing": "Importing… {{done}} / {{total}}",
+    "importDone": "Imported {{n}} tasks successfully.",
+    "issuesTitle": "Found {{n}} problem(s) — fix the file and upload again:",
+    "issues": {
+      "emptyFile": "The file has no data rows.",
+      "noTitleColumn": "Missing required column: Title.",
+      "noWbsColumn": "Missing required column: WBS.",
+      "rowMissingTitle": "Row {{row}}: title is required.",
+      "invalidWbs": "Row {{row}}: invalid WBS number \"{{value}}\".",
+      "duplicateWbs": "Duplicate WBS number \"{{value}}\".",
+      "missingParent": "WBS \"{{wbs}}\" has no parent task in the file.",
+      "wbsGap": "Gap under \"{{parent}}\": missing number(s) {{missing}}.",
+      "wbsDuplicateGroup": "Duplicate numbering under \"{{parent}}\".",
+      "invalidStatus": "Row {{row}}: unknown status \"{{value}}\".",
+      "invalidPriority": "Row {{row}}: unknown priority \"{{value}}\".",
+      "invalidDate": "Row {{row}}: invalid date \"{{value}}\"."
+    }
+  },
   "overview": {
     "description": "Description",
     "noDescription": "This project has no description.",

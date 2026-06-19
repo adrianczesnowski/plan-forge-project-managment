@@ -30,6 +30,40 @@
     "gantt": "Gantt",
     "table": "Tabela"
   },
+  "menu": {
+    "title": "Akcje projektu",
+    "data": "Import i eksport danych",
+    "dataHint": "Eksportuj zadania lub zaimportuj z CSV / XLSX"
+  },
+  "dataTransfer": {
+    "title": "Dane projektu",
+    "exportTitle": "Eksport",
+    "exportHint": "Pobierz wszystkie zadania (w kolejności WBS) jako plik CSV lub XLSX.",
+    "exportButton": "Eksportuj zadania",
+    "importTitle": "Import",
+    "importHint": "Wgraj plik CSV lub XLSX. Wymagane kolumny: WBS i Tytuł. Opcjonalne: Opis, Status, Priorytet, Data startu, Data końca, Postęp, Milestone.",
+    "importNoPermission": "Nie masz uprawnień do importu zadań w tym projekcie.",
+    "parseFailed": "Nie udało się odczytać pliku. Upewnij się, że to poprawny CSV lub XLSX.",
+    "readyToImport": "Gotowe do importu: {{n}} zadań z pliku „{{file}}”.",
+    "importButton": "Importuj {{n}} zadań",
+    "importing": "Importowanie… {{done}} / {{total}}",
+    "importDone": "Zaimportowano {{n}} zadań.",
+    "issuesTitle": "Znaleziono problemy ({{n}}) — popraw plik i wgraj ponownie:",
+    "issues": {
+      "emptyFile": "Plik nie zawiera wierszy z danymi.",
+      "noTitleColumn": "Brak wymaganej kolumny: Tytuł.",
+      "noWbsColumn": "Brak wymaganej kolumny: WBS.",
+      "rowMissingTitle": "Wiersz {{row}}: tytuł jest wymagany.",
+      "invalidWbs": "Wiersz {{row}}: nieprawidłowy numer WBS „{{value}}”.",
+      "duplicateWbs": "Zduplikowany numer WBS „{{value}}”.",
+      "missingParent": "WBS „{{wbs}}” nie ma zadania nadrzędnego w pliku.",
+      "wbsGap": "Luka w „{{parent}}”: brakuje numeru/numerów {{missing}}.",
+      "wbsDuplicateGroup": "Zduplikowana numeracja w „{{parent}}”.",
+      "invalidStatus": "Wiersz {{row}}: nieznany status „{{value}}”.",
+      "invalidPriority": "Wiersz {{row}}: nieznany priorytet „{{value}}”.",
+      "invalidDate": "Wiersz {{row}}: nieprawidłowa data „{{value}}”."
+    }
+  },
   "overview": {
     "description": "Opis",
     "noDescription": "Brak opisu projektu.",

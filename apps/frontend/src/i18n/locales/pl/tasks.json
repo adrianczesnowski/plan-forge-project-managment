@@ -5,6 +5,7 @@
     "status": "Status",
     "priority": "Priorytet",
     "assignee": "Przypisany",
+    "startDate": "Data startu",
     "dueDate": "Termin",
     "progress": "Postęp"
   },

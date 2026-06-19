@@ -18,6 +18,9 @@ import { DependencyModule } from './modules/dependency/dependency.module';
 import { ActivityModule } from './modules/activity/activity.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { FavoriteModule } from './modules/favorite/favorite.module';
+import { EventsModule } from './modules/events/events.module';
+import { NotificationModule } from './modules/notification/notification.module';
+import { SearchModule } from './modules/search/search.module';
 
 @Module({
   imports: [
@@ -35,6 +38,9 @@ import { FavoriteModule } from './modules/favorite/favorite.module';
     ActivityModule,
     DashboardModule,
     FavoriteModule,
+    EventsModule,
+    NotificationModule,
+    SearchModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },

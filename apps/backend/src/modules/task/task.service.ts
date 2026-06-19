@@ -13,6 +13,8 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { MESSAGES } from '../../common/constants/messages';
 import { ProjectAccessService } from '../project/project-access.service';
 import { ActivityService } from '../activity/activity.service';
+import { EventsGateway } from '../events/events.gateway';
+import { NotificationService } from '../notification/notification.service';
 import { WbsService } from './wbs.service';
 import { buildTaskTree, toTaskDto } from './task.mapper';
 
@@ -25,6 +27,8 @@ export class TaskService {
     private readonly access: ProjectAccessService,
     private readonly wbs: WbsService,
     private readonly activity: ActivityService,
+    private readonly events: EventsGateway,
+    private readonly notifications: NotificationService,
   ) {}
 
   async create(userId: string, dto: CreateTaskInput): Promise<Task> {
@@ -62,6 +66,10 @@ export class TaskService {
     });
 
     await this.activity.recordTaskCreated(userId, task);
+    this.events.emitToProject(task.projectId, 'task:changed', { projectId: task.projectId });
+    if (task.assigneeId && task.assigneeId !== userId) {
+      await this.notifyAssigned(task.assigneeId, task.id, task.title);
+    }
     return this.reload(task.id);
   }
 
@@ -116,6 +124,15 @@ export class TaskService {
 
     await this.prisma.task.update({ where: { id: taskId }, data });
     await this.activity.recordTaskUpdated(userId, task, dto);
+    this.events.emitToProject(task.projectId, 'task:changed', { projectId: task.projectId });
+    if (
+      dto.assigneeId !== undefined &&
+      dto.assigneeId &&
+      dto.assigneeId !== task.assigneeId &&
+      dto.assigneeId !== userId
+    ) {
+      await this.notifyAssigned(dto.assigneeId, taskId, task.title);
+    }
     return this.reload(taskId);
   }
 
@@ -129,6 +146,7 @@ export class TaskService {
       await this.wbs.renumberProject(task.projectId, tx);
     });
     await this.activity.recordTaskDeleted(userId, task);
+    this.events.emitToProject(task.projectId, 'task:changed', { projectId: task.projectId });
   }
 
   /** Moves the task to a new parent and/or position; rejects cycles. */
@@ -147,6 +165,7 @@ export class TaskService {
       await this.wbs.renumberProject(task.projectId, tx);
     });
 
+    this.events.emitToProject(task.projectId, 'task:changed', { projectId: task.projectId });
     return this.listTree(userId, task.projectId);
   }
 
@@ -170,6 +189,7 @@ export class TaskService {
       await this.wbs.renumberProject(dto.projectId, tx);
     });
 
+    this.events.emitToProject(dto.projectId, 'task:changed', { projectId: dto.projectId });
     return this.listTree(userId, dto.projectId);
   }
 
@@ -223,7 +243,18 @@ export class TaskService {
         break;
     }
 
+    this.events.emitToProject(projectId, 'task:changed', { projectId });
     return { affected: dto.taskIds.length };
+  }
+
+  private async notifyAssigned(assigneeId: string, taskId: string, title: string): Promise<void> {
+    await this.notifications.create({
+      userId: assigneeId,
+      type: 'TASK_ASSIGNED',
+      title,
+      entityType: 'task',
+      entityId: taskId,
+    });
   }
 
   private async reload(taskId: string): Promise<Task> {

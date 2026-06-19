@@ -11,6 +11,7 @@ import type { ActivityLog, UpdateTaskInput } from '@planforge/shared';
 import { PrismaService } from '../../prisma/prisma.service';
 import { MESSAGES } from '../../common/constants/messages';
 import { ProjectAccessService } from '../project/project-access.service';
+import { EventsGateway } from '../events/events.gateway';
 import { toUserSummary } from '../user/user.mapper';
 
 const TASK_ENTITY = 'task';
@@ -87,6 +88,7 @@ export class ActivityService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly access: ProjectAccessService,
+    private readonly events: EventsGateway,
   ) {}
 
   /** Activity feed for a single task (newest first). */
@@ -115,6 +117,7 @@ export class ActivityService {
         projectId: task.projectId,
       },
     ]);
+    this.emitChanged(task);
   }
 
   async recordTaskUpdated(userId: string, old: PrismaTask, dto: UpdateTaskInput): Promise<void> {
@@ -132,6 +135,7 @@ export class ActivityService {
         newValue: toJson(d.newValue),
       })),
     );
+    this.emitChanged(old);
   }
 
   async recordTaskDeleted(userId: string, task: PrismaTask): Promise<void> {
@@ -144,6 +148,14 @@ export class ActivityService {
         projectId: task.projectId,
       },
     ]);
+    this.emitChanged(task);
+  }
+
+  private emitChanged(task: PrismaTask): void {
+    this.events.emitToProject(task.projectId, 'activity:changed', {
+      projectId: task.projectId,
+      taskId: task.id,
+    });
   }
 
   private async safeCreate(data: Prisma.ActivityLogCreateManyInput[]): Promise<void> {

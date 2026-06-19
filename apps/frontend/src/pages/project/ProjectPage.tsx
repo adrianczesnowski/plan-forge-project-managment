@@ -15,6 +15,7 @@ import { GanttTab } from './tabs/gantt/GanttTab';
 import { TableTab } from './tabs/table/TableTab';
 import { ProjectActionsMenu } from '@/features/project/ui/ProjectActionsMenu';
 import { FavoriteStar } from '@/features/favorite/ui/FavoriteStar';
+import { useProjectRealtime } from '@/shared/hooks/use-project-realtime';
 
 const TABS = ['overview', 'wbs', 'kanban', 'gantt', 'table'] as const;
 type ProjectTab = (typeof TABS)[number];
@@ -31,6 +32,8 @@ export function ProjectPage() {
   // Deep-linked task modal defaults the underlying view to the WBS tab.
   const [activeTab, setActiveTab] = useState<ProjectTab>(taskId ? 'wbs' : 'overview');
   const [filters, setFilters] = useState<TaskFilters>(EMPTY_FILTERS);
+
+  useProjectRealtime(projectId);
 
   if (isPending) return <FullPageSpinner />;
   if (!project) return null;

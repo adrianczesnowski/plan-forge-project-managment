@@ -23,5 +23,23 @@
     "title": "Favorites",
     "add": "Add to favorites",
     "remove": "Remove from favorites"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications yet.",
+    "markAllRead": "Mark all read",
+    "type": {
+      "TASK_ASSIGNED": "Task assigned to you",
+      "COMMENT_MENTION": "New comment on your task",
+      "TASK_STATUS_CHANGED": "Status changed",
+      "DEADLINE_APPROACHING": "Deadline approaching"
+    }
+  },
+  "search": {
+    "hint": "Type at least 2 characters to search…",
+    "empty": "No results.",
+    "tasks": "Tasks",
+    "projects": "Projects",
+    "spaces": "Spaces"
   }
 }

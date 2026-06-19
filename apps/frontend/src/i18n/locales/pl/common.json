@@ -23,5 +23,23 @@
     "title": "Ulubione",
     "add": "Dodaj do ulubionych",
     "remove": "Usuń z ulubionych"
+  },
+  "notifications": {
+    "title": "Powiadomienia",
+    "empty": "Brak powiadomień.",
+    "markAllRead": "Oznacz wszystkie",
+    "type": {
+      "TASK_ASSIGNED": "Przypisano Ci zadanie",
+      "COMMENT_MENTION": "Nowy komentarz w Twoim zadaniu",
+      "TASK_STATUS_CHANGED": "Zmiana statusu",
+      "DEADLINE_APPROACHING": "Zbliża się termin"
+    }
+  },
+  "search": {
+    "hint": "Wpisz min. 2 znaki, aby wyszukać…",
+    "empty": "Brak wyników.",
+    "tasks": "Zadania",
+    "projects": "Projekty",
+    "spaces": "Przestrzenie"
   }
 }

@@ -4,6 +4,8 @@ import type { Comment, CreateCommentInput, UpdateCommentInput } from '@planforge
 import { PrismaService } from '../../prisma/prisma.service';
 import { MESSAGES } from '../../common/constants/messages';
 import { ProjectAccessService } from '../project/project-access.service';
+import { EventsGateway } from '../events/events.gateway';
+import { NotificationService } from '../notification/notification.service';
 import { toUserSummary } from '../user/user.mapper';
 
 function toCommentDto(comment: PrismaComment & { author: PrismaUser }): Comment {
@@ -23,15 +25,28 @@ export class CommentService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly access: ProjectAccessService,
+    private readonly events: EventsGateway,
+    private readonly notifications: NotificationService,
   ) {}
 
   /** Everyone with project access (including VIEWER) may comment. */
   async create(userId: string, taskId: string, dto: CreateCommentInput): Promise<Comment> {
-    await this.requireTaskAccess(userId, taskId);
+    const task = await this.requireTaskAccess(userId, taskId);
     const comment = await this.prisma.comment.create({
       data: { content: dto.content, taskId, authorId: userId },
       include: { author: true },
     });
+    this.events.emitToProject(task.projectId, 'comment:changed', { projectId: task.projectId, taskId });
+    // Notify the task's assignee about a new comment from someone else.
+    if (task.assigneeId && task.assigneeId !== userId) {
+      await this.notifications.create({
+        userId: task.assigneeId,
+        type: 'COMMENT_MENTION',
+        title: task.title,
+        entityType: 'task',
+        entityId: taskId,
+      });
+    }
     return toCommentDto(comment);
   }
 
@@ -50,14 +65,28 @@ export class CommentService {
     const comment = await this.prisma.comment.update({
       where: { id: commentId },
       data: { content: dto.content },
-      include: { author: true },
+      include: { author: true, task: { select: { projectId: true } } },
+    });
+    this.events.emitToProject(comment.task.projectId, 'comment:changed', {
+      projectId: comment.task.projectId,
+      taskId: comment.taskId,
     });
     return toCommentDto(comment);
   }
 
   async delete(userId: string, commentId: string): Promise<void> {
-    await this.requireOwnComment(userId, commentId);
+    const existing = await this.requireOwnComment(userId, commentId);
+    const task = await this.prisma.task.findUnique({
+      where: { id: existing.taskId },
+      select: { projectId: true },
+    });
     await this.prisma.comment.delete({ where: { id: commentId } });
+    if (task) {
+      this.events.emitToProject(task.projectId, 'comment:changed', {
+        projectId: task.projectId,
+        taskId: existing.taskId,
+      });
+    }
   }
 
   private async requireTaskAccess(userId: string, taskId: string) {

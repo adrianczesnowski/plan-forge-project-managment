@@ -18,5 +18,10 @@
   },
   "topbar": {
     "searchPlaceholder": "Search projects, spaces, tasks..."
+  },
+  "favorites": {
+    "title": "Favorites",
+    "add": "Add to favorites",
+    "remove": "Remove from favorites"
   }
 }

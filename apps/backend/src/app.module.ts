@@ -15,6 +15,9 @@ import { ProjectModule } from './modules/project/project.module';
 import { TaskModule } from './modules/task/task.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { DependencyModule } from './modules/dependency/dependency.module';
+import { ActivityModule } from './modules/activity/activity.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { FavoriteModule } from './modules/favorite/favorite.module';
 
 @Module({
   imports: [
@@ -29,6 +32,9 @@ import { DependencyModule } from './modules/dependency/dependency.module';
     TaskModule,
     CommentModule,
     DependencyModule,
+    ActivityModule,
+    DashboardModule,
+    FavoriteModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },

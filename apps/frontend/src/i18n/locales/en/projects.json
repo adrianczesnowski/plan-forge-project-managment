@@ -71,5 +71,43 @@
     "noDates": "No dates set",
     "tasksSoon": "Tasks and the WBS structure will appear here.",
     "tasksSoonHint": "The tasks module is next on the roadmap."
+  },
+  "dashboard": {
+    "kpi": {
+      "overallProgress": "Overall Progress",
+      "tasksCompleted": "Tasks Completed",
+      "scheduleHealth": "Schedule Health",
+      "overdue": "Overdue Tasks",
+      "milestones": "Milestones"
+    },
+    "health": {
+      "ON_TRACK": "On Track",
+      "AT_RISK": "At Risk",
+      "NO_DATES": "No dates"
+    },
+    "timeElapsed": "{{value}}% of timeline elapsed",
+    "tasksBreakdown": "{{inProgress}} in progress · {{todo}} to do",
+    "phaseProgress": "Phase Progress",
+    "upcomingMilestones": "Upcoming Milestones",
+    "team": "Project Team",
+    "statusBreakdown": "Tasks by Status",
+    "noPhases": "No phases yet.",
+    "noMilestones": "No milestones defined.",
+    "noTeam": "No tasks assigned yet.",
+    "milestoneDone": "Done",
+    "daysLeft_one": "{{count}} day",
+    "daysLeft_other": "{{count}} days",
+    "dueToday": "Today",
+    "overdueBy_one": "{{count}} day overdue",
+    "overdueBy_other": "{{count}} days overdue",
+    "taskCount_one": "{{count}} task",
+    "taskCount_other": "{{count}} tasks",
+    "status": {
+      "done": "Done",
+      "inProgress": "In progress",
+      "inReview": "In review",
+      "todo": "To do",
+      "cancelled": "Cancelled"
+    }
   }
 }

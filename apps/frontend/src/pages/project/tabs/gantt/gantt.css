@@ -32,12 +32,24 @@
   fill: #a855f7;
 }
 
-/* Critical path — red bars and highlighted incoming arrows. */
+/* Critical path — unmistakable red bar with a solid red outline. */
 .pf-gantt .gantt .gantt-critical .bar {
-  fill: #fca5a5;
+  fill: #fecaca;
+  stroke: #ef4444;
+  stroke-width: 2px;
 }
 .pf-gantt .gantt .gantt-critical .bar-progress {
   fill: #ef4444;
+}
+.pf-gantt .gantt .gantt-critical .bar-label {
+  fill: #b91c1c;
+  font-weight: 700;
+}
+/* Critical milestone keeps the red treatment over the purple milestone fill. */
+.pf-gantt .gantt .gantt-critical.gantt-milestone .bar,
+.pf-gantt .gantt .gantt-critical.gantt-milestone .bar-progress {
+  fill: #ef4444;
+  stroke: #b91c1c;
 }
 
 /*

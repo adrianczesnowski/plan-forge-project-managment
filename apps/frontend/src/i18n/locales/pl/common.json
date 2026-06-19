@@ -18,5 +18,10 @@
   },
   "topbar": {
     "searchPlaceholder": "Szukaj projektów, przestrzeni, zadań..."
+  },
+  "favorites": {
+    "title": "Ulubione",
+    "add": "Dodaj do ulubionych",
+    "remove": "Usuń z ulubionych"
   }
 }

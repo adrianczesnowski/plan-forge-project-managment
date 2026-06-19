@@ -71,5 +71,49 @@
     "noDates": "Nie ustawiono dat",
     "tasksSoon": "Zadania i struktura WBS pojawią się tutaj.",
     "tasksSoonHint": "Moduł zadań jest następny na roadmapie."
+  },
+  "dashboard": {
+    "kpi": {
+      "overallProgress": "Postęp ogólny",
+      "tasksCompleted": "Ukończone zadania",
+      "scheduleHealth": "Status harmonogramu",
+      "overdue": "Zadania po terminie",
+      "milestones": "Kamienie milowe"
+    },
+    "health": {
+      "ON_TRACK": "Na czas",
+      "AT_RISK": "Zagrożony",
+      "NO_DATES": "Brak dat"
+    },
+    "timeElapsed": "{{value}}% czasu projektu minęło",
+    "tasksBreakdown": "{{inProgress}} w toku · {{todo}} do zrobienia",
+    "phaseProgress": "Postęp faz",
+    "upcomingMilestones": "Nadchodzące kamienie milowe",
+    "team": "Zespół projektu",
+    "statusBreakdown": "Zadania wg statusu",
+    "noPhases": "Brak faz.",
+    "noMilestones": "Brak kamieni milowych.",
+    "noTeam": "Nikomu nie przypisano zadań.",
+    "milestoneDone": "Gotowe",
+    "daysLeft_one": "{{count}} dzień",
+    "daysLeft_few": "{{count}} dni",
+    "daysLeft_many": "{{count}} dni",
+    "daysLeft_other": "{{count}} dnia",
+    "dueToday": "Dziś",
+    "overdueBy_one": "{{count}} dzień po terminie",
+    "overdueBy_few": "{{count}} dni po terminie",
+    "overdueBy_many": "{{count}} dni po terminie",
+    "overdueBy_other": "{{count}} dnia po terminie",
+    "taskCount_one": "{{count}} zadanie",
+    "taskCount_few": "{{count}} zadania",
+    "taskCount_many": "{{count}} zadań",
+    "taskCount_other": "{{count}} zadania",
+    "status": {
+      "done": "Gotowe",
+      "inProgress": "W toku",
+      "inReview": "W recenzji",
+      "todo": "Do zrobienia",
+      "cancelled": "Anulowane"
+    }
   }
 }

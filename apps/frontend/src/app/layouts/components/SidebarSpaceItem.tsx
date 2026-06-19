@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import type { SpaceWithRole } from '@planforge/shared';
 import { cn } from '@/shared/lib/utils';
 import { useSpaceProjects } from '@/entities/project/hooks/use-projects';
+import { FavoriteStar } from '@/features/favorite/ui/FavoriteStar';
 
 const PROJECT_DOT_FALLBACK = '#9ca3af';
 
@@ -42,6 +43,12 @@ export function SidebarSpaceItem({ space }: { space: SpaceWithRole }) {
           />
           <span className="truncate">{space.name}</span>
         </NavLink>
+        <FavoriteStar
+          entityType="SPACE"
+          entityId={space.id}
+          size={13}
+          className="mr-1 h-6 w-6 opacity-0 group-hover:opacity-100"
+        />
       </div>
 
       {expanded && (

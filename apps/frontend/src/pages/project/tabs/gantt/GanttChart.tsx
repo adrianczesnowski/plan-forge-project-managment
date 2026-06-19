@@ -11,6 +11,8 @@ export interface GanttChartHandle {
 
 interface GanttChartProps {
   tasks: GanttTask[];
+  /** Per-task bar classes (parent / milestone / critical), applied post-render. */
+  classMap: Record<string, string[]>;
   viewMode: GanttViewMode;
   readonly: boolean;
   popup: (ctx: import('frappe-gantt').GanttPopupContext) => void;
@@ -23,13 +25,26 @@ interface GanttChartProps {
  * div. Handlers go through a ref so the chart never holds stale closures.
  */
 export const GanttChart = forwardRef<GanttChartHandle, GanttChartProps>(function GanttChart(
-  { tasks, viewMode, readonly, popup, onTaskClick, onDateChange },
+  { tasks, classMap, viewMode, readonly, popup, onTaskClick, onDateChange },
   ref,
 ) {
   const containerRef = useRef<HTMLDivElement>(null);
   const ganttRef = useRef<Gantt | null>(null);
   const handlersRef = useRef({ popup, onTaskClick, onDateChange });
   handlersRef.current = { popup, onTaskClick, onDateChange };
+  const classMapRef = useRef(classMap);
+  classMapRef.current = classMap;
+
+  // frappe-gantt's `custom_class` accepts only a single token; we apply the
+  // parent/milestone/critical classes ourselves after every (re)render.
+  const applyClasses = () => {
+    const container = containerRef.current;
+    if (!container) return;
+    for (const [id, classes] of Object.entries(classMapRef.current)) {
+      const wrapper = container.querySelector(`.bar-wrapper[data-id="${id}"]`);
+      wrapper?.classList.add(...classes);
+    }
+  };
 
   useImperativeHandle(ref, () => ({
     scrollToday: () =>
@@ -63,8 +78,12 @@ export const GanttChart = forwardRef<GanttChartHandle, GanttChartProps>(function
       const scroller = container.querySelector('.gantt-container');
       if (scroller) scroller.scrollLeft = previousScroll;
     }
+    applyClasses();
+    // frappe-gantt may re-position/re-render on the next frame — re-apply then.
+    const raf = requestAnimationFrame(applyClasses);
 
     return () => {
+      cancelAnimationFrame(raf);
       container.innerHTML = '';
       ganttRef.current = null;
     };
@@ -74,6 +93,8 @@ export const GanttChart = forwardRef<GanttChartHandle, GanttChartProps>(function
 
   useEffect(() => {
     ganttRef.current?.change_view_mode(viewMode);
+    applyClasses();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewMode]);
 
   return <div ref={containerRef} className="pf-gantt" />;

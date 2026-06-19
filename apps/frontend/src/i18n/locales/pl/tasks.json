@@ -66,9 +66,19 @@
       "all": "Cała aktywność",
       "comments": "Komentarze",
       "history": "Historia",
-      "demo": "Dane demonstracyjne — log aktywności wkrótce",
+      "empty": "Brak aktywności.",
+      "system": "System",
+      "createdTask": "utworzył(a) to zadanie",
+      "deletedTask": "usunął(ęła) to zadanie",
+      "updated": "zaktualizował(a) zadanie",
       "changedStatus": "zmienił(a) status",
-      "createdTask": "utworzył(a) to zadanie"
+      "changedPriority": "zmienił(a) priorytet",
+      "changedAssignee": "zmienił(a) przypisanie",
+      "updatedProgress": "zaktualizował(a) postęp",
+      "renamed": "zmienił(a) nazwę zadania",
+      "toggledMilestone": "zmienił(a) kamień milowy",
+      "changedStartDate": "zmienił(a) datę startu",
+      "changedEndDate": "zmienił(a) termin"
     },
     "meta": {
       "status": "Status",

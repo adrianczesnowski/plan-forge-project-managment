@@ -13,3 +13,4 @@ export * from './shared-list';
 export * from './notification';
 export * from './favorite';
 export * from './activity';
+export * from './dashboard';

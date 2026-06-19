@@ -3,6 +3,7 @@ import { LayoutGrid, Layers, Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/shared/lib/utils';
 import { SidebarSpaces } from './SidebarSpaces';
+import { SidebarFavorites } from './SidebarFavorites';
 import { SidebarUser } from './SidebarUser';
 
 const navItemClass = ({ isActive }: { isActive: boolean }) =>
@@ -30,9 +31,10 @@ export function Sidebar() {
         </NavLink>
       </nav>
 
-      <SidebarSpaces />
-
-      <div className="flex-1" />
+      <div className="flex-1 overflow-y-auto">
+        <SidebarFavorites />
+        <SidebarSpaces />
+      </div>
 
       <div className="flex flex-col gap-0.5 border-t border-border p-2">
         <button

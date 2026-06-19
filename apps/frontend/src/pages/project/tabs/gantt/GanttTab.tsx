@@ -37,7 +37,7 @@ export function GanttTab({ project, filters }: GanttTabProps) {
   const chartRef = useRef<GanttChartHandle>(null);
   const [viewMode, setViewMode] = useState<GanttViewMode>('Day');
 
-  const tasks = useMemo(
+  const { tasks, classMap } = useMemo(
     () => buildGanttTasks(filterTaskTree(tree ?? [], filters), dependencies ?? []),
     [tree, dependencies, filters],
   );
@@ -61,7 +61,7 @@ export function GanttTab({ project, filters }: GanttTabProps) {
   };
 
   return (
-    <div className="flex h-full flex-col gap-3 px-6 py-4">
+    <div className="space-y-3 px-6 py-4">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <div className="flex rounded-lg border border-border p-0.5">
@@ -102,21 +102,18 @@ export function GanttTab({ project, filters }: GanttTabProps) {
       </div>
 
       {tasks.length === 0 ? (
-        <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
-          {t('gantt.empty')}
-        </div>
+        <div className="py-20 text-center text-sm text-muted-foreground">{t('gantt.empty')}</div>
       ) : (
-        <div className="min-h-0 flex-1 overflow-y-auto">
-          <GanttChart
-            ref={chartRef}
-            tasks={tasks}
-            viewMode={viewMode}
-            readonly={project.myRole === 'VIEWER'}
-            popup={renderPopup}
-            onTaskClick={(taskId) => navigate(`/projects/${project.id}/tasks/${taskId}`)}
-            onDateChange={handleDateChange}
-          />
-        </div>
+        <GanttChart
+          ref={chartRef}
+          tasks={tasks}
+          classMap={classMap}
+          viewMode={viewMode}
+          readonly={project.myRole === 'VIEWER'}
+          popup={renderPopup}
+          onTaskClick={(taskId) => navigate(`/projects/${project.id}/tasks/${taskId}`)}
+          onDateChange={handleDateChange}
+        />
       )}
     </div>
   );

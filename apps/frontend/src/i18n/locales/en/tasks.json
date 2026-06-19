@@ -66,9 +66,19 @@
       "all": "All Activity",
       "comments": "Comments",
       "history": "History",
-      "demo": "Demo data — activity log coming soon",
+      "empty": "No activity yet.",
+      "system": "System",
+      "createdTask": "created this task",
+      "deletedTask": "deleted this task",
+      "updated": "updated this task",
       "changedStatus": "changed status",
-      "createdTask": "created this task"
+      "changedPriority": "changed priority",
+      "changedAssignee": "changed assignee",
+      "updatedProgress": "updated progress",
+      "renamed": "renamed the task",
+      "toggledMilestone": "changed milestone",
+      "changedStartDate": "changed start date",
+      "changedEndDate": "changed due date"
     },
     "meta": {
       "status": "Status",

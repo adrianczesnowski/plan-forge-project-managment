@@ -19,10 +19,14 @@ export function useCreateTask(projectId: string) {
 
 export function useUpdateTask(projectId: string) {
   const invalidate = useInvalidateTree(projectId);
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ taskId, input }: { taskId: string; input: UpdateTaskInput }) =>
       taskApi.update(taskId, input),
-    onSuccess: invalidate,
+    onSuccess: (_data, { taskId }) => {
+      invalidate();
+      void queryClient.invalidateQueries({ queryKey: ['tasks', taskId, 'activity'] });
+    },
   });
 }
 

@@ -12,6 +12,7 @@ import type {
 import { PrismaService } from '../../prisma/prisma.service';
 import { MESSAGES } from '../../common/constants/messages';
 import { ProjectAccessService } from '../project/project-access.service';
+import { ActivityService } from '../activity/activity.service';
 import { WbsService } from './wbs.service';
 import { buildTaskTree, toTaskDto } from './task.mapper';
 
@@ -23,6 +24,7 @@ export class TaskService {
     private readonly prisma: PrismaService,
     private readonly access: ProjectAccessService,
     private readonly wbs: WbsService,
+    private readonly activity: ActivityService,
   ) {}
 
   async create(userId: string, dto: CreateTaskInput): Promise<Task> {
@@ -59,6 +61,7 @@ export class TaskService {
       return created;
     });
 
+    await this.activity.recordTaskCreated(userId, task);
     return this.reload(task.id);
   }
 
@@ -112,6 +115,7 @@ export class TaskService {
     }
 
     await this.prisma.task.update({ where: { id: taskId }, data });
+    await this.activity.recordTaskUpdated(userId, task, dto);
     return this.reload(taskId);
   }
 
@@ -124,6 +128,7 @@ export class TaskService {
       await tx.task.delete({ where: { id: taskId } });
       await this.wbs.renumberProject(task.projectId, tx);
     });
+    await this.activity.recordTaskDeleted(userId, task);
   }
 
   /** Moves the task to a new parent and/or position; rejects cycles. */

@@ -14,6 +14,7 @@ import { KanbanTab } from './tabs/kanban/KanbanTab';
 import { GanttTab } from './tabs/gantt/GanttTab';
 import { TableTab } from './tabs/table/TableTab';
 import { ProjectActionsMenu } from '@/features/project/ui/ProjectActionsMenu';
+import { FavoriteStar } from '@/features/favorite/ui/FavoriteStar';
 
 const TABS = ['overview', 'wbs', 'kanban', 'gantt', 'table'] as const;
 type ProjectTab = (typeof TABS)[number];
@@ -40,6 +41,7 @@ export function ProjectPage() {
         <div className="mb-3 flex items-center gap-3">
           <h1 className="text-xl font-bold tracking-tight">{project.name}</h1>
           <ProjectStatusBadge status={project.status} />
+          <FavoriteStar entityType="PROJECT" entityId={project.id} size={18} className="h-7 w-7" />
           <ProjectActionsMenu project={project} />
         </div>
 

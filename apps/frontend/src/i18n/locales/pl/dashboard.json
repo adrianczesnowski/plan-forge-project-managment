@@ -1,0 +1,44 @@
+{
+  "greeting": {
+    "morning": "Dzień dobry, {{name}}",
+    "afternoon": "Dzień dobry, {{name}}",
+    "evening": "Dobry wieczór, {{name}}",
+    "sub": "Oto co dzieje się dziś w Twoich projektach."
+  },
+  "stats": {
+    "projects": "Projekty",
+    "tasksToday": "Moje zadania dziś",
+    "overdue": "Po terminie",
+    "milestones": "Kamienie milowe w tym tygodniu"
+  },
+  "actions": {
+    "viewAll": "Zobacz wszystkie →",
+    "allTasks": "Wszystkie zadania →",
+    "calendar": "Kalendarz →",
+    "allActivity": "Cała aktywność →"
+  },
+  "cards": {
+    "activeProjects": "Aktywne projekty",
+    "myTasks": "Moje zadania",
+    "comingUp": "Nadchodzące",
+    "recentActivity": "Ostatnia aktywność",
+    "pulse": "Puls tygodnia"
+  },
+  "projStatus": {
+    "onTrack": "Na dobrej drodze",
+    "atRisk": "Zagrożony"
+  },
+  "due": {
+    "today": "Dziś",
+    "tomorrow": "Jutro",
+    "overdue": "Po terminie",
+    "done": "Gotowe"
+  },
+  "tlType": {
+    "meeting": "Spotkanie",
+    "review": "Przegląd",
+    "deadline": "Termin",
+    "milestone": "Kamień milowy"
+  },
+  "demo": "Dane demonstracyjne — metryki na żywo wkrótce (API dashboardu)"
+}

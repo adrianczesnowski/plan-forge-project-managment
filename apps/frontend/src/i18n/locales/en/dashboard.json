@@ -1,0 +1,44 @@
+{
+  "greeting": {
+    "morning": "Good morning, {{name}}",
+    "afternoon": "Good afternoon, {{name}}",
+    "evening": "Good evening, {{name}}",
+    "sub": "Here's what's happening across your projects today."
+  },
+  "stats": {
+    "projects": "Projects",
+    "tasksToday": "My tasks today",
+    "overdue": "Overdue",
+    "milestones": "Milestones this week"
+  },
+  "actions": {
+    "viewAll": "View all →",
+    "allTasks": "All tasks →",
+    "calendar": "Calendar →",
+    "allActivity": "All activity →"
+  },
+  "cards": {
+    "activeProjects": "Active Projects",
+    "myTasks": "My Tasks",
+    "comingUp": "Coming Up",
+    "recentActivity": "Recent Activity",
+    "pulse": "This Week's Pulse"
+  },
+  "projStatus": {
+    "onTrack": "On Track",
+    "atRisk": "At Risk"
+  },
+  "due": {
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "overdue": "Overdue",
+    "done": "Done"
+  },
+  "tlType": {
+    "meeting": "Meeting",
+    "review": "Review",
+    "deadline": "Deadline",
+    "milestone": "Milestone"
+  },
+  "demo": "Demo data — live metrics coming with the dashboard API"
+}

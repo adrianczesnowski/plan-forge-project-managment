@@ -1,16 +1,17 @@
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { CalendarDays, Flag, Gem } from 'lucide-react';
+import { CalendarDays, Gem } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import type { TaskTreeNode } from '@planforge/shared';
 import { cn } from '@/shared/lib/utils';
 
-const PRIORITY_COLORS: Record<string, string> = {
-  LOW: 'text-accent-blue',
-  MEDIUM: 'text-yellow-500',
-  HIGH: 'text-accent-orange',
-  URGENT: 'text-destructive',
+/** Priority pill tints — consistent with the WBS / Table / modal badges. */
+const PRIORITY_BADGE: Record<string, string> = {
+  LOW: 'bg-accent-green/10 text-accent-green',
+  MEDIUM: 'bg-accent-orange/10 text-accent-orange',
+  HIGH: 'bg-destructive/10 text-destructive',
+  URGENT: 'bg-destructive/15 text-destructive',
 };
 
 interface KanbanCardProps {
@@ -28,7 +29,7 @@ export function KanbanCard({ task, canEdit, onOpen, overlay = false }: KanbanCar
     disabled: !canEdit || overlay,
   });
 
-  const priorityColor = PRIORITY_COLORS[task.priority];
+  const priorityBadge = PRIORITY_BADGE[task.priority];
 
   return (
     <div
@@ -38,21 +39,27 @@ export function KanbanCard({ task, canEdit, onOpen, overlay = false }: KanbanCar
       style={overlay ? undefined : { transform: CSS.Translate.toString(transform) }}
       onClick={() => !isDragging && onOpen(task.id)}
       className={cn(
-        'flex cursor-pointer flex-col gap-2 rounded-xl border border-border bg-white p-3 shadow-sm transition-shadow hover:shadow-md',
+        'flex cursor-pointer flex-col gap-2.5 rounded-xl border border-border bg-card p-3 shadow-sm transition-shadow hover:shadow-md',
         isDragging && 'opacity-30',
         overlay && 'rotate-2 shadow-xl',
       )}
     >
       <div className="flex items-start gap-1.5">
         {task.isMilestone && <Gem className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent-purple" />}
-        <span className="text-[13px] font-medium leading-snug">{task.title}</span>
+        <span
+          className={cn(
+            'text-[13px] font-medium leading-snug',
+            task.status === 'CANCELLED' && 'text-faint line-through',
+          )}
+        >
+          {task.title}
+        </span>
       </div>
 
-      <div className="flex items-center gap-3 text-[11.5px] text-faint">
+      <div className="flex flex-wrap items-center gap-2 text-[11.5px] text-faint">
         <span className="font-mono">{task.wbsNumber}</span>
-        {priorityColor && (
-          <span className={cn('flex items-center gap-1', priorityColor)} title={t(`priority.${task.priority}`)}>
-            <Flag className="h-3 w-3" />
+        {priorityBadge && (
+          <span className={cn('rounded-full px-2 py-0.5 text-[10.5px] font-semibold', priorityBadge)}>
             {t(`priority.${task.priority}`)}
           </span>
         )}
@@ -62,16 +69,33 @@ export function KanbanCard({ task, canEdit, onOpen, overlay = false }: KanbanCar
             {format(new Date(task.endDate), 'd MMM')}
           </span>
         )}
-        {task.assignee && (
-          <span
-            title={`${task.assignee.firstName} ${task.assignee.lastName}`}
-            className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-white"
-          >
-            {task.assignee.firstName.charAt(0)}
-            {task.assignee.lastName.charAt(0)}
-          </span>
-        )}
       </div>
+
+      {(task.progress > 0 || task.assignee) && (
+        <div className="flex items-center gap-2">
+          {task.progress > 0 && (
+            <>
+              <div className="h-[5px] flex-1 overflow-hidden rounded-[3px] bg-border-light">
+                <div
+                  className="h-full rounded-[3px] bg-accent-blue"
+                  style={{ width: `${task.progress}%` }}
+                />
+              </div>
+              <span className="text-[11px] text-faint">{task.progress}%</span>
+            </>
+          )}
+          {task.assignee && (
+            <span
+              className={cn(
+                'shrink-0 rounded-full bg-[#f0f0f5] px-2 py-0.5 text-[11px] font-medium text-foreground',
+                task.progress > 0 ? 'ml-1' : 'ml-auto',
+              )}
+            >
+              {task.assignee.firstName} {task.assignee.lastName.charAt(0)}.
+            </span>
+          )}
+        </div>
+      )}
     </div>
   );
 }

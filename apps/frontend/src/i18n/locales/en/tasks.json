@@ -101,7 +101,8 @@
       "critical": "Critical path"
     },
     "empty": "No tasks with dates yet — set start and end dates to see them on the chart.",
-    "popupProgress": "Progress"
+    "popupProgress": "Progress",
+    "today": "Today"
   },
   "dependencies": {
     "title": "Dependencies",

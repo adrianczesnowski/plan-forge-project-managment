@@ -1,8 +1,13 @@
-import { useEffect, useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import Gantt, { type GanttTask } from 'frappe-gantt';
 import './gantt.css';
 
 export type GanttViewMode = 'Day' | 'Week' | 'Month';
+
+export interface GanttChartHandle {
+  /** Scroll the timeline so today is in view. */
+  scrollToday: () => void;
+}
 
 interface GanttChartProps {
   tasks: GanttTask[];
@@ -17,18 +22,19 @@ interface GanttChartProps {
  * Thin imperative wrapper: frappe-gantt owns the SVG, React owns the wrapper
  * div. Handlers go through a ref so the chart never holds stale closures.
  */
-export function GanttChart({
-  tasks,
-  viewMode,
-  readonly,
-  popup,
-  onTaskClick,
-  onDateChange,
-}: GanttChartProps) {
+export const GanttChart = forwardRef<GanttChartHandle, GanttChartProps>(function GanttChart(
+  { tasks, viewMode, readonly, popup, onTaskClick, onDateChange },
+  ref,
+) {
   const containerRef = useRef<HTMLDivElement>(null);
   const ganttRef = useRef<Gantt | null>(null);
   const handlersRef = useRef({ popup, onTaskClick, onDateChange });
   handlersRef.current = { popup, onTaskClick, onDateChange };
+
+  useImperativeHandle(ref, () => ({
+    scrollToday: () =>
+      (ganttRef.current as unknown as { scroll_current?: () => void })?.scroll_current?.(),
+  }));
 
   useEffect(() => {
     const container = containerRef.current;
@@ -71,4 +77,4 @@ export function GanttChart({
   }, [viewMode]);
 
   return <div ref={containerRef} className="pf-gantt" />;
-}
+});

@@ -103,7 +103,8 @@
       "critical": "Ścieżka krytyczna"
     },
     "empty": "Brak zadań z datami — ustaw daty rozpoczęcia i zakończenia, aby zobaczyć je na wykresie.",
-    "popupProgress": "Postęp"
+    "popupProgress": "Postęp",
+    "today": "Dziś"
   },
   "dependencies": {
     "title": "Zależności",

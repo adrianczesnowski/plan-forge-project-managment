@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { CalendarClock } from 'lucide-react';
 import { format } from 'date-fns';
 import type { ProjectWithRole } from '@planforge/shared';
 import type { GanttPopupContext } from 'frappe-gantt';
@@ -10,7 +11,7 @@ import { useUpdateTask } from '@/features/task/hooks/use-task-mutations';
 import { filterTaskTree, type TaskFilters } from '@/features/task/model/task-filters';
 import { FullPageSpinner } from '@/shared/ui/full-page-spinner';
 import { cn } from '@/shared/lib/utils';
-import { GanttChart, type GanttViewMode } from './GanttChart';
+import { GanttChart, type GanttChartHandle, type GanttViewMode } from './GanttChart';
 import { buildGanttTasks } from './lib/build-gantt-tasks';
 
 const VIEW_MODES: GanttViewMode[] = ['Day', 'Week', 'Month'];
@@ -33,6 +34,7 @@ export function GanttTab({ project, filters }: GanttTabProps) {
   const { data: tree, isPending: treePending } = useProjectTasks(project.id);
   const { data: dependencies, isPending: depsPending } = useProjectDependencies(project.id);
   const updateTask = useUpdateTask(project.id);
+  const chartRef = useRef<GanttChartHandle>(null);
   const [viewMode, setViewMode] = useState<GanttViewMode>('Day');
 
   const tasks = useMemo(
@@ -59,24 +61,34 @@ export function GanttTab({ project, filters }: GanttTabProps) {
   };
 
   return (
-    <div className="flex h-full flex-col gap-3 p-4">
-      <div className="flex items-center justify-between">
-        <div className="flex rounded-lg border border-border p-0.5">
-          {VIEW_MODES.map((mode) => (
-            <button
-              key={mode}
-              type="button"
-              onClick={() => setViewMode(mode)}
-              className={cn(
-                'rounded-md px-3 py-1 text-[12.5px] font-medium transition-colors',
-                viewMode === mode
-                  ? 'bg-primary text-white'
-                  : 'text-muted-foreground hover:text-foreground',
-              )}
-            >
-              {t(`gantt.viewMode.${mode}`)}
-            </button>
-          ))}
+    <div className="flex h-full flex-col gap-3 px-6 py-4">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <div className="flex rounded-lg border border-border p-0.5">
+            {VIEW_MODES.map((mode) => (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => setViewMode(mode)}
+                className={cn(
+                  'rounded-md px-3 py-1 text-[12.5px] font-medium transition-colors',
+                  viewMode === mode
+                    ? 'bg-primary text-white'
+                    : 'text-muted-foreground hover:text-foreground',
+                )}
+              >
+                {t(`gantt.viewMode.${mode}`)}
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() => chartRef.current?.scrollToday()}
+            className="flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 text-[12.5px] text-muted-foreground transition-colors hover:bg-muted"
+          >
+            <CalendarClock className="h-3.5 w-3.5" />
+            {t('gantt.today')}
+          </button>
         </div>
 
         <div className="flex items-center gap-4">
@@ -96,6 +108,7 @@ export function GanttTab({ project, filters }: GanttTabProps) {
       ) : (
         <div className="min-h-0 flex-1 overflow-y-auto">
           <GanttChart
+            ref={chartRef}
             tasks={tasks}
             viewMode={viewMode}
             readonly={project.myRole === 'VIEWER'}

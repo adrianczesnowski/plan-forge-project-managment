@@ -75,7 +75,7 @@ export function KanbanTab({ project, filters }: KanbanTabProps) {
       onDragEnd={handleDragEnd}
       onDragCancel={() => setActiveTask(null)}
     >
-      <div className="flex h-full gap-3 overflow-x-auto p-4">
+      <div className="flex h-full gap-3.5 overflow-x-auto px-6 py-4">
         {BOARD_COLUMNS.map((status) => (
           <KanbanColumn
             key={status}

@@ -9,7 +9,7 @@ import {
 } from '@tanstack/react-table';
 import { ChevronDown, ChevronsUpDown, ChevronUp, Gem } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { format } from 'date-fns';
+import { differenceInCalendarDays, format } from 'date-fns';
 import { TaskPriority, TaskStatus, type TaskTreeNode } from '@planforge/shared';
 import { cn } from '@/shared/lib/utils';
 import { TaskStatusSelect } from '@/features/task/ui/TaskStatusSelect';
@@ -58,20 +58,17 @@ function TitleCell({
 
   if (!editing) {
     return (
-      <div className="flex items-center gap-1.5">
-        {task.isMilestone && <Gem className="h-3.5 w-3.5 shrink-0 text-accent-purple" />}
-        <button
-          type="button"
-          onClick={() => canEdit && setEditing(true)}
-          className={cn(
-            'truncate text-left text-[13px]',
-            canEdit ? 'hover:text-primary' : 'cursor-default',
-            task.status === 'CANCELLED' && 'text-faint line-through',
-          )}
-        >
-          {task.title}
-        </button>
-      </div>
+      <button
+        type="button"
+        onClick={() => canEdit && setEditing(true)}
+        className={cn(
+          'truncate text-left text-[13px]',
+          canEdit ? 'hover:text-primary' : 'cursor-default',
+          task.status === 'CANCELLED' && 'text-faint line-through',
+        )}
+      >
+        {task.title}
+      </button>
     );
   }
 
@@ -100,17 +97,19 @@ function TitleCell({
   );
 }
 
-function AssigneeCell({ task }: { task: TaskTreeNode }) {
+function ResourceCell({ task }: { task: TaskTreeNode }) {
   if (!task.assignee) return <span className="text-faint">—</span>;
-  const initials =
-    `${task.assignee.firstName.charAt(0)}${task.assignee.lastName.charAt(0)}`.toUpperCase();
   return (
-    <span
-      title={`${task.assignee.firstName} ${task.assignee.lastName}`}
-      className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white"
-    >
-      {initials}
+    <span className="inline-block rounded-full bg-[#f0f0f5] px-2 py-0.5 text-[11.5px] font-medium text-foreground">
+      {task.assignee.firstName} {task.assignee.lastName.charAt(0)}.
     </span>
+  );
+}
+
+function DateCell({ value }: { value: string | null }) {
+  if (!value) return <span className="text-faint">—</span>;
+  return (
+    <span className="text-[12.5px] text-muted-foreground">{format(new Date(value), 'd MMM yyyy')}</span>
   );
 }
 
@@ -125,18 +124,34 @@ export function TaskTable({
   const { t } = useTranslation('tasks');
   const [sorting, setSorting] = useState<SortingState>([]);
 
+  // Stable per-task display number, matching the WBS view's ID column.
+  const idMap = useMemo(() => {
+    const map = new Map<string, number>();
+    tasks.forEach((task, i) => map.set(task.id, i + 1));
+    return map;
+  }, [tasks]);
+
   const columns = useMemo<ColumnDef<TaskTreeNode>[]>(
     () => [
+      {
+        id: 'id',
+        header: t('columns.id'),
+        accessorFn: (task) => idMap.get(task.id) ?? 0,
+        size: 42,
+        cell: ({ row }) => (
+          <span className="block text-center text-[12px] text-faint">{idMap.get(row.original.id)}</span>
+        ),
+      },
       {
         id: 'wbs',
         header: t('columns.wbs'),
         accessorFn: (task) => task.wbsNumber,
-        size: 80,
+        size: 56,
         cell: ({ row }) => (
           <button
             type="button"
             onClick={() => onOpenTask(row.original.id)}
-            className="font-mono text-[11.5px] text-faint hover:text-primary hover:underline"
+            className="block w-full text-center font-mono text-[12px] font-medium text-muted-foreground hover:text-primary hover:underline"
           >
             {row.original.wbsNumber}
           </button>
@@ -146,7 +161,7 @@ export function TaskTable({
         id: 'title',
         header: t('columns.title'),
         accessorFn: (task) => task.title,
-        size: 420,
+        size: 360,
         cell: ({ row }) => (
           <TitleCell
             task={row.original}
@@ -156,23 +171,69 @@ export function TaskTable({
         ),
       },
       {
-        id: 'status',
-        header: t('columns.status'),
-        accessorFn: (task) => STATUS_ORDER[task.status],
-        size: 130,
+        id: 'duration',
+        header: t('columns.duration'),
+        accessorFn: (task) =>
+          task.startDate && task.endDate
+            ? differenceInCalendarDays(new Date(task.endDate), new Date(task.startDate)) + 1
+            : 0,
+        size: 80,
+        cell: ({ row }) => {
+          const { startDate, endDate } = row.original;
+          if (!startDate || !endDate) return <span className="text-faint">—</span>;
+          const days = differenceInCalendarDays(new Date(endDate), new Date(startDate)) + 1;
+          return <span className="text-[12.5px] text-muted-foreground">{t('modal.meta.days', { count: days })}</span>;
+        },
+      },
+      {
+        id: 'startDate',
+        header: t('columns.start'),
+        accessorFn: (task) => task.startDate ?? '',
+        size: 110,
+        cell: ({ row }) => <DateCell value={row.original.startDate} />,
+      },
+      {
+        id: 'finishDate',
+        header: t('columns.finish'),
+        accessorFn: (task) => task.endDate ?? '',
+        size: 110,
+        cell: ({ row }) => <DateCell value={row.original.endDate} />,
+      },
+      {
+        id: 'progress',
+        header: t('columns.progress'),
+        accessorFn: (task) => task.progress,
+        size: 120,
         cell: ({ row }) => (
-          <TaskStatusSelect
-            value={row.original.status}
-            disabled={!canEdit}
-            onChange={(status) => onStatusChange(row.original.id, status)}
-          />
+          <div className="flex items-center gap-2">
+            <div className="h-[5px] w-[52px] overflow-hidden rounded-[3px] bg-border-light">
+              <div className="h-full rounded-[3px] bg-accent-blue" style={{ width: `${row.original.progress}%` }} />
+            </div>
+            <span className="w-8 text-[12px] font-medium text-muted-foreground">{row.original.progress}%</span>
+          </div>
         ),
+      },
+      {
+        id: 'resource',
+        header: t('columns.resource'),
+        accessorFn: (task) =>
+          task.assignee ? `${task.assignee.lastName} ${task.assignee.firstName}` : '',
+        size: 100,
+        cell: ({ row }) => <ResourceCell task={row.original} />,
+      },
+      {
+        id: 'milestone',
+        header: () => <Gem className="mx-auto h-3.5 w-3.5" />,
+        accessorFn: (task) => (task.isMilestone ? 1 : 0),
+        size: 40,
+        cell: ({ row }) =>
+          row.original.isMilestone ? <Gem className="mx-auto h-3.5 w-3.5 text-accent-purple" /> : null,
       },
       {
         id: 'priority',
         header: t('columns.priority'),
         accessorFn: (task) => PRIORITY_ORDER[task.priority],
-        size: 110,
+        size: 90,
         cell: ({ row }) => (
           <TaskPrioritySelect
             value={row.original.priority}
@@ -182,62 +243,20 @@ export function TaskTable({
         ),
       },
       {
-        id: 'assignee',
-        header: t('columns.assignee'),
-        accessorFn: (task) =>
-          task.assignee ? `${task.assignee.lastName} ${task.assignee.firstName}` : '',
-        size: 90,
-        cell: ({ row }) => <AssigneeCell task={row.original} />,
-      },
-      {
-        id: 'startDate',
-        header: t('columns.startDate'),
-        accessorFn: (task) => task.startDate ?? '',
-        size: 110,
-        cell: ({ row }) =>
-          row.original.startDate ? (
-            <span className="text-[12.5px] text-muted-foreground">
-              {format(new Date(row.original.startDate), 'd MMM yyyy')}
-            </span>
-          ) : (
-            <span className="text-faint">—</span>
-          ),
-      },
-      {
-        id: 'dueDate',
-        header: t('columns.dueDate'),
-        accessorFn: (task) => task.endDate ?? '',
-        size: 110,
-        cell: ({ row }) =>
-          row.original.endDate ? (
-            <span className="text-[12.5px] text-muted-foreground">
-              {format(new Date(row.original.endDate), 'd MMM yyyy')}
-            </span>
-          ) : (
-            <span className="text-faint">—</span>
-          ),
-      },
-      {
-        id: 'progress',
-        header: t('columns.progress'),
-        accessorFn: (task) => task.progress,
-        size: 130,
+        id: 'status',
+        header: t('columns.status'),
+        accessorFn: (task) => STATUS_ORDER[task.status],
+        size: 120,
         cell: ({ row }) => (
-          <div className="flex items-center gap-2">
-            <div className="h-1.5 w-12 overflow-hidden rounded-full bg-border-light">
-              <div
-                className="h-full rounded-full bg-accent-green"
-                style={{ width: `${row.original.progress}%` }}
-              />
-            </div>
-            <span className="w-8 text-right text-[11.5px] text-muted-foreground">
-              {row.original.progress}%
-            </span>
-          </div>
+          <TaskStatusSelect
+            value={row.original.status}
+            disabled={!canEdit}
+            onChange={(status) => onStatusChange(row.original.id, status)}
+          />
         ),
       },
     ],
-    [t, canEdit, onStatusChange, onPriorityChange, onTitleChange, onOpenTask],
+    [t, idMap, canEdit, onStatusChange, onPriorityChange, onTitleChange, onOpenTask],
   );
 
   const table = useReactTable({
@@ -250,16 +269,16 @@ export function TaskTable({
   });
 
   return (
-    <table className="w-full border-collapse">
+    <table className="w-full border-separate border-spacing-0 overflow-hidden rounded-[10px] border border-border text-[13px]">
       <thead>
-        <tr className="border-b border-border">
+        <tr>
           {table.getFlatHeaders().map((header) => {
             const sorted = header.column.getIsSorted();
             return (
               <th
                 key={header.id}
                 style={{ width: header.getSize() }}
-                className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-faint"
+                className="sticky top-0 z-[2] whitespace-nowrap border-b-2 border-border bg-muted px-3 py-2.5 text-left text-[11.5px] font-semibold uppercase tracking-[0.04em] text-faint"
               >
                 <button
                   type="button"
@@ -282,9 +301,9 @@ export function TaskTable({
       </thead>
       <tbody>
         {table.getRowModel().rows.map((row) => (
-          <tr key={row.id} className="border-b border-border-light hover:bg-muted/40">
+          <tr key={row.id} className="transition-colors hover:bg-muted/40 [&>td]:border-b [&>td]:border-border-light">
             {row.getVisibleCells().map((cell) => (
-              <td key={cell.id} className="px-3 py-1.5">
+              <td key={cell.id} className="whitespace-nowrap px-3 py-2 align-middle text-muted-foreground">
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </td>
             ))}

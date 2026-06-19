@@ -92,6 +92,11 @@ enum ActivityAction {
   COMMENTED
 }
 
+enum DocumentNodeType {
+  FOLDER
+  DOC
+}
+
 // ─── Users & auth ────────────────────────────────────────────────────────────
 
 model User {
@@ -121,6 +126,7 @@ model User {
   sharedListPermissions SharedListPermission[]
   notifications         Notification[]
   activityLogs          ActivityLog[]
+  createdDocuments      DocumentNode[]         @relation("DocumentCreator")
 
   @@map("users")
 }
@@ -149,10 +155,11 @@ model Organization {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   owner       User                 @relation("OrganizationOwner", fields: [ownerId], references: [id])
-  members     OrganizationMember[]
-  invitations Invitation[]
-  spaces      Space[]
-  sharedLists SharedList[]
+  members       OrganizationMember[]
+  invitations   Invitation[]
+  spaces        Space[]
+  sharedLists   SharedList[]
+  documentNodes DocumentNode[]
 
   @@map("organizations")
 }
@@ -439,4 +446,33 @@ model ActivityLog {
   @@index([entityType, entityId])
   @@index([projectId])
   @@map("activity_logs")
+}
+
+// ─── Documents (Docs / Wiki) ─────────────────────────────────────────────────
+
+/// A node in the docs tree — either a FOLDER (container) or a DOC (tiptap page
+/// that may itself have child pages, Notion-style). Self-referential hierarchy.
+model DocumentNode {
+  id             String           @id @default(uuid()) @db.Uuid
+  type           DocumentNodeType @default(DOC)
+  title          String           @db.VarChar(300)
+  icon           String?          @db.VarChar(50)
+  coverColor     String?          @map("cover_color") @db.VarChar(120)
+  content        Json? // tiptap ProseMirror JSON (DOC only)
+  parentId       String?          @map("parent_id") @db.Uuid
+  organizationId String           @map("organization_id") @db.Uuid
+  createdById    String           @map("created_by_id") @db.Uuid
+  order          Int              @default(0)
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+
+  parent       DocumentNode?  @relation("DocumentTree", fields: [parentId], references: [id], onDelete: Cascade)
+  children     DocumentNode[] @relation("DocumentTree")
+  organization Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdBy    User           @relation("DocumentCreator", fields: [createdById], references: [id])
+
+  @@index([organizationId])
+  @@index([parentId])
+  @@index([createdById])
+  @@map("document_nodes")
 }

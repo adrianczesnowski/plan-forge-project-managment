@@ -71,6 +71,15 @@ export const MESSAGES = {
     NOT_FOUND: 'Comment not found',
     NOT_AUTHOR: 'Only the author can modify this comment',
   },
+  DOCUMENT: {
+    NOT_FOUND: 'Document not found',
+    FORBIDDEN: 'You do not have permission to access this document',
+    PARENT_NOT_FOUND: 'Parent document not found',
+    PARENT_NOT_FOLDER: 'A document can only be nested inside a folder or another document',
+    PARENT_DIFFERENT_ORG: 'Parent must belong to the same organization',
+    CYCLIC_HIERARCHY: 'Cannot move a node inside its own subtree',
+    CONTENT_ON_FOLDER: 'Folders cannot hold document content',
+  },
   VALIDATION: {
     FAILED: 'Validation failed',
   },

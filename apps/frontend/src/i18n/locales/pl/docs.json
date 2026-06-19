@@ -1,0 +1,52 @@
+{
+  "title": "Dokumenty",
+  "searchPlaceholder": "Szukaj dokumentów...",
+  "createButton": "Utwórz",
+  "createInside": "Utwórz wewnątrz",
+  "rowMenu": "Więcej",
+  "empty": {
+    "title": "Brak dokumentów",
+    "hint": "Utwórz pierwszy dokument lub folder, aby zacząć."
+  },
+  "selectPrompt": {
+    "title": "Wybierz dokument",
+    "hint": "Wybierz dokument z drzewa lub utwórz nowy."
+  },
+  "create": {
+    "doc": "Dokument",
+    "docDescription": "Pusta strona z tekstem i blokami",
+    "folder": "Folder",
+    "folderDescription": "Katalog na dokumenty i podkatalogi",
+    "untitledDoc": "Bez tytułu",
+    "untitledFolder": "Nowy folder"
+  },
+  "menu": {
+    "rename": "Zmień nazwę",
+    "duplicate": "Duplikuj",
+    "createInside": "Utwórz wewnątrz",
+    "delete": "Usuń"
+  },
+  "deleteConfirm": {
+    "title": "Usunąć „{{title}}”?",
+    "messageDoc": "Ten dokument zostanie trwale usunięty.",
+    "messageFolder": "Ten folder i cała jego zawartość zostaną trwale usunięte.",
+    "confirm": "Usuń",
+    "cancel": "Anuluj"
+  },
+  "meta": {
+    "editedAgo": "Edytowano {{time}}",
+    "justNow": "przed chwilą"
+  },
+  "editor": {
+    "titlePlaceholder": "Bez tytułu",
+    "bodyPlaceholder": "Wpisz „/”, aby wstawić blok, lub po prostu zacznij pisać...",
+    "saving": "Zapisywanie...",
+    "saved": "Zapisano"
+  },
+  "topbar": {
+    "history": "Historia",
+    "comments": "Komentarze",
+    "more": "Więcej",
+    "share": "Udostępnij"
+  }
+}

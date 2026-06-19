@@ -21,6 +21,7 @@ import { FavoriteModule } from './modules/favorite/favorite.module';
 import { EventsModule } from './modules/events/events.module';
 import { NotificationModule } from './modules/notification/notification.module';
 import { SearchModule } from './modules/search/search.module';
+import { DocumentModule } from './modules/document/document.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { SearchModule } from './modules/search/search.module';
     EventsModule,
     NotificationModule,
     SearchModule,
+    DocumentModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },

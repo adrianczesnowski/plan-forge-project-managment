@@ -1,0 +1,52 @@
+{
+  "title": "Docs",
+  "searchPlaceholder": "Search docs...",
+  "createButton": "Create",
+  "createInside": "Create inside",
+  "rowMenu": "More",
+  "empty": {
+    "title": "No documents yet",
+    "hint": "Create your first document or folder to get started."
+  },
+  "selectPrompt": {
+    "title": "Select a document",
+    "hint": "Pick a document from the tree, or create a new one."
+  },
+  "create": {
+    "doc": "Document",
+    "docDescription": "Empty page with text and blocks",
+    "folder": "Folder",
+    "folderDescription": "A container for documents and subfolders",
+    "untitledDoc": "Untitled",
+    "untitledFolder": "New folder"
+  },
+  "menu": {
+    "rename": "Rename",
+    "duplicate": "Duplicate",
+    "createInside": "Create inside",
+    "delete": "Delete"
+  },
+  "deleteConfirm": {
+    "title": "Delete \"{{title}}\"?",
+    "messageDoc": "This document will be permanently removed.",
+    "messageFolder": "This folder and everything inside it will be permanently removed.",
+    "confirm": "Delete",
+    "cancel": "Cancel"
+  },
+  "meta": {
+    "editedAgo": "Edited {{time}}",
+    "justNow": "just now"
+  },
+  "editor": {
+    "titlePlaceholder": "Untitled",
+    "bodyPlaceholder": "Type \"/\" to insert a block, or just start writing...",
+    "saving": "Saving...",
+    "saved": "Saved"
+  },
+  "topbar": {
+    "history": "History",
+    "comments": "Comments",
+    "more": "More",
+    "share": "Share"
+  }
+}

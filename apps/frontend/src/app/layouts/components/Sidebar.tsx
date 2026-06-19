@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutGrid, Layers, Settings } from 'lucide-react';
+import { FileText, LayoutGrid, Layers, Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/shared/lib/utils';
 import { SidebarSpaces } from './SidebarSpaces';
@@ -28,6 +28,10 @@ export function Sidebar() {
         <NavLink to="/" end className={navItemClass}>
           <LayoutGrid className="h-[17px] w-[17px]" />
           {t('nav.dashboard')}
+        </NavLink>
+        <NavLink to="/docs" className={navItemClass}>
+          <FileText className="h-[17px] w-[17px]" />
+          {t('nav.docs')}
         </NavLink>
       </nav>
 

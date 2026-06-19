@@ -5,6 +5,7 @@ import { DashboardPage } from '@/pages/dashboard/DashboardPage';
 import { OnboardingPage } from '@/pages/onboarding/OnboardingPage';
 import { SpacePage } from '@/pages/space/SpacePage';
 import { ProjectPage } from '@/pages/project/ProjectPage';
+import { DocsPage } from '@/pages/docs/DocsPage';
 import { AppLayout } from './layouts/AppLayout';
 import { GuestRoute } from './guards/GuestRoute';
 import { ProtectedRoute } from './guards/ProtectedRoute';
@@ -30,6 +31,8 @@ export const router = createBrowserRouter([
             element: <AppLayout />,
             children: [
               { path: '/', element: <DashboardPage /> },
+              { path: '/docs', element: <DocsPage /> },
+              { path: '/docs/:docId', element: <DocsPage /> },
               { path: '/spaces/:spaceId', element: <SpacePage /> },
               { path: '/projects/:projectId', element: <ProjectPage /> },
               // Deep link to the task modal rendered on top of the project view.

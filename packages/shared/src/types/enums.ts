@@ -94,6 +94,12 @@ export const ActivityAction = {
 } as const;
 export type ActivityAction = (typeof ActivityAction)[keyof typeof ActivityAction];
 
+export const DocumentNodeType = {
+  FOLDER: 'FOLDER',
+  DOC: 'DOC',
+} as const;
+export type DocumentNodeType = (typeof DocumentNodeType)[keyof typeof DocumentNodeType];
+
 export const NotificationType = {
   TASK_ASSIGNED: 'TASK_ASSIGNED',
   COMMENT_MENTION: 'COMMENT_MENTION',

@@ -13,6 +13,7 @@
   "welcome": "Welcome, {{name}}",
   "nav": {
     "dashboard": "Dashboard",
+    "docs": "Docs",
     "settings": "Settings",
     "helpSupport": "Help & Support"
   },

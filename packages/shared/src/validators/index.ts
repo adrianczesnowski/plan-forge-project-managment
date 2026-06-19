@@ -10,3 +10,4 @@ export * from './dependency.schema';
 export * from './comment.schema';
 export * from './shared-list.schema';
 export * from './favorite.schema';
+export * from './document.schema';

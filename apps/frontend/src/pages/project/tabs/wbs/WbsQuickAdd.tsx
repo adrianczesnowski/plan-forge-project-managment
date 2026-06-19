@@ -1,17 +1,19 @@
-import { useState } from 'react';
+import { useState, type RefObject } from 'react';
 import { CornerDownLeft, Plus, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface WbsQuickAddProps {
   /** When adding a subtask, the parent task's title is shown as context. */
   parentTitle?: string;
+  /** Lets the "New Task" toolbar button focus this input. */
+  inputRef?: RefObject<HTMLInputElement | null>;
   onSubmit: (title: string) => void;
   onCancel?: () => void;
   isPending: boolean;
 }
 
 /** Single-input quick add: type a title, press Enter. */
-export function WbsQuickAdd({ parentTitle, onSubmit, onCancel, isPending }: WbsQuickAddProps) {
+export function WbsQuickAdd({ parentTitle, inputRef, onSubmit, onCancel, isPending }: WbsQuickAddProps) {
   const { t } = useTranslation('tasks');
   const [title, setTitle] = useState('');
 
@@ -31,6 +33,7 @@ export function WbsQuickAdd({ parentTitle, onSubmit, onCancel, isPending }: WbsQ
         </span>
       )}
       <input
+        ref={inputRef}
         autoFocus={Boolean(parentTitle)}
         value={title}
         disabled={isPending}

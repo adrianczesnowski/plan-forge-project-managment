@@ -20,9 +20,10 @@ import {
 } from '@tanstack/react-table';
 import { ChevronRight, Gem, Plus, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { format } from 'date-fns';
+import { differenceInCalendarDays, format } from 'date-fns';
 import type { TaskPriority, TaskStatus, TaskTreeNode } from '@planforge/shared';
 import { cn } from '@/shared/lib/utils';
+import { flattenTree } from '@/entities/task/lib/flatten-tree';
 import { TaskStatusSelect } from '@/features/task/ui/TaskStatusSelect';
 import { TaskPrioritySelect } from '@/features/task/ui/TaskPrioritySelect';
 import {
@@ -59,16 +60,11 @@ interface WbsTableProps extends WbsTableCallbacks {
   dndEnabled?: boolean;
 }
 
-function AssigneeCell({ task }: { task: TaskTreeNode }) {
+function ResourceCell({ task }: { task: TaskTreeNode }) {
   if (!task.assignee) return <span className="text-faint">—</span>;
-  const initials =
-    `${task.assignee.firstName.charAt(0)}${task.assignee.lastName.charAt(0)}`.toUpperCase();
   return (
-    <span
-      title={`${task.assignee.firstName} ${task.assignee.lastName}`}
-      className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white"
-    >
-      {initials}
+    <span className="inline-block rounded-full bg-[#f0f0f5] px-2 py-0.5 text-[11.5px] font-medium text-foreground">
+      {task.assignee.firstName} {task.assignee.lastName.charAt(0)}.
     </span>
   );
 }
@@ -76,10 +72,10 @@ function AssigneeCell({ task }: { task: TaskTreeNode }) {
 function ProgressCell({ value }: { value: number }) {
   return (
     <div className="flex items-center gap-2">
-      <div className="h-1.5 w-12 overflow-hidden rounded-full bg-border-light">
-        <div className="h-full rounded-full bg-accent-green" style={{ width: `${value}%` }} />
+      <div className="h-[5px] w-[52px] overflow-hidden rounded-[3px] bg-border-light">
+        <div className="h-full rounded-[3px] bg-accent-blue" style={{ width: `${value}%` }} />
       </div>
-      <span className="w-8 text-right text-[11.5px] text-muted-foreground">{value}%</span>
+      <span className="w-8 text-[12px] font-medium text-muted-foreground">{value}%</span>
     </div>
   );
 }
@@ -101,20 +97,37 @@ export function WbsTable({
   const [projection, setProjection] = useState<DropProjection | null>(null);
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
+  // Stable per-task display number (DFS order), independent of expand state.
+  const idMap = useMemo(() => {
+    const map = new Map<string, number>();
+    flattenTree(tasks).forEach((node, i) => map.set(node.id, i + 1));
+    return map;
+  }, [tasks]);
+
   const columns = useMemo<ColumnDef<TaskTreeNode>[]>(
     () => [
       {
+        id: 'id',
+        header: t('columns.id'),
+        size: 42,
+        cell: ({ row }) => (
+          <span className="block text-center text-[12px] text-faint">{idMap.get(row.original.id)}</span>
+        ),
+      },
+      {
         id: 'wbs',
         header: t('columns.wbs'),
-        size: 70,
+        size: 56,
         cell: ({ row }) => (
-          <span className="font-mono text-[11.5px] text-faint">{row.original.wbsNumber}</span>
+          <span className="block text-center font-mono text-[12px] font-medium text-muted-foreground">
+            {row.original.wbsNumber}
+          </span>
         ),
       },
       {
         id: 'title',
         header: t('columns.title'),
-        size: 400,
+        size: 360,
         cell: ({ row, table }) => {
           // While dragging, the active row previews its projected nesting level.
           const meta = table.options.meta as WbsTableMeta | undefined;
@@ -122,70 +135,70 @@ export function WbsTable({
             meta?.activeId === row.original.id && meta.projectedDepth !== null
               ? meta.projectedDepth
               : row.depth;
+          const isPhase = row.original.children.length > 0;
           return (
             <div className="flex items-center gap-1" style={{ paddingLeft: depth * INDENT_WIDTH }}>
-            {row.getCanExpand() ? (
+              {row.getCanExpand() ? (
+                <button
+                  type="button"
+                  onClick={row.getToggleExpandedHandler()}
+                  className="flex h-5 w-5 shrink-0 items-center justify-center rounded text-faint hover:bg-muted hover:text-foreground"
+                >
+                  <ChevronRight
+                    className={cn('h-3.5 w-3.5 transition-transform', row.getIsExpanded() && 'rotate-90')}
+                  />
+                </button>
+              ) : (
+                <span className="w-5 shrink-0" />
+              )}
+              {isPhase && (
+                <span
+                  className="h-2.5 w-2.5 shrink-0 rounded-[3px]"
+                  style={{ background: 'var(--color-accent-purple)' }}
+                />
+              )}
               <button
                 type="button"
-                onClick={row.getToggleExpandedHandler()}
-                className="flex h-5 w-5 shrink-0 items-center justify-center rounded text-faint hover:bg-muted hover:text-foreground"
+                onClick={() => onOpenTask(row.original.id)}
+                className={cn(
+                  'truncate text-left text-[13px] hover:text-primary hover:underline',
+                  isPhase ? 'font-bold' : 'font-normal',
+                  row.original.status === 'CANCELLED' && 'text-faint line-through',
+                )}
               >
-                <ChevronRight
-                  className={cn('h-3.5 w-3.5 transition-transform', row.getIsExpanded() && 'rotate-90')}
-                />
+                {row.original.title}
               </button>
-            ) : (
-              <span className="w-5 shrink-0" />
-            )}
-            {row.original.isMilestone && <Gem className="h-3.5 w-3.5 shrink-0 text-accent-purple" />}
-            <button
-              type="button"
-              onClick={() => onOpenTask(row.original.id)}
-              className={cn(
-                'truncate text-left text-[13px] hover:text-primary hover:underline',
-                row.original.children.length > 0 && 'font-semibold',
-                row.original.status === 'CANCELLED' && 'text-faint line-through',
-              )}
-            >
-              {row.original.title}
-            </button>
             </div>
           );
         },
       },
       {
-        id: 'status',
-        header: t('columns.status'),
-        size: 130,
-        cell: ({ row }) => (
-          <TaskStatusSelect
-            value={row.original.status}
-            disabled={!canEdit}
-            onChange={(status) => onStatusChange(row.original.id, status)}
-          />
-        ),
+        id: 'duration',
+        header: t('columns.duration'),
+        size: 80,
+        cell: ({ row }) => {
+          const { startDate, endDate } = row.original;
+          if (!startDate || !endDate) return <span className="text-faint">—</span>;
+          const days = differenceInCalendarDays(new Date(endDate), new Date(startDate)) + 1;
+          return <span className="text-[12.5px] text-muted-foreground">{t('modal.meta.days', { count: days })}</span>;
+        },
       },
       {
-        id: 'priority',
-        header: t('columns.priority'),
+        id: 'startDate',
+        header: t('columns.start'),
         size: 110,
-        cell: ({ row }) => (
-          <TaskPrioritySelect
-            value={row.original.priority}
-            disabled={!canEdit}
-            onChange={(priority) => onPriorityChange(row.original.id, priority)}
-          />
-        ),
+        cell: ({ row }) =>
+          row.original.startDate ? (
+            <span className="text-[12.5px] text-muted-foreground">
+              {format(new Date(row.original.startDate), 'd MMM yyyy')}
+            </span>
+          ) : (
+            <span className="text-faint">—</span>
+          ),
       },
       {
-        id: 'assignee',
-        header: t('columns.assignee'),
-        size: 90,
-        cell: ({ row }) => <AssigneeCell task={row.original} />,
-      },
-      {
-        id: 'dueDate',
-        header: t('columns.dueDate'),
+        id: 'finishDate',
+        header: t('columns.finish'),
         size: 110,
         cell: ({ row }) =>
           row.original.endDate ? (
@@ -201,6 +214,52 @@ export function WbsTable({
         header: t('columns.progress'),
         size: 120,
         cell: ({ row }) => <ProgressCell value={row.original.progress} />,
+      },
+      {
+        // TODO: predecessors require a project-wide dependency fetch (not in the task tree yet).
+        id: 'predecessors',
+        header: t('columns.predecessors'),
+        size: 90,
+        cell: () => <span className="block text-center text-faint">—</span>,
+      },
+      {
+        id: 'resource',
+        header: t('columns.resource'),
+        size: 100,
+        cell: ({ row }) => <ResourceCell task={row.original} />,
+      },
+      {
+        id: 'milestone',
+        header: () => <Gem className="mx-auto h-3.5 w-3.5" />,
+        size: 40,
+        cell: ({ row }) =>
+          row.original.isMilestone ? (
+            <Gem className="mx-auto h-3.5 w-3.5 text-accent-purple" />
+          ) : null,
+      },
+      {
+        id: 'priority',
+        header: t('columns.priority'),
+        size: 90,
+        cell: ({ row }) => (
+          <TaskPrioritySelect
+            value={row.original.priority}
+            disabled={!canEdit}
+            onChange={(priority) => onPriorityChange(row.original.id, priority)}
+          />
+        ),
+      },
+      {
+        id: 'status',
+        header: t('columns.status'),
+        size: 120,
+        cell: ({ row }) => (
+          <TaskStatusSelect
+            value={row.original.status}
+            disabled={!canEdit}
+            onChange={(status) => onStatusChange(row.original.id, status)}
+          />
+        ),
       },
       {
         id: 'actions',
@@ -230,7 +289,7 @@ export function WbsTable({
           ),
       },
     ],
-    [t, canEdit, tasks, onStatusChange, onPriorityChange, onAddSubtask, onDelete, onOpenTask, onMove],
+    [t, idMap, canEdit, tasks, onStatusChange, onPriorityChange, onAddSubtask, onDelete, onOpenTask, onMove],
   );
 
   const table = useReactTable({
@@ -304,15 +363,15 @@ export function WbsTable({
       onDragEnd={handleDragEnd}
       onDragCancel={resetDragState}
     >
-      <table className="w-full border-collapse">
+      <table className="w-full border-separate border-spacing-0 overflow-hidden rounded-[10px] border border-border text-[13px]">
         <thead>
-          <tr className="border-b border-border">
-            <th className="w-7" />
+          <tr>
+            <th className="sticky top-0 z-[2] w-7 border-b-2 border-border bg-muted" />
             {table.getFlatHeaders().map((header) => (
               <th
                 key={header.id}
                 style={{ width: header.getSize() }}
-                className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-faint"
+                className="sticky top-0 z-[2] whitespace-nowrap border-b-2 border-border bg-muted px-3 py-2.5 text-left text-[11.5px] font-semibold uppercase tracking-[0.04em] text-faint"
               >
                 {flexRender(header.column.columnDef.header, header.getContext())}
               </th>
@@ -329,6 +388,7 @@ export function WbsTable({
                 key={row.id}
                 row={row}
                 canEdit={canEdit && dndEnabled}
+                isPhase={row.original.children.length > 0}
                 isDropParent={activeId !== null && projection?.parentId === row.original.id}
               />
             ))}

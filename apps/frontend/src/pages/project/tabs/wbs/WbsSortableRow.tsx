@@ -8,12 +8,14 @@ import { cn } from '@/shared/lib/utils';
 interface WbsSortableRowProps {
   row: Row<TaskTreeNode>;
   canEdit: boolean;
+  /** Summary task (has children) — gets the MS-Project phase-row highlight. */
+  isPhase?: boolean;
   /** This row would become the dragged task's parent if dropped now. */
   isDropParent?: boolean;
 }
 
 /** Table row wired into dnd-kit sortable, with a drag handle in the first cell. */
-export function WbsSortableRow({ row, canEdit, isDropParent = false }: WbsSortableRowProps) {
+export function WbsSortableRow({ row, canEdit, isPhase = false, isDropParent = false }: WbsSortableRowProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: row.original.id,
     disabled: !canEdit,
@@ -24,7 +26,8 @@ export function WbsSortableRow({ row, canEdit, isDropParent = false }: WbsSortab
       ref={setNodeRef}
       style={{ transform: CSS.Translate.toString(transform), transition }}
       className={cn(
-        'group border-b border-border-light transition-colors hover:bg-muted/40',
+        'group transition-colors hover:bg-muted/40 [&>td]:border-b [&>td]:border-border-light',
+        isPhase && 'bg-muted/40 [&>td]:font-medium [&>td]:text-foreground',
         isDragging && 'relative z-10 bg-primary/5 opacity-90 shadow-lg ring-1 ring-inset ring-primary/30',
         isDropParent && 'bg-primary/5',
       )}
@@ -42,7 +45,7 @@ export function WbsSortableRow({ row, canEdit, isDropParent = false }: WbsSortab
         )}
       </td>
       {row.getVisibleCells().map((cell) => (
-        <td key={cell.id} className="px-3 py-1.5">
+        <td key={cell.id} className="whitespace-nowrap px-3 py-2 align-middle text-muted-foreground">
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </td>
       ))}

@@ -1,13 +1,19 @@
 {
   "columns": {
+    "id": "ID",
     "wbs": "WBS",
-    "title": "Tytuł",
+    "title": "Nazwa zadania",
     "status": "Status",
     "priority": "Priorytet",
     "assignee": "Przypisany",
-    "startDate": "Data startu",
+    "resource": "Zasób",
+    "startDate": "Start",
+    "start": "Start",
+    "finish": "Koniec",
     "dueDate": "Termin",
-    "progress": "Postęp"
+    "duration": "Czas trwania",
+    "predecessors": "Poprzedniki",
+    "progress": "% ukończenia"
   },
   "status": {
     "TODO": "Do zrobienia",
@@ -27,7 +33,11 @@
     "addTask": "Nowe zadanie",
     "addSubtask": "Dodaj podzadanie",
     "delete": "Usuń zadanie",
-    "deleteConfirm": "Usunąć zadanie wraz z podzadaniami?"
+    "deleteConfirm": "Usunąć zadanie wraz z podzadaniami?",
+    "filter": "Filtruj",
+    "groupByPhase": "Grupuj po fazach",
+    "columns": "Kolumny",
+    "export": "Eksport"
   },
   "quickAdd": {
     "placeholder": "Dodaj zadanie i naciśnij Enter...",

@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ListTodo } from 'lucide-react';
+import { Columns3, Download, ListTodo, ListTree, Plus, SlidersHorizontal } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { ProjectWithRole, TaskTreeNode } from '@planforge/shared';
 import { useProjectTasks } from '@/entities/task/hooks/use-tasks';
@@ -40,7 +40,14 @@ export function WbsTab({ project, filters }: WbsTabProps) {
   const moveTask = useMoveTask(project.id);
 
   const [subtaskTarget, setSubtaskTarget] = useState<SubtaskTarget | null>(null);
+  const quickAddRef = useRef<HTMLInputElement>(null);
   const canEdit = project.myRole !== 'VIEWER';
+
+  const focusNewTask = () => {
+    setSubtaskTarget(null);
+    quickAddRef.current?.focus();
+    quickAddRef.current?.scrollIntoView({ block: 'nearest' });
+  };
 
   if (isPending) return <FullPageSpinner />;
 
@@ -61,7 +68,38 @@ export function WbsTab({ project, filters }: WbsTabProps) {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex-1 overflow-y-auto">
+      {/* Action bar */}
+      <div className="flex flex-shrink-0 items-center gap-2 px-6 py-3">
+        {canEdit && (
+          <button
+            type="button"
+            onClick={focusNewTask}
+            className="flex items-center gap-1.5 rounded-lg border border-accent-green bg-accent-green px-3.5 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-[#16a34a]"
+          >
+            <Plus className="h-3.5 w-3.5" strokeWidth={2.5} />
+            {t('actions.addTask')}
+          </button>
+        )}
+        {/* TODO: wire group-by-phase, column picker and export to real behaviour. */}
+        <button type="button" className="flex items-center gap-1.5 rounded-lg border border-border bg-card px-3.5 py-1.5 text-[13px] text-muted-foreground transition-colors hover:bg-muted">
+          <SlidersHorizontal className="h-3.5 w-3.5" />
+          {t('actions.filter')}
+        </button>
+        <button type="button" className="flex items-center gap-1.5 rounded-lg border border-border bg-card px-3.5 py-1.5 text-[13px] text-muted-foreground transition-colors hover:bg-muted">
+          <ListTree className="h-3.5 w-3.5" />
+          {t('actions.groupByPhase')}
+        </button>
+        <button type="button" className="flex items-center gap-1.5 rounded-lg border border-border bg-card px-3.5 py-1.5 text-[13px] text-muted-foreground transition-colors hover:bg-muted">
+          <Columns3 className="h-3.5 w-3.5" />
+          {t('actions.columns')}
+        </button>
+        <button type="button" className="flex items-center gap-1.5 rounded-lg border border-border bg-card px-3.5 py-1.5 text-[13px] text-muted-foreground transition-colors hover:bg-muted">
+          <Download className="h-3.5 w-3.5" />
+          {t('actions.export')}
+        </button>
+      </div>
+
+      <div className="min-h-0 flex-1 overflow-auto px-6 pb-4">
         {visibleTasks.length > 0 ? (
           <WbsTable
             tasks={visibleTasks}
@@ -79,7 +117,7 @@ export function WbsTab({ project, filters }: WbsTabProps) {
             }
           />
         ) : (
-          <div className="m-6 flex flex-col items-center gap-2 rounded-2xl border border-dashed border-border py-16 text-center">
+          <div className="flex flex-col items-center gap-2 rounded-2xl border border-dashed border-border py-16 text-center">
             <ListTodo className="h-8 w-8 text-faint" />
             <p className="text-sm font-medium text-muted-foreground">
               {hasActiveFilters(filters) ? t('filters.noResults') : t('empty')}
@@ -92,6 +130,7 @@ export function WbsTab({ project, filters }: WbsTabProps) {
       {canEdit && (
         <WbsQuickAdd
           parentTitle={subtaskTarget?.parentTitle}
+          inputRef={quickAddRef}
           onSubmit={handleAdd}
           onCancel={subtaskTarget ? () => setSubtaskTarget(null) : undefined}
           isPending={createTask.isPending}

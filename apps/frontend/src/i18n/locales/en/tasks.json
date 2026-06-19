@@ -1,13 +1,19 @@
 {
   "columns": {
+    "id": "ID",
     "wbs": "WBS",
-    "title": "Title",
+    "title": "Task Name",
     "status": "Status",
     "priority": "Priority",
     "assignee": "Assignee",
-    "startDate": "Start date",
+    "resource": "Resource",
+    "startDate": "Start",
+    "start": "Start",
+    "finish": "Finish",
     "dueDate": "Due date",
-    "progress": "Progress"
+    "duration": "Duration",
+    "predecessors": "Predecessors",
+    "progress": "% Complete"
   },
   "status": {
     "TODO": "To do",
@@ -27,7 +33,11 @@
     "addTask": "New task",
     "addSubtask": "Add subtask",
     "delete": "Delete task",
-    "deleteConfirm": "Delete this task with all its subtasks?"
+    "deleteConfirm": "Delete this task with all its subtasks?",
+    "filter": "Filter",
+    "groupByPhase": "Group by Phase",
+    "columns": "Columns",
+    "export": "Export"
   },
   "quickAdd": {
     "placeholder": "Add a task and press Enter...",

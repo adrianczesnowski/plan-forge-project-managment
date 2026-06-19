@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import type { ReactNode } from 'react';
+import { differenceInCalendarDays } from 'date-fns';
 import type { TaskTreeNode } from '@planforge/shared';
 import { useAuthStore } from '@/stores/auth.store';
 import { useProjectMembers } from '@/entities/project/hooks/use-projects';
@@ -11,9 +12,13 @@ import { TaskDateField } from './TaskDateField';
 
 function MetaCell({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="flex flex-col gap-1">
-      <span className="text-[11px] font-semibold uppercase tracking-wide text-faint">{label}</span>
-      <div className="flex min-h-7 items-center gap-2 text-[13px]">{children}</div>
+    <div className="flex flex-col gap-1 border-b border-r border-border-light px-4 py-3">
+      <span className="text-[11px] font-semibold uppercase tracking-[0.04em] text-faint">
+        {label}
+      </span>
+      <div className="flex min-h-[26px] items-center gap-1.5 text-[13.5px] font-medium">
+        {children}
+      </div>
     </div>
   );
 }
@@ -47,8 +52,13 @@ export function TaskMetaGrid({ task, projectId, canEdit }: TaskMetaGridProps) {
 
   const toDateInput = (iso: string | null) => (iso ? iso.slice(0, 10) : '');
 
+  const durationDays =
+    task.startDate && task.endDate
+      ? differenceInCalendarDays(new Date(task.endDate), new Date(task.startDate)) + 1
+      : null;
+
   return (
-    <div className="grid grid-cols-2 gap-x-8 gap-y-4 rounded-xl border border-border bg-muted/20 p-4 sm:grid-cols-3">
+    <div className="grid grid-cols-2 overflow-hidden rounded-[10px] border border-border [&>div:nth-child(2n)]:border-r-0 [&>div:nth-last-child(-n+2)]:border-b-0">
       <MetaCell label={t('modal.meta.status')}>
         <TaskStatusSelect
           value={task.status}
@@ -96,6 +106,14 @@ export function TaskMetaGrid({ task, projectId, canEdit }: TaskMetaGridProps) {
           min={toDateInput(task.startDate) || undefined}
           onCommit={(endDate) => update({ endDate })}
         />
+      </MetaCell>
+
+      <MetaCell label={t('modal.meta.duration')}>
+        {durationDays !== null ? (
+          <span>{t('modal.meta.days', { count: durationDays })}</span>
+        ) : (
+          <span className="text-faint">—</span>
+        )}
       </MetaCell>
 
       <MetaCell label={t('modal.meta.estimatedHours')}>

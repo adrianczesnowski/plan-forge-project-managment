@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { FileText } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { TaskTreeNode } from '@planforge/shared';
+import { cn } from '@/shared/lib/utils';
 import { useUpdateTask } from '../../hooks/use-task-mutations';
 
 interface TaskDescriptionProps {
@@ -29,8 +30,8 @@ export function TaskDescription({ task, projectId, canEdit }: TaskDescriptionPro
 
   return (
     <div>
-      <h3 className="mb-2 flex items-center gap-1.5 text-[13px] font-semibold text-muted-foreground">
-        <FileText className="h-4 w-4" />
+      <h3 className="mb-2 flex items-center gap-1.5 text-[13px] font-bold">
+        <FileText className="h-[15px] w-[15px] text-faint" />
         {t('modal.description')}
       </h3>
 
@@ -53,11 +54,10 @@ export function TaskDescription({ task, projectId, canEdit }: TaskDescriptionPro
       ) : (
         <div
           onClick={canEdit ? () => setEditing(true) : undefined}
-          className={
-            canEdit
-              ? 'min-h-12 cursor-text whitespace-pre-wrap rounded-lg border border-transparent p-3 text-[13.5px] leading-relaxed transition-colors hover:border-border hover:bg-muted/30'
-              : 'whitespace-pre-wrap p-3 text-[13.5px] leading-relaxed'
-          }
+          className={cn(
+            'min-h-12 whitespace-pre-wrap rounded-lg border border-border-light bg-muted/30 px-3.5 py-3 text-[13.5px] leading-relaxed text-muted-foreground',
+            canEdit && 'cursor-text transition-colors hover:border-border',
+          )}
         >
           {task.description || <span className="text-faint">{t('modal.noDescription')}</span>}
         </div>

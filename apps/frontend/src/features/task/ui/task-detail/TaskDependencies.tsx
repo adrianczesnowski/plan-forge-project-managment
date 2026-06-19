@@ -2,13 +2,32 @@ import { useMemo, useState } from 'react';
 import { Link2, Plus, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { DependencyType, type Dependency, type TaskTreeNode } from '@planforge/shared';
+import {
+  DependencyType,
+  TaskStatus,
+  type Dependency,
+  type TaskTreeNode,
+} from '@planforge/shared';
 import { useProjectTasks } from '@/entities/task/hooks/use-tasks';
 import { useTaskDependencies } from '@/entities/dependency/hooks/use-dependencies';
 import { flattenTree } from '@/entities/task/lib/flatten-tree';
+import { cn } from '@/shared/lib/utils';
 import { useCreateDependency, useDeleteDependency } from '../../hooks/use-dependency-mutations';
 
 type Direction = 'predecessor' | 'successor';
+
+const TYPE_BADGE: Record<Direction, string> = {
+  predecessor: 'bg-accent-blue/10 text-accent-blue',
+  successor: 'bg-accent-orange/10 text-accent-orange',
+};
+
+const STATUS_BADGE: Record<TaskStatus, string> = {
+  TODO: 'bg-muted text-faint',
+  IN_PROGRESS: 'bg-accent-blue/10 text-accent-blue',
+  IN_REVIEW: 'bg-accent-orange/10 text-accent-orange',
+  DONE: 'bg-accent-green/10 text-accent-green',
+  CANCELLED: 'bg-muted text-faint line-through',
+};
 
 interface TaskDependenciesProps {
   task: TaskTreeNode;
@@ -54,26 +73,40 @@ export function TaskDependencies({ task, projectId, canEdit }: TaskDependenciesP
     );
   };
 
-  const renderRow = (dependency: Dependency, otherId: string) => {
+  const renderRow = (dependency: Dependency, otherId: string, kind: Direction) => {
     const other = tasksById.get(otherId);
     if (!other) return null;
     return (
       <div
         key={dependency.id}
-        className="group flex items-center gap-2.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-muted/40"
+        className="group flex items-center gap-2.5 rounded-lg border border-border px-3.5 py-2.5 text-[13px] transition-colors hover:border-primary/40 hover:bg-primary/5"
       >
-        <span className="shrink-0 rounded bg-muted px-1.5 py-0.5 font-mono text-[10.5px] font-semibold text-muted-foreground">
-          {dependency.type}
-          {dependency.lag !== 0 && (dependency.lag > 0 ? `+${dependency.lag}` : dependency.lag)}
+        <span
+          className={cn(
+            'shrink-0 rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.05em]',
+            TYPE_BADGE[kind],
+          )}
+        >
+          {t(`dependencies.direction.${kind}`)}
         </span>
         <button
           type="button"
           onClick={() => navigate(`/projects/${projectId}/tasks/${other.id}`)}
-          className="min-w-0 flex-1 truncate text-left text-[13px] hover:text-primary"
+          className="min-w-0 flex-1 truncate text-left hover:text-primary"
         >
-          <span className="mr-1.5 font-mono text-[11px] text-faint">{other.wbsNumber}</span>
           {other.title}
         </button>
+        <span className="shrink-0 font-mono text-[11.5px] text-faint">
+          WBS {other.wbsNumber} · {dependency.type}
+        </span>
+        <span
+          className={cn(
+            'shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold',
+            STATUS_BADGE[other.status],
+          )}
+        >
+          {t(`status.${other.status}`)}
+        </span>
         {canEdit && (
           <button
             type="button"
@@ -89,30 +122,18 @@ export function TaskDependencies({ task, projectId, canEdit }: TaskDependenciesP
 
   return (
     <div>
-      <h3 className="mb-2 flex items-center gap-1.5 text-[13px] font-semibold text-muted-foreground">
-        <Link2 className="h-4 w-4" />
+      <h3 className="mb-2 flex items-center gap-1.5 text-[13px] font-bold">
+        <Link2 className="h-[15px] w-[15px] text-faint" />
         {t('dependencies.title')}
       </h3>
 
-      {predecessors.length > 0 && (
-        <div className="mb-1">
-          <p className="px-2 text-[11px] font-medium uppercase tracking-wide text-faint">
-            {t('dependencies.predecessors')}
-          </p>
-          {predecessors.map((d) => renderRow(d, d.predecessorId))}
-        </div>
-      )}
-      {successors.length > 0 && (
-        <div className="mb-1">
-          <p className="px-2 text-[11px] font-medium uppercase tracking-wide text-faint">
-            {t('dependencies.successors')}
-          </p>
-          {successors.map((d) => renderRow(d, d.successorId))}
-        </div>
-      )}
+      <div className="flex flex-col gap-1.5">
+        {predecessors.map((d) => renderRow(d, d.predecessorId, 'predecessor'))}
+        {successors.map((d) => renderRow(d, d.successorId, 'successor'))}
+      </div>
 
       {canEdit && (
-        <div className="mt-1 flex items-center gap-2 rounded-lg border border-dashed border-border px-2 py-1.5">
+        <div className="mt-1.5 flex items-center gap-2 rounded-lg border border-dashed border-border px-3.5 py-2.5">
           <select
             value={direction}
             onChange={(e) => setDirection(e.target.value as Direction)}

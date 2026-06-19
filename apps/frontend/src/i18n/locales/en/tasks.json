@@ -46,11 +46,28 @@
     "send": "Send",
     "noComments": "No comments yet. Start the discussion!",
     "deleteComment": "Delete comment",
+    "actions": {
+      "copyLink": "Copy link",
+      "fullscreen": "Full screen",
+      "more": "More",
+      "close": "Close"
+    },
+    "activity": {
+      "all": "All Activity",
+      "comments": "Comments",
+      "history": "History",
+      "demo": "Demo data — activity log coming soon",
+      "changedStatus": "changed status",
+      "createdTask": "created this task"
+    },
     "meta": {
       "status": "Status",
       "priority": "Priority",
       "startDate": "Start date",
       "endDate": "Due date",
+      "duration": "Duration",
+      "days_one": "{{count}} day",
+      "days_other": "{{count}} days",
       "assignee": "Assignee",
       "unassigned": "Unassigned",
       "milestone": "Milestone",

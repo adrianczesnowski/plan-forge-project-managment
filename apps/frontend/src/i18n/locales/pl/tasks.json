@@ -46,11 +46,30 @@
     "send": "Wyślij",
     "noComments": "Brak komentarzy. Rozpocznij dyskusję!",
     "deleteComment": "Usuń komentarz",
+    "actions": {
+      "copyLink": "Kopiuj link",
+      "fullscreen": "Pełny ekran",
+      "more": "Więcej",
+      "close": "Zamknij"
+    },
+    "activity": {
+      "all": "Cała aktywność",
+      "comments": "Komentarze",
+      "history": "Historia",
+      "demo": "Dane demonstracyjne — log aktywności wkrótce",
+      "changedStatus": "zmienił(a) status",
+      "createdTask": "utworzył(a) to zadanie"
+    },
     "meta": {
       "status": "Status",
       "priority": "Priorytet",
       "startDate": "Data rozpoczęcia",
       "endDate": "Termin",
+      "duration": "Czas trwania",
+      "days_one": "{{count}} dzień",
+      "days_few": "{{count}} dni",
+      "days_many": "{{count}} dni",
+      "days_other": "{{count}} dnia",
       "assignee": "Przypisany",
       "unassigned": "Nieprzypisane",
       "milestone": "Kamień milowy",

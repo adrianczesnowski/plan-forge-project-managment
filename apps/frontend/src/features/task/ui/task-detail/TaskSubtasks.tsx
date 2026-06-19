@@ -38,8 +38,8 @@ export function TaskSubtasks({ task, projectId, canEdit }: TaskSubtasksProps) {
 
   return (
     <div>
-      <h3 className="mb-2 flex items-center gap-1.5 text-[13px] font-semibold text-muted-foreground">
-        <ListChecks className="h-4 w-4" />
+      <h3 className="mb-2 flex items-center gap-1.5 text-[13px] font-bold">
+        <ListChecks className="h-[15px] w-[15px] text-faint" />
         {t('modal.subtasks')}
         {task.children.length > 0 && (
           <span className="text-[12px] font-normal text-faint">
@@ -48,60 +48,60 @@ export function TaskSubtasks({ task, projectId, canEdit }: TaskSubtasksProps) {
         )}
       </h3>
 
-      <div className="flex flex-col">
+      <div className="overflow-hidden rounded-[10px] border border-border">
         {task.children.map((subtask) => {
           const isDone = subtask.status === TaskStatus.DONE;
           return (
             <div
               key={subtask.id}
-              className="group flex items-center gap-2.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-muted/40"
+              className="group flex items-center gap-2.5 border-b border-border-light px-3.5 py-2.5 text-[13px] transition-colors last:border-b-0 hover:bg-muted/40"
             >
               <button
                 type="button"
                 disabled={!canEdit}
                 onClick={() => toggle(subtask)}
                 className={cn(
-                  'flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border-[1.5px] transition-colors',
+                  'flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[5px] border-[1.5px] transition-colors',
                   isDone
                     ? 'border-accent-green bg-accent-green text-white'
                     : 'border-border hover:border-accent-green',
                 )}
               >
-                {isDone && <Check className="h-3 w-3" strokeWidth={3} />}
+                {isDone && <Check className="h-[11px] w-[11px]" strokeWidth={3} />}
               </button>
               <button
                 type="button"
                 onClick={() => navigate(`/projects/${projectId}/tasks/${subtask.id}`)}
                 className={cn(
-                  'flex-1 truncate text-left text-[13px] hover:text-primary',
+                  'flex-1 truncate text-left hover:text-primary',
                   isDone && 'text-faint line-through',
                 )}
               >
                 {subtask.title}
               </button>
               {subtask.assignee && (
-                <span className="shrink-0 text-[11.5px] text-faint">
+                <span className="shrink-0 rounded-full bg-[#f0f0f5] px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground">
                   {subtask.assignee.firstName} {subtask.assignee.lastName.charAt(0)}.
                 </span>
               )}
             </div>
           );
         })}
-      </div>
 
-      {canEdit && (
-        <div className="mt-1 flex items-center gap-2 rounded-lg border border-dashed border-border px-2 py-1.5">
-          <Plus className="h-3.5 w-3.5 shrink-0 text-faint" />
-          <input
-            value={newTitle}
-            disabled={createTask.isPending}
-            placeholder={t('modal.addSubtask')}
-            onChange={(e) => setNewTitle(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && addSubtask()}
-            className="w-full bg-transparent text-[13px] outline-none placeholder:text-faint"
-          />
-        </div>
-      )}
+        {canEdit && (
+          <div className="flex items-center gap-2 border-t border-dashed border-border px-3.5 py-2.5 text-[13px] text-faint">
+            <Plus className="h-3.5 w-3.5 shrink-0" />
+            <input
+              value={newTitle}
+              disabled={createTask.isPending}
+              placeholder={t('modal.addSubtask')}
+              onChange={(e) => setNewTitle(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && addSubtask()}
+              className="w-full bg-transparent text-foreground outline-none placeholder:text-faint"
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

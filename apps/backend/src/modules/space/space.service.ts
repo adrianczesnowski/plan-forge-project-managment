@@ -51,16 +51,18 @@ export class SpaceService {
     return toSpaceWithRole(space, SpaceRole.OWNER);
   }
 
-  /** Spaces visible to the user: all for org OWNER/ADMIN, assigned ones for MEMBER. */
+  /** Spaces the user can see: all for org OWNER/ADMIN, assigned ones for MEMBER. Each
+   * carries a per-user `hidden` flag; filtering them out is left to the view layer. */
   async list(userId: string): Promise<SpaceWithRole[]> {
     const orgMembership = await this.requireCurrentMembership(userId);
+    const hiddenIds = await this.hiddenSpaceIds(userId);
 
     if (orgMembership.role !== OrganizationRole.MEMBER) {
       const spaces = await this.prisma.space.findMany({
         where: { organizationId: orgMembership.organizationId },
         orderBy: { order: 'asc' },
       });
-      return spaces.map((space) => toSpaceWithRole(space, SpaceRole.OWNER));
+      return spaces.map((space) => toSpaceWithRole(space, SpaceRole.OWNER, hiddenIds.has(space.id)));
     }
 
     const memberships = await this.prisma.spaceMember.findMany({
@@ -68,12 +70,29 @@ export class SpaceService {
       include: { space: true },
       orderBy: { space: { order: 'asc' } },
     });
-    return memberships.map((m) => toSpaceWithRole(m.space, m.role));
+    return memberships.map((m) => toSpaceWithRole(m.space, m.role, hiddenIds.has(m.spaceId)));
+  }
+
+  /** Ids of spaces the user has hidden from their workspace views. */
+  private async hiddenSpaceIds(userId: string): Promise<Set<string>> {
+    const rows = await this.prisma.userHiddenItem.findMany({
+      where: { userId, entityType: 'SPACE' },
+      select: { entityId: true },
+    });
+    return new Set(rows.map((r) => r.entityId));
   }
 
   async getById(userId: string, spaceId: string): Promise<SpaceWithRole> {
     const access = await this.access.require(userId, spaceId, SpaceRole.MEMBER);
-    return toSpaceWithRole(access.space, access.role);
+    const hidden = await this.isHidden(userId, spaceId);
+    return toSpaceWithRole(access.space, access.role, hidden);
+  }
+
+  private async isHidden(userId: string, spaceId: string): Promise<boolean> {
+    const row = await this.prisma.userHiddenItem.findUnique({
+      where: { userId_entityType_entityId: { userId, entityType: 'SPACE', entityId: spaceId } },
+    });
+    return Boolean(row);
   }
 
   async update(userId: string, spaceId: string, dto: UpdateSpaceInput): Promise<Space> {
@@ -178,7 +197,13 @@ export class SpaceService {
     if (target.role === SpaceRole.OWNER && access.role !== SpaceRole.OWNER) {
       throw new ForbiddenException(MESSAGES.SPACE.CANNOT_REMOVE_OWNER);
     }
-    await this.prisma.spaceMember.delete({ where: { id: target.id } });
+    // Losing space access also revokes membership in that space's projects.
+    await this.prisma.$transaction([
+      this.prisma.projectMember.deleteMany({
+        where: { userId: targetUserId, project: { spaceId } },
+      }),
+      this.prisma.spaceMember.delete({ where: { id: target.id } }),
+    ]);
   }
 
   private async requireCurrentMembership(userId: string) {

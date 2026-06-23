@@ -21,8 +21,12 @@ export function toSpaceDto(space: PrismaSpace): Space {
   };
 }
 
-export function toSpaceWithRole(space: PrismaSpace, myRole: SpaceRole): SpaceWithRole {
-  return { ...toSpaceDto(space), myRole };
+export function toSpaceWithRole(
+  space: PrismaSpace,
+  myRole: SpaceRole,
+  hidden = false,
+): SpaceWithRole {
+  return { ...toSpaceDto(space), myRole, hidden };
 }
 
 export function toSpaceMemberDto(member: PrismaSpaceMember & { user: PrismaUser }): SpaceMember {

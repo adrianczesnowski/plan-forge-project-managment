@@ -121,6 +121,7 @@ model User {
   assignedTasks         Task[]                 @relation("TaskAssignee")
   comments              Comment[]
   favorites             UserFavorite[]
+  hiddenItems           UserHiddenItem[]
   createdSharedLists    SharedList[]
   sharedListItems       SharedListItem[]
   sharedListPermissions SharedListPermission[]
@@ -355,6 +356,21 @@ model UserFavorite {
 
   @@unique([userId, entityType, entityId])
   @@map("user_favorites")
+}
+
+// ─── Hidden items (per-user view preference) ─────────────────────────────────
+
+model UserHiddenItem {
+  id         String             @id @default(uuid()) @db.Uuid
+  userId     String             @map("user_id") @db.Uuid
+  entityType FavoriteEntityType @map("entity_type")
+  entityId   String             @map("entity_id") @db.Uuid
+  createdAt  DateTime           @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, entityType, entityId])
+  @@map("user_hidden_items")
 }
 
 // ─── Shared lists ────────────────────────────────────────────────────────────

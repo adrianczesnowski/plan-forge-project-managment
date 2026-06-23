@@ -41,15 +41,10 @@ export function Sidebar() {
       </div>
 
       <div className="flex flex-col gap-0.5 border-t border-border p-2">
-        <button
-          type="button"
-          disabled
-          className="flex cursor-not-allowed items-center gap-2.5 rounded-[7px] px-2.5 py-2 text-[13.5px] text-faint"
-          title={t('nav.settings')}
-        >
+        <NavLink to="/settings" className={navItemClass}>
           <Settings className="h-[17px] w-[17px]" />
           {t('nav.settings')}
-        </button>
+        </NavLink>
         <SidebarUser />
       </div>
     </aside>

@@ -1,0 +1,28 @@
+{
+  "title": "Members ({{count}})",
+  "loading": "Loading members…",
+  "empty": "No members yet.",
+  "you": "(you)",
+  "remove": "Remove member",
+  "removeConfirm": {
+    "title": "Remove member",
+    "message": "Remove {{name}}? They lose access here and, for a space, to all of its projects."
+  },
+  "roles": {
+    "OWNER": "Owner",
+    "ADMIN": "Admin",
+    "MEMBER": "Member",
+    "VIEWER": "Viewer"
+  },
+  "add": {
+    "button": "Add member",
+    "title": "Add member",
+    "searchPlaceholder": "Search by name or email…",
+    "noCandidates": "No people available to add.",
+    "roleLabel": "Role",
+    "submit": "Add to list",
+    "blocked": {
+      "ALREADY_MEMBER": "Already a member"
+    }
+  }
+}

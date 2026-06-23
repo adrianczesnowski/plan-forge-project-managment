@@ -1,0 +1,28 @@
+{
+  "title": "Członkowie ({{count}})",
+  "loading": "Wczytywanie członków…",
+  "empty": "Brak członków.",
+  "you": "(Ty)",
+  "remove": "Usuń członka",
+  "removeConfirm": {
+    "title": "Usuń członka",
+    "message": "Usunąć {{name}}? Straci dostęp tutaj, a w przypadku przestrzeni — także do wszystkich jej projektów."
+  },
+  "roles": {
+    "OWNER": "Właściciel",
+    "ADMIN": "Administrator",
+    "MEMBER": "Członek",
+    "VIEWER": "Obserwator"
+  },
+  "add": {
+    "button": "Dodaj członka",
+    "title": "Dodaj członka",
+    "searchPlaceholder": "Szukaj po imieniu lub e-mailu…",
+    "noCandidates": "Brak osób do dodania.",
+    "roleLabel": "Rola",
+    "submit": "Dodaj do listy",
+    "blocked": {
+      "ALREADY_MEMBER": "Już jest członkiem"
+    }
+  }
+}

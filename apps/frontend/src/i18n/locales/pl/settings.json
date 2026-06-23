@@ -1,0 +1,28 @@
+{
+  "title": "Ustawienia",
+  "sections": {
+    "general": "Ogólne",
+    "members": "Członkowie"
+  },
+  "space": {
+    "button": "Ustawienia",
+    "title": "Ustawienia — {{name}}"
+  },
+  "visibility": {
+    "title": "Ukryj z widoków",
+    "hint": "Ukrywa {{scope}} z Twojego sidebara i list. Pozostaje dostępna w Ustawienia → Ukryte.",
+    "space": "przestrzeń",
+    "project": "projekt"
+  },
+  "orgMembers": {
+    "title": "Członkowie organizacji",
+    "subtitle": "Zarządzaj rolami i dostępem. Nowe osoby dołączają przez zaproszenia. Usunięcie kogoś odbiera mu też dostęp do wszystkich przestrzeni i projektów w organizacji."
+  },
+  "hidden": {
+    "unhide": "Odkryj",
+    "sectionTitle_one": "Ukryte ({{count}})",
+    "sectionTitle_few": "Ukryte ({{count}})",
+    "sectionTitle_many": "Ukryte ({{count}})",
+    "sectionTitle_other": "Ukryte ({{count}})"
+  }
+}

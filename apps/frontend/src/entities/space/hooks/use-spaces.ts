@@ -21,3 +21,15 @@ export function useSpace(spaceId: string | undefined) {
     enabled: Boolean(spaceId),
   });
 }
+
+export const spaceMemberKeys = {
+  members: (spaceId: string) => ['spaces', spaceId, 'members'] as const,
+};
+
+export function useSpaceMembers(spaceId: string | undefined) {
+  return useQuery({
+    queryKey: spaceMemberKeys.members(spaceId ?? ''),
+    queryFn: () => spaceApi.listMembers(spaceId!),
+    enabled: Boolean(spaceId),
+  });
+}

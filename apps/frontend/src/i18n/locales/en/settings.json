@@ -1,0 +1,26 @@
+{
+  "title": "Settings",
+  "sections": {
+    "general": "General",
+    "members": "Members"
+  },
+  "space": {
+    "button": "Settings",
+    "title": "Settings — {{name}}"
+  },
+  "visibility": {
+    "title": "Hide from views",
+    "hint": "Hides this {{scope}} from your sidebar and lists. It stays accessible under Settings → Hidden.",
+    "space": "space",
+    "project": "project"
+  },
+  "orgMembers": {
+    "title": "Organization members",
+    "subtitle": "Manage roles and access. New people join through invitations. Removing someone also revokes their access to every space and project in the organization."
+  },
+  "hidden": {
+    "unhide": "Un-hide",
+    "sectionTitle_one": "Hidden ({{count}})",
+    "sectionTitle_other": "Hidden ({{count}})"
+  }
+}

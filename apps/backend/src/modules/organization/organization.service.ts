@@ -139,7 +139,7 @@ export class OrganizationService {
     if (target.role === OrganizationRole.OWNER) {
       throw new ForbiddenException(MESSAGES.ORGANIZATION.CANNOT_REMOVE_OWNER);
     }
-    await this.prisma.organizationMember.delete({ where: { id: target.id } });
+    await this.removeAllMemberships(targetUserId, organizationId, target.id);
   }
 
   async leave(userId: string, organizationId: string): Promise<void> {
@@ -147,7 +147,24 @@ export class OrganizationService {
     if (membership.role === OrganizationRole.OWNER) {
       throw new BadRequestException(MESSAGES.ORGANIZATION.MUST_TRANSFER_OWNERSHIP);
     }
-    await this.prisma.organizationMember.delete({ where: { id: membership.id } });
+    await this.removeAllMemberships(userId, organizationId, membership.id);
+  }
+
+  /** Removes a user from the org and every space/project within it (single transaction). */
+  private async removeAllMemberships(
+    userId: string,
+    organizationId: string,
+    membershipId: string,
+  ): Promise<void> {
+    await this.prisma.$transaction([
+      this.prisma.projectMember.deleteMany({
+        where: { userId, project: { space: { organizationId } } },
+      }),
+      this.prisma.spaceMember.deleteMany({
+        where: { userId, space: { organizationId } },
+      }),
+      this.prisma.organizationMember.delete({ where: { id: membershipId } }),
+    ]);
   }
 
   async transferOwnership(

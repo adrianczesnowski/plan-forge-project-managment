@@ -13,6 +13,8 @@ export function SidebarSpaces() {
   const [isCreateOpen, setCreateOpen] = useState(false);
 
   const canCreate = organization?.myRole === 'OWNER' || organization?.myRole === 'ADMIN';
+  // Spaces the user hid live only under their settings, not in the navigation tree.
+  const visibleSpaces = spaces?.filter((space) => !space.hidden);
 
   return (
     <>
@@ -32,8 +34,8 @@ export function SidebarSpaces() {
       </div>
 
       <div className="flex flex-col gap-0.5 px-2">
-        {spaces?.map((space) => <SidebarSpaceItem key={space.id} space={space} />)}
-        {spaces?.length === 0 && (
+        {visibleSpaces?.map((space) => <SidebarSpaceItem key={space.id} space={space} />)}
+        {visibleSpaces?.length === 0 && (
           <p className="px-2.5 py-1.5 text-xs text-faint">
             {canCreate ? t('emptyHintAdmin') : t('emptyHintMember')}
           </p>

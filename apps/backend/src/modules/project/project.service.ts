@@ -55,13 +55,14 @@ export class ProjectService {
   async listBySpace(userId: string, spaceId: string): Promise<ProjectWithRole[]> {
     const spaceAccess = await this.spaceAccess.require(userId, spaceId, SpaceRole.MEMBER);
     const inheritedRole = SPACE_TO_PROJECT_ROLE[spaceAccess.role];
+    const hiddenIds = await this.hiddenProjectIds(userId);
 
     if (inheritedRole) {
       const projects = await this.prisma.project.findMany({
         where: { spaceId },
         orderBy: { createdAt: 'asc' },
       });
-      return projects.map((p) => toProjectWithRole(p, inheritedRole));
+      return projects.map((p) => toProjectWithRole(p, inheritedRole, hiddenIds.has(p.id)));
     }
 
     const memberships = await this.prisma.projectMember.findMany({
@@ -69,12 +70,29 @@ export class ProjectService {
       include: { project: true },
       orderBy: { project: { createdAt: 'asc' } },
     });
-    return memberships.map((m) => toProjectWithRole(m.project, m.role));
+    return memberships.map((m) => toProjectWithRole(m.project, m.role, hiddenIds.has(m.projectId)));
+  }
+
+  /** Ids of projects the user has hidden from their workspace views. */
+  private async hiddenProjectIds(userId: string): Promise<Set<string>> {
+    const rows = await this.prisma.userHiddenItem.findMany({
+      where: { userId, entityType: 'PROJECT' },
+      select: { entityId: true },
+    });
+    return new Set(rows.map((r) => r.entityId));
+  }
+
+  private async isHidden(userId: string, projectId: string): Promise<boolean> {
+    const row = await this.prisma.userHiddenItem.findUnique({
+      where: { userId_entityType_entityId: { userId, entityType: 'PROJECT', entityId: projectId } },
+    });
+    return Boolean(row);
   }
 
   async getById(userId: string, projectId: string): Promise<ProjectWithRole> {
     const access = await this.access.require(userId, projectId, ProjectRole.VIEWER);
-    return toProjectWithRole(access.project, access.role);
+    const hidden = await this.isHidden(userId, projectId);
+    return toProjectWithRole(access.project, access.role, hidden);
   }
 
   async update(userId: string, projectId: string, dto: UpdateProjectInput): Promise<Project> {

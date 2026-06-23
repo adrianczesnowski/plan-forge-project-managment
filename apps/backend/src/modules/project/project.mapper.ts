@@ -23,8 +23,12 @@ export function toProjectDto(project: PrismaProject): Project {
   };
 }
 
-export function toProjectWithRole(project: PrismaProject, myRole: ProjectRole): ProjectWithRole {
-  return { ...toProjectDto(project), myRole };
+export function toProjectWithRole(
+  project: PrismaProject,
+  myRole: ProjectRole,
+  hidden = false,
+): ProjectWithRole {
+  return { ...toProjectDto(project), myRole, hidden };
 }
 
 export function toProjectMemberDto(

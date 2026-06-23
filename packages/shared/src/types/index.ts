@@ -12,6 +12,7 @@ export * from './comment';
 export * from './shared-list';
 export * from './notification';
 export * from './favorite';
+export * from './hidden';
 export * from './document';
 export * from './activity';
 export * from './dashboard';

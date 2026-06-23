@@ -15,6 +15,8 @@ export function SidebarSpaceItem({ space }: { space: SpaceWithRole }) {
   const [expanded, setExpanded] = useState(false);
   // Projects are fetched only after the first expand.
   const { data: projects, isPending } = useSpaceProjects(space.id, expanded);
+  // Hidden projects don't appear in the navigation tree (only under settings / the space page).
+  const visibleProjects = projects?.filter((p) => !p.hidden);
 
   return (
     <div>
@@ -58,7 +60,7 @@ export function SidebarSpaceItem({ space }: { space: SpaceWithRole }) {
               <Loader2 className="h-3 w-3 animate-spin" />
             </span>
           )}
-          {projects?.map((project) => (
+          {visibleProjects?.map((project) => (
             <NavLink
               key={project.id}
               to={`/projects/${project.id}`}
@@ -72,7 +74,7 @@ export function SidebarSpaceItem({ space }: { space: SpaceWithRole }) {
               {project.name}
             </NavLink>
           ))}
-          {projects?.length === 0 && (
+          {visibleProjects?.length === 0 && (
             <span className="px-2 py-1 text-[12px] italic text-faint">{t('sidebarEmpty')}</span>
           )}
         </div>

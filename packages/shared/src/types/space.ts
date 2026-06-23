@@ -22,7 +22,9 @@ export interface SpaceMember {
   user: UserSummary;
 }
 
-/** Space as listed in the sidebar — with the caller's effective role. */
+/** Space as listed in the sidebar — with the caller's effective role and view state. */
 export interface SpaceWithRole extends Space {
   myRole: SpaceRole;
+  /** Whether the current user has hidden this space from their workspace views. */
+  hidden: boolean;
 }

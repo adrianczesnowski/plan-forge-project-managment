@@ -7,8 +7,10 @@ import enCommon from './locales/en/common.json';
 import enDashboard from './locales/en/dashboard.json';
 import enDocs from './locales/en/docs.json';
 import enErrors from './locales/en/errors.json';
+import enMembers from './locales/en/members.json';
 import enOnboarding from './locales/en/onboarding.json';
 import enProjects from './locales/en/projects.json';
+import enSettings from './locales/en/settings.json';
 import enSpaces from './locales/en/spaces.json';
 import enTasks from './locales/en/tasks.json';
 import plAuth from './locales/pl/auth.json';
@@ -16,8 +18,10 @@ import plCommon from './locales/pl/common.json';
 import plDashboard from './locales/pl/dashboard.json';
 import plDocs from './locales/pl/docs.json';
 import plErrors from './locales/pl/errors.json';
+import plMembers from './locales/pl/members.json';
 import plOnboarding from './locales/pl/onboarding.json';
 import plProjects from './locales/pl/projects.json';
+import plSettings from './locales/pl/settings.json';
 import plSpaces from './locales/pl/spaces.json';
 import plTasks from './locales/pl/tasks.json';
 
@@ -30,9 +34,11 @@ export const resources = {
     dashboard: enDashboard,
     docs: enDocs,
     errors: enErrors,
+    members: enMembers,
     onboarding: enOnboarding,
     spaces: enSpaces,
     projects: enProjects,
+    settings: enSettings,
     tasks: enTasks,
   },
   pl: {
@@ -41,9 +47,11 @@ export const resources = {
     dashboard: plDashboard,
     docs: plDocs,
     errors: plErrors,
+    members: plMembers,
     onboarding: plOnboarding,
     spaces: plSpaces,
     projects: plProjects,
+    settings: plSettings,
     tasks: plTasks,
   },
 } as const;

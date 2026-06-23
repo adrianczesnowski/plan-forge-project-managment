@@ -1,9 +1,11 @@
 import type {
+  AddProjectMemberInput,
   CreateProjectInput,
   Project,
   ProjectMember,
   ProjectWithRole,
   UpdateProjectInput,
+  UpdateProjectMemberInput,
 } from '@planforge/shared';
 import { apiClient, unwrap } from '@/shared/lib/api-client';
 
@@ -26,4 +28,15 @@ export const projectApi = {
 
   listMembers: (id: string) =>
     apiClient.get<never>(`/projects/${id}/members`).then((res) => unwrap<ProjectMember[]>(res)),
+
+  addMember: (id: string, input: AddProjectMemberInput) =>
+    apiClient.post<never>(`/projects/${id}/members`, input).then((res) => unwrap<ProjectMember>(res)),
+
+  updateMemberRole: (id: string, userId: string, input: UpdateProjectMemberInput) =>
+    apiClient
+      .patch<never>(`/projects/${id}/members/${userId}`, input)
+      .then((res) => unwrap<ProjectMember>(res)),
+
+  removeMember: (id: string, userId: string) =>
+    apiClient.delete(`/projects/${id}/members/${userId}`).then(() => undefined),
 };

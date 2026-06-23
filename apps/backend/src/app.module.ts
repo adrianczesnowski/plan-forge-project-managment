@@ -18,6 +18,7 @@ import { DependencyModule } from './modules/dependency/dependency.module';
 import { ActivityModule } from './modules/activity/activity.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { FavoriteModule } from './modules/favorite/favorite.module';
+import { HiddenModule } from './modules/hidden/hidden.module';
 import { EventsModule } from './modules/events/events.module';
 import { NotificationModule } from './modules/notification/notification.module';
 import { SearchModule } from './modules/search/search.module';
@@ -39,6 +40,7 @@ import { DocumentModule } from './modules/document/document.module';
     ActivityModule,
     DashboardModule,
     FavoriteModule,
+    HiddenModule,
     EventsModule,
     NotificationModule,
     SearchModule,

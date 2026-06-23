@@ -3,6 +3,7 @@
   "newProject": "New project",
   "sidebarEmpty": "No projects",
   "empty": "No projects in this space.",
+  "allHidden": "All projects in this space are hidden.",
   "emptyHintAdmin": "Create the first project to start planning.",
   "emptyHintMember": "Ask an administrator for access to a project.",
   "status": {
@@ -28,7 +29,8 @@
     "wbs": "WBS",
     "kanban": "Kanban",
     "gantt": "Gantt",
-    "table": "Table"
+    "table": "Table",
+    "settings": "Settings"
   },
   "menu": {
     "title": "Project actions",

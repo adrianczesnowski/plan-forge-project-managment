@@ -24,7 +24,9 @@ export interface ProjectMember {
   user: UserSummary;
 }
 
-/** Project as listed in the sidebar — with the caller's effective role. */
+/** Project as listed in the sidebar — with the caller's effective role and view state. */
 export interface ProjectWithRole extends Project {
   myRole: ProjectRole;
+  /** Whether the current user has hidden this project from their workspace views. */
+  hidden: boolean;
 }

@@ -14,6 +14,8 @@
   "welcome": "Welcome, {{name}}",
   "nav": {
     "dashboard": "Dashboard",
+    "todoLists": "ToDo Lists",
+    "pmo": "PMO",
     "docs": "Docs",
     "settings": "Settings",
     "helpSupport": "Help & Support"
@@ -22,7 +24,7 @@
     "searchPlaceholder": "Search projects, spaces, tasks..."
   },
   "favorites": {
-    "title": "Favorites",
+    "title": "Bookmarks",
     "add": "Add to favorites",
     "remove": "Remove from favorites"
   },

@@ -32,6 +32,7 @@ export function SidebarSpaceItem({ space }: { space: SpaceWithRole }) {
         </button>
         <NavLink
           to={`/spaces/${space.id}`}
+          onClick={() => setExpanded(true)}
           className={({ isActive }) =>
             cn(
               'flex min-w-0 flex-1 items-center gap-2 rounded-[7px] px-1.5 py-1.5 text-[13px] text-muted-foreground transition-colors hover:bg-muted hover:text-foreground',

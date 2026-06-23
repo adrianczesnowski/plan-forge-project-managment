@@ -1,35 +1,54 @@
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { ChevronRight, FileText, Folder, MoreHorizontal, Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import type { DocumentNodeType, DocumentTreeNode } from '@planforge/shared';
+import type { DocumentNodeType } from '@planforge/shared';
 import { cn } from '@/shared/lib/utils';
 import {
   useCreateDocument,
   useDeleteDocument,
   useUpdateDocument,
 } from '../hooks/use-document-mutations';
+import { INDENT_WIDTH, type FlatNode } from '../lib/tree-dnd';
 import { CreateDocMenu } from './CreateDocMenu';
 import { DocRowMenu } from './DocRowMenu';
 import { DeleteDocDialog } from './DeleteDocDialog';
 
-interface DocsTreeNodeProps {
-  node: DocumentTreeNode;
-  depth: number;
-  activeId: string | undefined;
+interface DocsTreeRowProps {
+  flat: FlatNode;
+  /** Id of the document currently open in the editor (route param). */
+  routeId: string | undefined;
+  expanded: boolean;
+  onToggle: (id: string) => void;
+  onExpand: (id: string) => void;
+  renameId: string | null;
+  onRequestRename: (id: string | null) => void;
+  /** Projected depth while this row is being dragged (overrides flat depth). */
+  dragDepth: number | null;
 }
 
-/** One row of the docs tree, rendering its children recursively. */
-export function DocsTreeNode({ node, depth, activeId }: DocsTreeNodeProps) {
+/** One row of the (flattened) docs tree — sortable, with inline rename + actions. */
+export function DocsTreeRow({
+  flat,
+  routeId,
+  expanded,
+  onToggle,
+  onExpand,
+  renameId,
+  onRequestRename,
+  dragDepth,
+}: DocsTreeRowProps) {
+  const { node, depth } = flat;
   const { t } = useTranslation('docs');
   const navigate = useNavigate();
 
   const isFolder = node.type === 'FOLDER';
   const hasChildren = node.children.length > 0;
   const canExpand = isFolder || hasChildren;
-  const isActive = activeId === node.id;
+  const isActive = routeId === node.id;
 
-  const [expanded, setExpanded] = useState(depth === 0 && isFolder);
   const [createOpen, setCreateOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -44,25 +63,42 @@ export function DocsTreeNode({ node, depth, activeId }: DocsTreeNodeProps) {
   const updateDoc = useUpdateDocument();
   const deleteDoc = useDeleteDocument();
 
+  const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
+    id: node.id,
+    disabled: renaming,
+  });
+
   useEffect(() => {
     if (renaming) inputRef.current?.select();
   }, [renaming]);
 
+  // Open straight into rename when this node was just created.
+  useEffect(() => {
+    if (renameId === node.id) {
+      setDraftTitle(node.title);
+      setRenaming(true);
+      onRequestRename(null);
+    }
+  }, [renameId, node.id, node.title, onRequestRename]);
+
   const handleRowClick = () => {
     if (renaming) return;
-    if (isFolder) setExpanded((e) => !e);
+    if (isFolder) onToggle(node.id);
     else navigate(`/docs/${node.id}`);
   };
 
   const handleCreateInside = (type: DocumentNodeType) => {
-    const title =
-      type === 'FOLDER' ? t('create.untitledFolder') : t('create.untitledDoc');
+    const title = type === 'FOLDER' ? t('create.untitledFolder') : t('create.untitledDoc');
     createDoc.mutate(
       { type, title, parentId: node.id },
       {
         onSuccess: (created) => {
-          setExpanded(true);
-          if (created.type === 'DOC') navigate(`/docs/${created.id}`);
+          onExpand(node.id);
+          if (created.type === 'DOC') {
+            navigate(`/docs/${created.id}`, { state: { autoFocusTitle: true } });
+          } else {
+            onRequestRename(created.id);
+          }
         },
       },
     );
@@ -95,15 +131,22 @@ export function DocsTreeNode({ node, depth, activeId }: DocsTreeNodeProps) {
     });
   };
 
+  const effectiveDepth = dragDepth ?? depth;
+
   return (
-    <div>
+    <div
+      ref={setNodeRef}
+      style={{ transform: CSS.Translate.toString(transform), transition }}
+      className={cn('relative', isDragging && 'z-10 opacity-60')}
+    >
       <div
-        role="button"
-        tabIndex={0}
+        {...attributes}
+        {...listeners}
         onClick={handleRowClick}
         onKeyDown={(e) => e.key === 'Enter' && handleRowClick()}
+        style={{ paddingLeft: 8 + effectiveDepth * INDENT_WIDTH }}
         className={cn(
-          'group relative flex cursor-pointer items-center gap-1.5 rounded-[7px] px-2 py-[5px] text-[13px] transition-colors',
+          'group relative flex cursor-pointer items-center gap-1.5 rounded-[7px] py-[5px] pr-2 text-[13px] transition-colors',
           isActive
             ? 'bg-[#f0ecff] font-semibold text-accent-purple'
             : 'text-muted-foreground hover:bg-muted hover:text-foreground',
@@ -114,7 +157,7 @@ export function DocsTreeNode({ node, depth, activeId }: DocsTreeNodeProps) {
           onClick={(e) => {
             if (!canExpand) return;
             e.stopPropagation();
-            setExpanded((v) => !v);
+            onToggle(node.id);
           }}
           className={cn(
             'flex h-3.5 w-3.5 shrink-0 items-center justify-center text-faint transition-transform',
@@ -185,14 +228,6 @@ export function DocsTreeNode({ node, depth, activeId }: DocsTreeNodeProps) {
           </button>
         </span>
       </div>
-
-      {expanded && hasChildren && (
-        <div className="ml-3.5 border-l border-border-light pl-1">
-          {node.children.map((child) => (
-            <DocsTreeNode key={child.id} node={child} depth={depth + 1} activeId={activeId} />
-          ))}
-        </div>
-      )}
 
       <CreateDocMenu
         open={createOpen}

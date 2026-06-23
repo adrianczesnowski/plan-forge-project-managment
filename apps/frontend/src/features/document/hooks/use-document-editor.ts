@@ -28,7 +28,7 @@ export function useDocumentEditor(docId: string, initialContent: DocumentContent
     immediatelyRender: false,
     extensions: buildEditorExtensions(t('editor.bodyPlaceholder')),
     content: (initialContent as Content) ?? '',
-    editorProps: { attributes: { class: 'tiptap min-h-[40vh]' } },
+    editorProps: { attributes: { class: 'simple-editor tiptap min-h-[40vh]' } },
     onUpdate: ({ editor: e }) => {
       setStatus('saving');
       clearTimeout(timer.current);

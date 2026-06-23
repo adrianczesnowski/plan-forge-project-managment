@@ -1,12 +1,14 @@
-import { useState, type FormEvent, type KeyboardEvent } from 'react';
-import { EditorContent } from '@tiptap/react';
+import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { EditorContent, EditorContext } from '@tiptap/react';
 import { formatDistanceToNow } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import type { DocumentDetail } from '@planforge/shared';
 import { useAuthStore } from '@/stores/auth.store';
 import { useDocumentEditor, type SaveStatus } from '../hooks/use-document-editor';
 import { useUpdateDocument } from '../hooks/use-document-mutations';
-import { DocumentToolbar } from './DocumentToolbar';
+import { DocEditorToolbar } from './DocEditorToolbar';
+import { SlashMenu } from './SlashMenu';
 
 const DEFAULT_COVER = 'linear-gradient(120deg, #7c5cfc 0%, #a855f7 60%, #ec4899 100%)';
 
@@ -35,18 +37,21 @@ function DocPane({ doc }: DocumentEditorPaneProps) {
   const { t } = useTranslation('docs');
   const { editor, status } = useDocumentEditor(doc.id, doc.content);
 
+  if (!editor) return null;
+
   return (
-    <>
-      {editor && <DocumentToolbar editor={editor} />}
+    <EditorContext.Provider value={{ editor }}>
+      <DocEditorToolbar />
       <div className="flex-1 overflow-y-auto">
         <div className="mx-auto max-w-[760px] px-8 pb-24 pt-10">
           <Cover doc={doc} />
           <DocTitle doc={doc} />
           <DocMeta doc={doc} status={status} t={t} />
-          <EditorContent editor={editor} />
+          <EditorContent editor={editor} className="simple-editor-content" />
         </div>
       </div>
-    </>
+      <SlashMenu editor={editor} />
+    </EditorContext.Provider>
   );
 }
 
@@ -68,6 +73,18 @@ function DocTitle({ doc }: { doc: DocumentDetail }) {
   const { t } = useTranslation('docs');
   const updateDoc = useUpdateDocument();
   const [title, setTitle] = useState(doc.title);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Focus + select the title right after a document is created from the tree.
+  const autoFocus = (location.state as { autoFocusTitle?: boolean } | null)?.autoFocusTitle;
+  useEffect(() => {
+    if (!autoFocus) return;
+    inputRef.current?.focus();
+    inputRef.current?.select();
+    navigate(location.pathname, { replace: true, state: null });
+  }, [autoFocus, location.pathname, navigate]);
 
   const save = (e?: FormEvent) => {
     e?.preventDefault();
@@ -90,6 +107,7 @@ function DocTitle({ doc }: { doc: DocumentDetail }) {
   return (
     <form onSubmit={save}>
       <input
+        ref={inputRef}
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         onBlur={() => save()}

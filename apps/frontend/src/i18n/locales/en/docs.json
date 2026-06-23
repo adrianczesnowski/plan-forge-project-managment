@@ -41,7 +41,37 @@
     "titlePlaceholder": "Untitled",
     "bodyPlaceholder": "Type \"/\" to insert a block, or just start writing...",
     "saving": "Saving...",
-    "saved": "Saved"
+    "saved": "Saved",
+    "slash": {
+      "items": {
+        "text": "Text",
+        "h1": "Heading 1",
+        "h2": "Heading 2",
+        "h3": "Heading 3",
+        "bulletList": "Bulleted list",
+        "orderedList": "Numbered list",
+        "taskList": "To-do list",
+        "blockquote": "Quote",
+        "codeBlock": "Code block",
+        "divider": "Divider",
+        "table": "Table",
+        "image": "Image"
+      },
+      "descriptions": {
+        "text": "Plain paragraph",
+        "h1": "Large section heading",
+        "h2": "Medium section heading",
+        "h3": "Small section heading",
+        "bulletList": "A simple bulleted list",
+        "orderedList": "A numbered list",
+        "taskList": "Track tasks with checkboxes",
+        "blockquote": "Capture a quote or callout",
+        "codeBlock": "Formatted code snippet",
+        "divider": "Visually divide blocks",
+        "table": "Insert a table",
+        "image": "Upload or embed an image"
+      }
+    }
   },
   "topbar": {
     "history": "History",

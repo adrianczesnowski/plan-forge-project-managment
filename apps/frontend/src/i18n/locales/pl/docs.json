@@ -41,7 +41,37 @@
     "titlePlaceholder": "Bez tytułu",
     "bodyPlaceholder": "Wpisz „/”, aby wstawić blok, lub po prostu zacznij pisać...",
     "saving": "Zapisywanie...",
-    "saved": "Zapisano"
+    "saved": "Zapisano",
+    "slash": {
+      "items": {
+        "text": "Tekst",
+        "h1": "Nagłówek 1",
+        "h2": "Nagłówek 2",
+        "h3": "Nagłówek 3",
+        "bulletList": "Lista punktowana",
+        "orderedList": "Lista numerowana",
+        "taskList": "Lista zadań",
+        "blockquote": "Cytat",
+        "codeBlock": "Blok kodu",
+        "divider": "Separator",
+        "table": "Tabela",
+        "image": "Obraz"
+      },
+      "descriptions": {
+        "text": "Zwykły akapit",
+        "h1": "Duży nagłówek sekcji",
+        "h2": "Średni nagłówek sekcji",
+        "h3": "Mały nagłówek sekcji",
+        "bulletList": "Prosta lista punktowana",
+        "orderedList": "Lista numerowana",
+        "taskList": "Zadania z polami wyboru",
+        "blockquote": "Cytat lub wyróżnienie",
+        "codeBlock": "Sformatowany fragment kodu",
+        "divider": "Wizualnie oddziel bloki",
+        "table": "Wstaw tabelę",
+        "image": "Prześlij lub osadź obraz"
+      }
+    }
   },
   "topbar": {
     "history": "Historia",

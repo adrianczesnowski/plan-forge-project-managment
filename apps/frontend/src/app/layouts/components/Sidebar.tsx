@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { FolderKanban, LayoutGrid, Layers, ListChecks, Settings } from 'lucide-react';
+import { FileText, FolderKanban, LayoutGrid, Layers, ListChecks, Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/shared/lib/utils';
 import { SidebarSpaces } from './SidebarSpaces';
@@ -38,6 +38,10 @@ export function Sidebar() {
       <div className="flex-1 overflow-y-auto">
         <SidebarSpaces />
         <nav className="flex flex-col gap-0.5 px-2 pt-1">
+          <NavLink to="/docs" className={navItemClass}>
+            <FileText className="h-[17px] w-[17px]" />
+            {t('nav.docs')}
+          </NavLink>
           <NavLink to="/pmo" className={navItemClass}>
             <FolderKanban className="h-[17px] w-[17px]" />
             {t('nav.pmo')}

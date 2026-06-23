@@ -168,7 +168,11 @@ export function DocsTreeRow({
           <ChevronRight className="h-3 w-3" />
         </span>
 
-        {isFolder ? (
+        {node.icon ? (
+          <span className="flex h-4 w-4 shrink-0 items-center justify-center text-[14px] leading-none">
+            {node.icon}
+          </span>
+        ) : isFolder ? (
           <Folder className="h-4 w-4 shrink-0 fill-accent-orange text-accent-orange" />
         ) : (
           <FileText className="h-4 w-4 shrink-0 text-faint" />

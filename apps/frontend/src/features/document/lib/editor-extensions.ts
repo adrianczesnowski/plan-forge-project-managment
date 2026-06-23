@@ -16,6 +16,7 @@ import type { Extensions } from '@tiptap/react';
 import { HorizontalRule } from '@/components/tiptap-node/horizontal-rule-node/horizontal-rule-node-extension';
 import { ImageUploadNode } from '@/components/tiptap-node/image-upload-node/image-upload-node-extension';
 import { handleImageUpload, MAX_FILE_SIZE } from '@/lib/tiptap-utils';
+import { CodeBlock } from './code-block';
 
 /**
  * Shared tiptap extension set for the docs editor — the Tiptap "Simple Editor"
@@ -26,8 +27,10 @@ export function buildEditorExtensions(placeholder: string): Extensions {
   return [
     StarterKit.configure({
       horizontalRule: false,
+      codeBlock: false,
       link: { openOnClick: false, enableClickSelection: true },
     }),
+    CodeBlock,
     HorizontalRule,
     TextAlign.configure({ types: ['heading', 'paragraph'] }),
     TaskList,

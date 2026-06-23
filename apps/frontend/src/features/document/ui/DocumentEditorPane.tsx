@@ -9,6 +9,7 @@ import { useDocumentEditor, type SaveStatus } from '../hooks/use-document-editor
 import { useUpdateDocument } from '../hooks/use-document-mutations';
 import { DocEditorToolbar } from './DocEditorToolbar';
 import { SlashMenu } from './SlashMenu';
+import { EmojiPickerPopover } from './EmojiPickerPopover';
 
 const DEFAULT_COVER = 'linear-gradient(120deg, #7c5cfc 0%, #a855f7 60%, #ec4899 100%)';
 
@@ -56,14 +57,34 @@ function DocPane({ doc }: DocumentEditorPaneProps) {
 }
 
 function Cover({ doc }: { doc: DocumentDetail }) {
+  const { t } = useTranslation('docs');
+  const updateDoc = useUpdateDocument();
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const iconRef = useRef<HTMLButtonElement>(null);
+
+  const setIcon = (icon: string | null) => updateDoc.mutate({ id: doc.id, input: { icon } });
+
   return (
     <div
       className="relative mb-6 h-[140px] rounded-2xl"
       style={{ background: doc.coverColor ?? DEFAULT_COVER }}
     >
-      <div className="absolute -bottom-[22px] left-7 flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-[44px] leading-none shadow-[0_4px_14px_rgba(0,0,0,0.08)]">
+      <button
+        ref={iconRef}
+        type="button"
+        title={t('icon.change')}
+        onClick={() => setPickerOpen(true)}
+        className="absolute -bottom-[22px] left-7 flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-[44px] leading-none shadow-[0_4px_14px_rgba(0,0,0,0.08)] transition-transform hover:scale-[1.04]"
+      >
         {doc.icon ?? (doc.type === 'FOLDER' ? '📁' : '📄')}
-      </div>
+      </button>
+      <EmojiPickerPopover
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        anchorRef={iconRef}
+        onSelect={setIcon}
+        onRemove={doc.icon ? () => setIcon(null) : undefined}
+      />
     </div>
   );
 }

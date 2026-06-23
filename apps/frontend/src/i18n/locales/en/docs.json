@@ -37,6 +37,10 @@
     "editedAgo": "Edited {{time}}",
     "justNow": "just now"
   },
+  "icon": {
+    "change": "Change icon",
+    "remove": "Remove icon"
+  },
   "editor": {
     "titlePlaceholder": "Untitled",
     "bodyPlaceholder": "Type \"/\" to insert a block, or just start writing...",

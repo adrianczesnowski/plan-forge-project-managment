@@ -37,6 +37,10 @@
     "editedAgo": "Edytowano {{time}}",
     "justNow": "przed chwilą"
   },
+  "icon": {
+    "change": "Zmień ikonę",
+    "remove": "Usuń ikonę"
+  },
   "editor": {
     "titlePlaceholder": "Bez tytułu",
     "bodyPlaceholder": "Wpisz „/”, aby wstawić blok, lub po prostu zacznij pisać...",

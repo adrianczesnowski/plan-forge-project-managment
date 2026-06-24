@@ -79,6 +79,10 @@ export const MESSAGES = {
     PARENT_DIFFERENT_ORG: 'Parent must belong to the same organization',
     CYCLIC_HIERARCHY: 'Cannot move a node inside its own subtree',
     CONTENT_ON_FOLDER: 'Folders cannot hold document content',
+    EDIT_FORBIDDEN: 'You do not have permission to edit this document',
+    MANAGE_FORBIDDEN: 'Only the owner can manage sharing for this document',
+    SHARE_TARGET_NOT_MEMBER: 'User is not a member of this organization',
+    SHARE_WITH_OWNER: 'The owner already has full access',
   },
   VALIDATION: {
     FAILED: 'Validation failed',

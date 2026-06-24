@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 
 import { useNavigate } from 'react-router-dom';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { ChevronRight, FileText, Folder, MoreHorizontal, Plus } from 'lucide-react';
+import { ChevronRight, FileText, Folder, MoreHorizontal, Plus, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { DocumentNodeType } from '@planforge/shared';
 import { cn } from '@/shared/lib/utils';
@@ -15,6 +15,7 @@ import { INDENT_WIDTH, type FlatNode } from '../lib/tree-dnd';
 import { CreateDocMenu } from './CreateDocMenu';
 import { DocRowMenu } from './DocRowMenu';
 import { DeleteDocDialog } from './DeleteDocDialog';
+import { ShareDocDialog } from './ShareDocDialog';
 
 interface DocsTreeRowProps {
   flat: FlatNode;
@@ -48,10 +49,13 @@ export function DocsTreeRow({
   const hasChildren = node.children.length > 0;
   const canExpand = isFolder || hasChildren;
   const isActive = routeId === node.id;
+  const isOwner = node.myAccess === 'OWNER';
+  const canEdit = isOwner || node.myAccess === 'EDIT';
 
   const [createOpen, setCreateOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   const [renaming, setRenaming] = useState(false);
   const [draftTitle, setDraftTitle] = useState(node.title);
 
@@ -65,7 +69,8 @@ export function DocsTreeRow({
 
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
     id: node.id,
-    disabled: renaming,
+    // Only the owner can restructure their tree (move is owner-only on the backend).
+    disabled: renaming || !isOwner,
   });
 
   useEffect(() => {
@@ -194,42 +199,52 @@ export function DocsTreeRow({
           <span className="min-w-0 flex-1 truncate">{node.title}</span>
         )}
 
+        {!isOwner && (
+          <span title={t('sharedWithYou')} className="flex shrink-0 items-center">
+            <Users className="h-3.5 w-3.5 text-faint" />
+          </span>
+        )}
+
         <span
           className={cn(
             'flex shrink-0 items-center gap-0.5 transition-opacity',
             createOpen || menuOpen ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
           )}
         >
-          <button
-            ref={addRef}
-            type="button"
-            title={t('createInside')}
-            onClick={(e) => {
-              e.stopPropagation();
-              setCreateOpen(true);
-            }}
-            className={cn(
-              'flex h-5 w-5 items-center justify-center rounded-md text-faint hover:bg-[#e0d8ff] hover:text-accent-purple',
-              createOpen && 'bg-[#e0d8ff] text-accent-purple',
-            )}
-          >
-            <Plus className="h-3.5 w-3.5" />
-          </button>
-          <button
-            ref={menuRef}
-            type="button"
-            title={t('rowMenu')}
-            onClick={(e) => {
-              e.stopPropagation();
-              setMenuOpen(true);
-            }}
-            className={cn(
-              'flex h-5 w-5 items-center justify-center rounded-md text-faint hover:bg-[#e0d8ff] hover:text-accent-purple',
-              menuOpen && 'bg-[#e0d8ff] text-accent-purple',
-            )}
-          >
-            <MoreHorizontal className="h-3.5 w-3.5" />
-          </button>
+          {isOwner && (
+            <button
+              ref={addRef}
+              type="button"
+              title={t('createInside')}
+              onClick={(e) => {
+                e.stopPropagation();
+                setCreateOpen(true);
+              }}
+              className={cn(
+                'flex h-5 w-5 items-center justify-center rounded-md text-faint hover:bg-[#e0d8ff] hover:text-accent-purple',
+                createOpen && 'bg-[#e0d8ff] text-accent-purple',
+              )}
+            >
+              <Plus className="h-3.5 w-3.5" />
+            </button>
+          )}
+          {canEdit && (
+            <button
+              ref={menuRef}
+              type="button"
+              title={t('rowMenu')}
+              onClick={(e) => {
+                e.stopPropagation();
+                setMenuOpen(true);
+              }}
+              className={cn(
+                'flex h-5 w-5 items-center justify-center rounded-md text-faint hover:bg-[#e0d8ff] hover:text-accent-purple',
+                menuOpen && 'bg-[#e0d8ff] text-accent-purple',
+              )}
+            >
+              <MoreHorizontal className="h-3.5 w-3.5" />
+            </button>
+          )}
         </span>
       </div>
 
@@ -244,7 +259,9 @@ export function DocsTreeRow({
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
         anchorRef={menuRef}
-        nodeType={node.type}
+        canManage={isOwner}
+        canEdit={canEdit}
+        onShare={() => setShareOpen(true)}
         onRename={() => {
           setDraftTitle(node.title);
           setRenaming(true);
@@ -252,6 +269,14 @@ export function DocsTreeRow({
         onCreateInside={() => setCreateOpen(true)}
         onDelete={() => setDeleteOpen(true)}
       />
+      {shareOpen && (
+        <ShareDocDialog
+          open={shareOpen}
+          onClose={() => setShareOpen(false)}
+          docId={node.id}
+          docTitle={node.title}
+        />
+      )}
       <DeleteDocDialog
         open={deleteOpen}
         onClose={() => setDeleteOpen(false)}

@@ -2,13 +2,16 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/commo
 import {
   createDocumentSchema,
   moveDocumentSchema,
+  setDocumentPermissionSchema,
   updateDocumentSchema,
   uuidSchema,
   type CreateDocumentInput,
   type DocumentDetail,
   type DocumentNode,
+  type DocumentPermission,
   type DocumentTreeNode,
   type MoveDocumentInput,
+  type SetDocumentPermissionInput,
   type UpdateDocumentInput,
 } from '@planforge/shared';
 import { CurrentUser, type AuthUser } from '../../common/decorators/current-user.decorator';
@@ -67,5 +70,31 @@ export class DocumentController {
   ): Promise<{ deleted: boolean }> {
     await this.documentService.delete(user.id, id);
     return { deleted: true };
+  }
+
+  @Get(':id/permissions')
+  listPermissions(
+    @CurrentUser() user: AuthUser,
+    @Param('id', UuidParam()) id: string,
+  ): Promise<DocumentPermission[]> {
+    return this.documentService.listPermissions(user.id, id);
+  }
+
+  @Post(':id/permissions')
+  setPermission(
+    @CurrentUser() user: AuthUser,
+    @Param('id', UuidParam()) id: string,
+    @Body(new ZodValidationPipe(setDocumentPermissionSchema)) dto: SetDocumentPermissionInput,
+  ): Promise<DocumentPermission[]> {
+    return this.documentService.setPermission(user.id, id, dto);
+  }
+
+  @Delete(':id/permissions/:userId')
+  removePermission(
+    @CurrentUser() user: AuthUser,
+    @Param('id', UuidParam()) id: string,
+    @Param('userId', UuidParam()) userId: string,
+  ): Promise<DocumentPermission[]> {
+    return this.documentService.removePermission(user.id, id, userId);
   }
 }

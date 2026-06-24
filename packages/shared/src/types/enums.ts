@@ -100,6 +100,13 @@ export const DocumentNodeType = {
 } as const;
 export type DocumentNodeType = (typeof DocumentNodeType)[keyof typeof DocumentNodeType];
 
+export const DocumentAccess = {
+  VIEW: 'VIEW',
+  COMMENT: 'COMMENT',
+  EDIT: 'EDIT',
+} as const;
+export type DocumentAccess = (typeof DocumentAccess)[keyof typeof DocumentAccess];
+
 export const NotificationType = {
   TASK_ASSIGNED: 'TASK_ASSIGNED',
   COMMENT_MENTION: 'COMMENT_MENTION',

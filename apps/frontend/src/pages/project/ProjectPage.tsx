@@ -13,18 +13,27 @@ import { WbsTab } from './tabs/wbs/WbsTab';
 import { KanbanTab } from './tabs/kanban/KanbanTab';
 import { GanttTab } from './tabs/gantt/GanttTab';
 import { TableTab } from './tabs/table/TableTab';
+import { ProjectDocsTab } from './tabs/ProjectDocsTab';
 import { ProjectSettingsTab } from './tabs/ProjectSettingsTab';
 import { ProjectActionsMenu } from '@/features/project/ui/ProjectActionsMenu';
 import { FavoriteStar } from '@/features/favorite/ui/FavoriteStar';
 import { useProjectRealtime } from '@/shared/hooks/use-project-realtime';
 
-const TABS = ['overview', 'wbs', 'kanban', 'gantt', 'table', 'settings'] as const;
+const TABS = ['overview', 'wbs', 'kanban', 'gantt', 'table', 'docs', 'settings'] as const;
 type ProjectTab = (typeof TABS)[number];
 
 /** Tabs that render tasks and react to the shared filters toolbar. */
 const TASK_TABS: ProjectTab[] = ['wbs', 'kanban', 'gantt', 'table'];
 
-const IMPLEMENTED_TABS: ProjectTab[] = ['overview', 'wbs', 'kanban', 'gantt', 'table', 'settings'];
+const IMPLEMENTED_TABS: ProjectTab[] = [
+  'overview',
+  'wbs',
+  'kanban',
+  'gantt',
+  'table',
+  'docs',
+  'settings',
+];
 
 export function ProjectPage() {
   const { t } = useTranslation('projects');
@@ -85,6 +94,7 @@ export function ProjectPage() {
         {activeTab === 'kanban' && <KanbanTab project={project} filters={filters} />}
         {activeTab === 'gantt' && <GanttTab project={project} filters={filters} />}
         {activeTab === 'table' && <TableTab project={project} filters={filters} />}
+        {activeTab === 'docs' && <ProjectDocsTab project={project} />}
         {activeTab === 'settings' && <ProjectSettingsTab project={project} />}
       </div>
 

@@ -1,10 +1,11 @@
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { Clock, MessageSquare, MoreHorizontal, Share2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { DocumentDetail } from '@planforge/shared';
 import { useDocument } from '@/entities/document/hooks/use-documents';
 import { FullPageSpinner } from '@/shared/ui/full-page-spinner';
 import { DocumentEditorPane } from './DocumentEditorPane';
+import { ShareDocDialog } from './ShareDocDialog';
 
 interface DocumentViewProps {
   docId: string;
@@ -36,6 +37,8 @@ function DocumentTopbar({
 }) {
   const iconBtn =
     'flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-white text-faint transition-colors hover:bg-muted hover:text-foreground';
+  const [shareOpen, setShareOpen] = useState(false);
+  const isOwner = doc.myAccess === 'OWNER';
 
   return (
     <div className="flex h-[52px] shrink-0 items-center gap-3 border-b border-border px-5">
@@ -65,14 +68,26 @@ function DocumentTopbar({
         <button type="button" className={iconBtn} title={t('topbar.more')}>
           <MoreHorizontal className="h-[15px] w-[15px]" />
         </button>
-        <button
-          type="button"
-          className="flex items-center gap-1.5 rounded-lg bg-accent-purple px-3.5 py-[7px] text-[13px] font-medium text-white transition-colors hover:bg-primary-hover"
-        >
-          <Share2 className="h-3.5 w-3.5" />
-          {t('topbar.share')}
-        </button>
+        {isOwner && (
+          <button
+            type="button"
+            onClick={() => setShareOpen(true)}
+            className="flex items-center gap-1.5 rounded-lg bg-accent-purple px-3.5 py-[7px] text-[13px] font-medium text-white transition-colors hover:bg-primary-hover"
+          >
+            <Share2 className="h-3.5 w-3.5" />
+            {t('topbar.share')}
+          </button>
+        )}
       </div>
+
+      {shareOpen && (
+        <ShareDocDialog
+          open={shareOpen}
+          onClose={() => setShareOpen(false)}
+          docId={doc.id}
+          docTitle={doc.title}
+        />
+      )}
     </div>
   );
 }

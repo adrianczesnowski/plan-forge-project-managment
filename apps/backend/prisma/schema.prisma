@@ -97,6 +97,12 @@ enum DocumentNodeType {
   DOC
 }
 
+enum DocumentAccess {
+  VIEW
+  COMMENT
+  EDIT
+}
+
 // ─── Users & auth ────────────────────────────────────────────────────────────
 
 model User {
@@ -128,6 +134,8 @@ model User {
   notifications         Notification[]
   activityLogs          ActivityLog[]
   createdDocuments      DocumentNode[]         @relation("DocumentCreator")
+  documentPermissions   DocumentPermission[]
+  createdDocumentLinks  DocumentProjectLink[]  @relation("DocumentLinkCreator")
 
   @@map("users")
 }
@@ -257,6 +265,7 @@ model Project {
   tasks        Task[]
   sharedLists  SharedList[]
   activityLogs ActivityLog[]
+  documentLinks DocumentProjectLink[]
 
   @@index([spaceId])
   @@map("projects")
@@ -486,9 +495,42 @@ model DocumentNode {
   children     DocumentNode[] @relation("DocumentTree")
   organization Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   createdBy    User           @relation("DocumentCreator", fields: [createdById], references: [id])
+  permissions  DocumentPermission[]
+  projectLinks DocumentProjectLink[]
 
   @@index([organizationId])
   @@index([parentId])
   @@index([createdById])
   @@map("document_nodes")
+}
+
+model DocumentPermission {
+  id        String         @id @default(uuid()) @db.Uuid
+  nodeId    String         @map("node_id") @db.Uuid
+  userId    String         @map("user_id") @db.Uuid
+  access    DocumentAccess @default(VIEW)
+  createdAt DateTime       @default(now()) @map("created_at")
+
+  node DocumentNode @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  user User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([nodeId, userId])
+  @@index([userId])
+  @@map("document_permissions")
+}
+
+model DocumentProjectLink {
+  id          String   @id @default(uuid()) @db.Uuid
+  nodeId      String   @map("node_id") @db.Uuid
+  projectId   String   @map("project_id") @db.Uuid
+  createdById String   @map("created_by_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  node      DocumentNode @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  project   Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdBy User         @relation("DocumentLinkCreator", fields: [createdById], references: [id])
+
+  @@unique([nodeId, projectId])
+  @@index([projectId])
+  @@map("document_project_links")
 }

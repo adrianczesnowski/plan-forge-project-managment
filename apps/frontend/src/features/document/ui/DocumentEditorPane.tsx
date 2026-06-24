@@ -17,46 +17,52 @@ interface DocumentEditorPaneProps {
   doc: DocumentDetail;
 }
 
+interface PaneProps {
+  doc: DocumentDetail;
+  canEdit: boolean;
+}
+
 export function DocumentEditorPane({ doc }: DocumentEditorPaneProps) {
-  if (doc.type === 'FOLDER') return <FolderPane doc={doc} />;
-  return <DocPane doc={doc} />;
+  const canEdit = doc.myAccess === 'OWNER' || doc.myAccess === 'EDIT';
+  if (doc.type === 'FOLDER') return <FolderPane doc={doc} canEdit={canEdit} />;
+  return <DocPane doc={doc} canEdit={canEdit} />;
 }
 
 /** Folders have no body — show a simple cover + title header. */
-function FolderPane({ doc }: DocumentEditorPaneProps) {
+function FolderPane({ doc, canEdit }: PaneProps) {
   return (
     <div className="flex-1 overflow-y-auto">
       <div className="mx-auto max-w-[760px] px-8 pb-24 pt-10">
-        <Cover doc={doc} />
-        <DocTitle doc={doc} />
+        <Cover doc={doc} canEdit={canEdit} />
+        <DocTitle doc={doc} canEdit={canEdit} />
       </div>
     </div>
   );
 }
 
-function DocPane({ doc }: DocumentEditorPaneProps) {
+function DocPane({ doc, canEdit }: PaneProps) {
   const { t } = useTranslation('docs');
-  const { editor, status } = useDocumentEditor(doc.id, doc.content);
+  const { editor, status } = useDocumentEditor(doc.id, doc.content, canEdit);
 
   if (!editor) return null;
 
   return (
     <EditorContext.Provider value={{ editor }}>
-      <DocEditorToolbar />
+      {canEdit && <DocEditorToolbar />}
       <div className="flex-1 overflow-y-auto">
         <div className="mx-auto max-w-[760px] px-8 pb-24 pt-10">
-          <Cover doc={doc} />
-          <DocTitle doc={doc} />
+          <Cover doc={doc} canEdit={canEdit} />
+          <DocTitle doc={doc} canEdit={canEdit} />
           <DocMeta doc={doc} status={status} t={t} />
           <EditorContent editor={editor} className="simple-editor-content" />
         </div>
       </div>
-      <SlashMenu editor={editor} />
+      {canEdit && <SlashMenu editor={editor} />}
     </EditorContext.Provider>
   );
 }
 
-function Cover({ doc }: { doc: DocumentDetail }) {
+function Cover({ doc, canEdit }: PaneProps) {
   const { t } = useTranslation('docs');
   const updateDoc = useUpdateDocument();
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -72,9 +78,10 @@ function Cover({ doc }: { doc: DocumentDetail }) {
       <button
         ref={iconRef}
         type="button"
-        title={t('icon.change')}
-        onClick={() => setPickerOpen(true)}
-        className="absolute -bottom-[22px] left-7 flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-[44px] leading-none shadow-[0_4px_14px_rgba(0,0,0,0.08)] transition-transform hover:scale-[1.04]"
+        disabled={!canEdit}
+        title={canEdit ? t('icon.change') : undefined}
+        onClick={() => canEdit && setPickerOpen(true)}
+        className="absolute -bottom-[22px] left-7 flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-[44px] leading-none shadow-[0_4px_14px_rgba(0,0,0,0.08)] transition-transform enabled:hover:scale-[1.04]"
       >
         {doc.icon ?? (doc.type === 'FOLDER' ? '📁' : '📄')}
       </button>
@@ -90,7 +97,7 @@ function Cover({ doc }: { doc: DocumentDetail }) {
 }
 
 /** Inline-editable document title. */
-function DocTitle({ doc }: { doc: DocumentDetail }) {
+function DocTitle({ doc, canEdit }: PaneProps) {
   const { t } = useTranslation('docs');
   const updateDoc = useUpdateDocument();
   const [title, setTitle] = useState(doc.title);
@@ -130,6 +137,7 @@ function DocTitle({ doc }: { doc: DocumentDetail }) {
       <input
         ref={inputRef}
         value={title}
+        readOnly={!canEdit}
         onChange={(e) => setTitle(e.target.value)}
         onBlur={() => save()}
         onKeyDown={onKeyDown}

@@ -15,7 +15,11 @@ const AUTOSAVE_DELAY = 800;
  * debounced autosave. Intended to be mounted per-document (keyed by id), so the
  * initial content is read once on mount.
  */
-export function useDocumentEditor(docId: string, initialContent: DocumentContent | null) {
+export function useDocumentEditor(
+  docId: string,
+  initialContent: DocumentContent | null,
+  editable = true,
+) {
   const { t } = useTranslation('docs');
   const updateDoc = useUpdateDocument();
   const [status, setStatus] = useState<SaveStatus>('idle');
@@ -26,6 +30,7 @@ export function useDocumentEditor(docId: string, initialContent: DocumentContent
 
   const editor = useEditor({
     immediatelyRender: false,
+    editable,
     extensions: buildEditorExtensions(t('editor.bodyPlaceholder')),
     content: (initialContent as Content) ?? '',
     editorProps: { attributes: { class: 'simple-editor tiptap min-h-[40vh]' } },

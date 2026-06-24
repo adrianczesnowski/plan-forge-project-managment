@@ -4,6 +4,7 @@
   "createButton": "Utwórz",
   "createInside": "Utwórz wewnątrz",
   "rowMenu": "Więcej",
+  "sharedWithYou": "Udostępnione Tobie",
   "empty": {
     "title": "Brak dokumentów",
     "hint": "Utwórz pierwszy dokument lub folder, aby zacząć."
@@ -21,6 +22,7 @@
     "untitledFolder": "Nowy folder"
   },
   "menu": {
+    "share": "Udostępnij",
     "rename": "Zmień nazwę",
     "duplicate": "Duplikuj",
     "createInside": "Utwórz wewnątrz",
@@ -75,6 +77,34 @@
         "table": "Wstaw tabelę",
         "image": "Prześlij lub osadź obraz"
       }
+    }
+  },
+  "projectDocs": {
+    "title": "Połączone dokumenty",
+    "linkButton": "Połącz dokument",
+    "empty": "Brak dokumentów połączonych z tym projektem.",
+    "noAccess": "Brak dostępu",
+    "unlink": "Odłącz",
+    "picker": {
+      "title": "Połącz dokument",
+      "hint": "Wybierz dokument lub folder ze swoich dokumentów, aby podpiąć go do projektu.",
+      "confirm": "Połącz",
+      "empty": "Nie masz jeszcze żadnych dokumentów."
+    }
+  },
+  "share": {
+    "title": "Udostępnij „{{title}}”",
+    "peopleWithAccess": "Osoby z dostępem",
+    "onlyYou": "Na razie tylko Ty masz dostęp",
+    "addPeople": "Dodaj osoby",
+    "searchPlaceholder": "Szukaj członków...",
+    "noCandidates": "Brak osób do dodania",
+    "add": "Dodaj",
+    "remove": "Odbierz dostęp",
+    "access": {
+      "VIEW": "Może wyświetlać",
+      "COMMENT": "Może komentować",
+      "EDIT": "Może edytować"
     }
   },
   "topbar": {

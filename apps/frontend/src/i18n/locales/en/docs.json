@@ -4,6 +4,7 @@
   "createButton": "Create",
   "createInside": "Create inside",
   "rowMenu": "More",
+  "sharedWithYou": "Shared with you",
   "empty": {
     "title": "No documents yet",
     "hint": "Create your first document or folder to get started."
@@ -21,6 +22,7 @@
     "untitledFolder": "New folder"
   },
   "menu": {
+    "share": "Share",
     "rename": "Rename",
     "duplicate": "Duplicate",
     "createInside": "Create inside",
@@ -75,6 +77,34 @@
         "table": "Insert a table",
         "image": "Upload or embed an image"
       }
+    }
+  },
+  "projectDocs": {
+    "title": "Linked documents",
+    "linkButton": "Link document",
+    "empty": "No documents linked to this project yet.",
+    "noAccess": "No access",
+    "unlink": "Unlink",
+    "picker": {
+      "title": "Link a document",
+      "hint": "Pick a document or folder from your docs to attach to this project.",
+      "confirm": "Link",
+      "empty": "You don't have any documents yet."
+    }
+  },
+  "share": {
+    "title": "Share \"{{title}}\"",
+    "peopleWithAccess": "People with access",
+    "onlyYou": "Only you have access yet",
+    "addPeople": "Add people",
+    "searchPlaceholder": "Search members...",
+    "noCandidates": "No one left to add",
+    "add": "Add",
+    "remove": "Remove access",
+    "access": {
+      "VIEW": "Can view",
+      "COMMENT": "Can comment",
+      "EDIT": "Can edit"
     }
   },
   "topbar": {

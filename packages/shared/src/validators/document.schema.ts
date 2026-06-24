@@ -24,6 +24,19 @@ export const moveDocumentSchema = z.object({
   index: z.number().int().min(0).optional(),
 });
 
+/** Grant or change a user's access to a node (sharing). */
+export const setDocumentPermissionSchema = z.object({
+  userId: uuidSchema,
+  access: z.enum(['VIEW', 'COMMENT', 'EDIT']),
+});
+
+/** Link a document/folder node to a project. */
+export const linkDocumentSchema = z.object({
+  nodeId: uuidSchema,
+});
+
 export type CreateDocumentInput = z.infer<typeof createDocumentSchema>;
 export type UpdateDocumentInput = z.infer<typeof updateDocumentSchema>;
 export type MoveDocumentInput = z.infer<typeof moveDocumentSchema>;
+export type SetDocumentPermissionInput = z.infer<typeof setDocumentPermissionSchema>;
+export type LinkDocumentInput = z.infer<typeof linkDocumentSchema>;

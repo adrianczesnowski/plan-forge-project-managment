@@ -30,6 +30,7 @@
     "kanban": "Kanban",
     "gantt": "Gantt",
     "table": "Table",
+    "docs": "Docs",
     "settings": "Settings"
   },
   "menu": {
